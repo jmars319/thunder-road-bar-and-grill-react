@@ -1,0 +1,22 @@
+{
+  "business_info": {
+    "name": "Thunder Road Bar and Grill",
+    "phone": "(336) 764-0890",
+    "email": "thundergrillmidway@gmail.com",
+    "address": "11141 Old US Hwy 52, Suite 2, Winston Salem, NC 27107"
+  },
+  "hero": {
+    "title": "Thunder Road Bar and Grill",
+    "subtitle": "Serving Midway since 2015",
+    "btn_text": "View Menu",
+    "btn_link": "#menu",
+    "btn2_text": "Order Online",
+    "btn2_link": "order.php"
+  },
+  "about": {
+    "title": "About Us",
+    "content": "Your about us content",
+    "heading": "Placeholder",
+    "body": "This is placeholder text that will be updated once I get more details."
+  }
+}
