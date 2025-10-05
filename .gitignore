@@ -1,0 +1,63 @@
+# Node
+node_modules/
+.pnp/
+.pnp.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Vite / build
+dist/
+.build/
+.env
+.env.*
+.vscode/
+.DS_Store
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Lockfiles
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Temporary files
+.cache/
+*.tmp
+
+# Composer/PHP vendor (if PHP repo gets copied into this branch)
+vendor/
+composer.lock
+
+# Common PHP
+storage/
+.env.php
+
+# Uploads (optional: keep if you want images versioned)
+# uploads/
+
+# Misc
+coverage/
+coverage-final.json
+
+# build artifacts
+*.tgz
+
+# local node_modules in subfolders
+**/node_modules
