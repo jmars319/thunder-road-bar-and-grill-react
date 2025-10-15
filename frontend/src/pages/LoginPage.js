@@ -45,12 +45,12 @@ export default function LoginPage({ onLogin, onBack }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+  <div className="min-h-screen bg-gradient-to-br from-primary via-accent to-surface flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="bg-surface rounded-lg shadow-2xl p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="inline-block w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg mb-4"></div>
+            <div className="inline-block w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-lg mb-4"></div>
             <h1 className="text-2xl font-bold text-text-primary">Thunder Road Admin</h1>
             <p className="text-text-secondary text-sm mt-2">Sign in to manage your site</p>
           </div>

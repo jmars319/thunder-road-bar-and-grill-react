@@ -111,7 +111,7 @@ export default function AdminPanel({ user, onLogout, onBackToSite }) {
         {/* Module Content */}
         <div className="flex-1 overflow-auto p-8">
           {CurrentModule ? <CurrentModule /> : (
-            <div className="text-center text-gray-500 py-12">
+            <div className="text-center text-text-secondary py-12">
               <p>Module not found</p>
             </div>
           )}
