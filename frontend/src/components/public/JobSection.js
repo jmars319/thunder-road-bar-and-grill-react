@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
+import Toast from '../ui/Toast';
+void Toast;
 
 // Public-facing job application form (frontend-only integration)
 // Submits to POST /api/jobs and uploads resume via /api/media/upload when present
@@ -24,6 +26,7 @@ export default function JobSection() {
   const fileInputRef = useRef(null);
   const inputRefs = useRef({});
   const uploadXhrRef = useRef(null);
+  const [previewWarning, setPreviewWarning] = useState(null);
 
   // Validation rules
   const MAX_FILE_BYTES = 3 * 1024 * 1024; // 3 MB
@@ -68,6 +71,12 @@ export default function JobSection() {
       return next;
     });
     setResumeFile(file);
+    // non-blocking preview warning for large (but acceptable) files (>800 KB)
+    if (file && file.size > 800 * 1024 && file.size <= MAX_FILE_BYTES) {
+      setPreviewWarning('Large file: upload may take longer. Consider optimizing your resume PDF.');
+    } else {
+      setPreviewWarning(null);
+    }
   }
 
   // Upload using XMLHttpRequest to provide progress feedback
@@ -298,21 +307,10 @@ export default function JobSection() {
                 <button type="button" onClick={cancelUpload} className="btn btn-ghost btn-sm">Cancel upload</button>
               </div>
             )}
+            {previewWarning && <Toast type="info">{previewWarning}</Toast>}
           </label>
-
-          {error && (
-            <div className="bg-error/10 border border-error rounded-lg p-3 mb-2 flex items-center gap-3">
-              <p className="text-error">{error}</p>
-            </div>
-          )}
-
-          {message && (
-            <div aria-live="polite" className="transform transition-all duration-300">
-              <div className="bg-success/10 border border-success rounded-lg p-3 mb-2 flex items-center gap-3" style={{ animation: 'job-success 400ms ease-out' }}>
-                <p className="text-success">{message}</p>
-              </div>
-            </div>
-          )}
+          {error && <Toast type="error">{error}</Toast>}
+          {message && <Toast type="success">{message}</Toast>}
 
           {fields && Array.isArray(fields) && (
             <div className="mt-4 bg-surface p-3 rounded">
