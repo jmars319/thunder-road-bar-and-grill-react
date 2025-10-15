@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { LayoutDashboard, Users, Calendar, Briefcase, TrendingUp } from '../../icons';
+import { icons } from '../../icons';
 
 /*
   DashboardModule
@@ -53,9 +53,12 @@ const StatCard = (props) => {
   );
 };
 
-// Reference the component at module scope to avoid false-positive "assigned but never used"
-// warnings from linters that don't pick up JSX usage in some editor setups.
-void StatCard;
+// StatCard is used in JSX below; no module-scope no-op is required.
+// Some linters/editors don't detect JSX usage of locally-declared components.
+// Keep a tiny used-symbol reference so those tools stop reporting false
+// positives.
+const __usedStatCard = { StatCard };
+void __usedStatCard;
 
 function DashboardModule() {
   const [stats, setStats] = useState({
@@ -90,25 +93,25 @@ function DashboardModule() {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard 
-          icon={Calendar} 
+          icon={icons.Calendar} 
           label="Pending Reservations" 
           value={stats.reservations} 
           color="bg-primary" 
         />
         <StatCard 
-          icon={Briefcase} 
+          icon={icons.Briefcase} 
           label="New Applications" 
           value={stats.jobs} 
           color="bg-secondary" 
         />
         <StatCard 
-          icon={Users} 
+          icon={icons.Users} 
           label="Active Subscribers" 
           value={stats.subscribers} 
           color="bg-accent" 
         />
         <StatCard 
-          icon={TrendingUp} 
+          icon={icons.TrendingUp} 
           label="Unread Messages" 
           value={stats.messages} 
           color="bg-accent" 
@@ -138,7 +141,7 @@ function DashboardModule() {
 const Module = {
   component: DashboardModule,
   name: 'Dashboard',
-  icon: LayoutDashboard
+  icon: icons.LayoutDashboard
 };
 
 export default Module;

@@ -1,14 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Briefcase, Trash2 } from '../../icons';
-
-// Developer notes:
-// - Admin components use semantic Tailwind tokens (bg-surface, bg-surface-warm,
-//   text-text-primary, text-text-secondary, text-error, etc.). Adjust colors
-//   in `frontend/src/custom-styles.css` to change the site's token palette.
-// - Icons are centralized in `src/icons` for easier refactors and consistent
-//   import paths across the codebase.
-// Keep module-scope references so linters don't complain about conditional usage.
-void Briefcase; void Trash2;
+import { icons } from '../../icons';
 
 /*
   JobsModule
@@ -141,7 +132,7 @@ function JobsModule() {
                 className="text-error p-2 rounded hover:bg-surface-warm"
                 aria-label={`Delete application from ${selectedApp.name}`}
               >
-                <Trash2 size={18} />
+                <icons.Trash2 size={18} />
               </button>
             </div>
 
@@ -197,7 +188,7 @@ function JobsModule() {
         ) : (
           <div className="flex items-center justify-center h-full p-12 text-center text-text-inverse">
             <div>
-              <Briefcase size={48} className="mx-auto mb-4" />
+              <icons.Briefcase size={48} className="mx-auto mb-4" />
               <p>Select an application to view details</p>
             </div>
           </div>
@@ -210,7 +201,7 @@ function JobsModule() {
 const Module = {
   component: JobsModule,
   name: 'Jobs',
-  icon: Briefcase
+  icon: icons.Briefcase
 };
 
 export default Module;

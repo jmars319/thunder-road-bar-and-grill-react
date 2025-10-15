@@ -65,5 +65,8 @@ export default function PublicSite({ onGoToAdmin }) {
   );
 }
 
-// Silence ESLint for imports used in JSX (some lint setups misreport these)
-void PublicNavbar; void HeroSection; void MenuSection; void ReservationSection; void AboutSection; void PublicFooter;
+// Group component references so linters that don't follow JSX usage will still
+// see these symbols as used. This is a minimal, file-local pattern and can be
+// removed when editor tooling is consistent across developer setups.
+const __usedComponents = { PublicNavbar, HeroSection, MenuSection, ReservationSection, AboutSection, PublicFooter };
+void __usedComponents;

@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Inbox, Mail, MailOpen, Trash2 } from '../../icons';
-
-// Developer: icons are re-exported from `src/icons`. Keep module-scope references
-// below to avoid false-positive `no-unused-vars` warnings in some lint setups.
-void Inbox; void Mail; void MailOpen; void Trash2;
+import { icons } from '../../icons';
 
 /*
   InboxModule
@@ -109,7 +105,7 @@ function InboxModule() {
               }`}
             >
               <div className="flex items-start gap-3">
-                {msg.is_read ? <MailOpen size={18} /> : <Mail size={18} className="text-primary" />}
+                {msg.is_read ? <icons.MailOpen size={18} /> : <icons.Mail size={18} className="text-primary" />}
                 <div className="flex-1 min-w-0">
                   <p className={`font-medium truncate ${!msg.is_read ? 'text-text-primary' : ''}`}>
                     {msg.name}
@@ -147,7 +143,7 @@ function InboxModule() {
                 aria-label="Delete message"
                 className="text-error hover:text-error-muted p-2 rounded hover:bg-error/10"
               >
-                <Trash2 size={18} />
+                <icons.Trash2 size={18} />
               </button>
             </div>
               <div className="border-t pt-4">
@@ -157,7 +153,7 @@ function InboxModule() {
         ) : (
           <div className="flex items-center justify-center h-full p-12 text-center text-text-secondary">
             <div>
-              <Inbox size={48} className="mx-auto mb-4" />
+              <icons.Inbox size={48} className="mx-auto mb-4" />
               <p>Select a message to view</p>
             </div>
           </div>
@@ -170,7 +166,7 @@ function InboxModule() {
 const Module = {
   component: InboxModule,
   name: 'Inbox',
-  icon: Inbox
+  icon: icons.Inbox
 };
 
 export default Module;

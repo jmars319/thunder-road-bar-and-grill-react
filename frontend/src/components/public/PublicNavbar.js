@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
- 
-import { Menu, X } from '../../icons';
+
+import { icons } from '../../icons';
 import ThemeToggle from '../ThemeToggle';
 
 /*
@@ -135,7 +135,7 @@ export default function PublicNavbar({ onGoToAdmin }) {
             aria-controls="mobile-menu"
             aria-label="Toggle navigation menu"
           >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {mobileMenuOpen ? <icons.X size={24} /> : <icons.Menu size={24} />}
           </button>
         </div>
 
@@ -172,5 +172,8 @@ export default function PublicNavbar({ onGoToAdmin }) {
   );
 }
 
-// reference ThemeToggle at module scope so linters see it as a used symbol
-void ThemeToggle;
+// Some editor/lint setups don't detect JSX uses of member-expressions like
+// `<icons.X />`. Provide a small used-symbol object so those tools don't
+// incorrectly report `icons` or `ThemeToggle` as unused.
+const __usedNavbar = { icons, ThemeToggle };
+void __usedNavbar;

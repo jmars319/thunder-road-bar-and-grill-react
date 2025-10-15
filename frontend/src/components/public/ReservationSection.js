@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CheckCircle, AlertCircle } from '../../icons';
+import { icons } from '../../icons';
 
 /*
   ReservationSection
@@ -79,14 +79,14 @@ export default function ReservationSection() {
 
         {submitted && (
           <div className="bg-success/10 border border-success rounded-lg p-4 mb-6 flex items-center gap-3">
-            <CheckCircle size={20} className="text-success" />
+            <icons.CheckCircle size={20} className="text-success" />
             <p className="text-success">Reservation submitted! We'll contact you to confirm.</p>
           </div>
         )}
 
         {error && (
           <div className="bg-error/10 border border-error rounded-lg p-4 mb-6 flex items-center gap-3">
-            <AlertCircle size={20} className="text-error" />
+            <icons.AlertCircle size={20} className="text-error" />
             <p className="text-error">{error}</p>
           </div>
         )}
@@ -185,12 +185,14 @@ export default function ReservationSection() {
             Submit Reservation
           </button>
         </div>
-  {/* ensure lucide-react icons are considered used by some linters */}
-  {/* (no-op handled at module scope) */}
+  {/* icons are used via the `icons` map above; no module-scope no-op required */}
       </div>
     </div>
   );
 }
 
-// ensure lucide-react icons are considered used by some linters
-void CheckCircle; void AlertCircle;
+// Some editor/linter setups may not detect JSX usage of member expressions
+// like <icons.CheckCircle />. Keep a small used-symbol reference to satisfy
+// those tools without changing runtime behavior.
+const __usedResIcons = { icons };
+void __usedResIcons;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { UtensilsCrossed, Plus, Edit, Trash2, ChevronDown, ChevronUp } from '../../icons';
+import { icons } from '../../icons';
 
 /* DEV:
    - Admin menu editor uses semantic tokens (bg-primary, bg-surface-warm,
@@ -104,7 +104,7 @@ function MenuModule() {
           className="bg-primary text-text-inverse px-4 py-2 rounded-lg hover:bg-primary-dark flex items-center gap-2"
           aria-label="Add menu category"
         >
-          <Plus size={18} />
+          <icons.Plus size={18} />
           Add Category
         </button>
       </div>
@@ -226,7 +226,7 @@ function MenuModule() {
                 aria-controls={`category-items-${category.id}`}
               >
                 <div>
-                  {expandedCategory === category.id ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                  {expandedCategory === category.id ? <icons.ChevronUp size={20} /> : <icons.ChevronDown size={20} />}
                 </div>
                 <div>
                   <h3 className="font-bold text-lg text-text-primary">{category.name}</h3>
@@ -240,7 +240,7 @@ function MenuModule() {
                   className="text-primary hover:bg-surface-warm p-2 rounded"
                   aria-label={`Add item to ${category.name}`}
                 >
-                  <Plus size={18} />
+                  <icons.Plus size={18} />
                 </button>
                 <button
                   type="button"
@@ -248,7 +248,7 @@ function MenuModule() {
                   className="text-text-inverse hover:bg-surface-warm p-2 rounded"
                   aria-label={`Edit category ${category.name}`}
                 >
-                  <Edit size={18} />
+                  <icons.Edit size={18} />
                 </button>
                 <button
                   type="button"
@@ -256,7 +256,7 @@ function MenuModule() {
                   className="text-error hover:bg-surface-warm p-2 rounded"
                   aria-label={`Delete category ${category.name}`}
                 >
-                  <Trash2 size={18} />
+                  <icons.Trash2 size={18} />
                 </button>
               </div>
             </div>
@@ -279,7 +279,7 @@ function MenuModule() {
                             className="text-text-secondary hover:bg-surface p-2 rounded"
                             aria-label={`Edit item ${item.name}`}
                           >
-                            <Edit size={16} />
+                            <icons.Edit size={16} />
                           </button>
                           <button
                             type="button"
@@ -287,7 +287,7 @@ function MenuModule() {
                             className="text-error hover:bg-surface p-2 rounded"
                             aria-label={`Delete item ${item.name}`}
                           >
-                            <Trash2 size={16} />
+                            <icons.Trash2 size={16} />
                           </button>
                         </div>
                       </div>
@@ -308,10 +308,9 @@ function MenuModule() {
 const Module = {
   component: MenuModule,
   name: 'Menu',
-  icon: UtensilsCrossed
+  icon: icons.UtensilsCrossed
 };
 
 export default Module;
 
-// ensure imported icons are considered used by linters in case of indirect usage
-void Plus; void Edit; void Trash2; void ChevronDown; void ChevronUp;
+// Icons are referenced through the centralized `icons` map so linters pick up usage.

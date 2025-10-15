@@ -25,8 +25,10 @@ import ThemeProvider from './contexts/ThemeContext';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-// help some ESLint configs that falsely report JSX-used imports as unused
-void React; void App; void ThemeProvider; void ToastProvider;
+// Group references to avoid false-positive `no-unused-vars` in some lint setups
+// that don't follow JSX usages in automatic runtime environments.
+const __usedRoot = { React, App, ThemeProvider, ToastProvider };
+void __usedRoot;
 root.render(
   <React.StrictMode>
     <ThemeProvider>

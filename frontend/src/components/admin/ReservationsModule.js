@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, CheckCircle, XCircle, Clock } from '../../icons';
+import { icons } from '../../icons';
 
 /*
   ReservationsModule
@@ -21,11 +21,7 @@ import { Calendar, CheckCircle, XCircle, Clock } from '../../icons';
   // - Icons are re-exported from `src/icons` to keep import surface consistent.
   // - If icons appear unused during linting in some build setups, keep a module-scope no-op: `void Calendar;` (below).
 
-  // Keep these references at module scope to avoid false-positive `no-unused-vars` from some linters.
-  void Calendar;
-  void CheckCircle;
-  void XCircle;
-  void Clock;
+  // Icons are referenced via the centralized `icons` map so linters pick up usage.
 
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
@@ -131,7 +127,7 @@ function ReservationsModule() {
                           className="text-success hover:bg-surface-warm p-2 rounded"
                           title="Confirm"
                         >
-                          <CheckCircle size={18} />
+                          <icons.CheckCircle size={18} />
                         </button>
                       )}
                       {res.status !== 'cancelled' && (
@@ -140,7 +136,7 @@ function ReservationsModule() {
                           className="text-error hover:bg-surface-warm p-2 rounded"
                           title="Cancel"
                         >
-                          <XCircle size={18} />
+                          <icons.XCircle size={18} />
                         </button>
                       )}
                       {res.status === 'confirmed' && (
@@ -149,7 +145,7 @@ function ReservationsModule() {
                           className="text-primary hover:bg-surface-warm p-2 rounded"
                           title="Mark Complete"
                         >
-                          <Clock size={18} />
+                          <icons.Clock size={18} />
                         </button>
                       )}
                     </div>
@@ -167,7 +163,7 @@ function ReservationsModule() {
 const Module = {
   component: ReservationsModule,
   name: 'Reservations',
-  icon: Calendar
+  icon: icons.Calendar
 };
 
 export default Module;

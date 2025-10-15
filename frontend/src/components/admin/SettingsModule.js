@@ -1,12 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings, Save } from '../../icons';
-
-// Developer notes:
-// - Settings admin UI uses semantic tokens (bg-surface, bg-success, text-text-inverse,
-//   text-text-primary). Edit `frontend/src/custom-styles.css` to adjust the token palette.
-// - Icons are centralized under `src/icons`. Keep a module-scope reference to avoid
-//   false-positive lint warnings in some environments.
-void Settings; void Save;
+import { icons } from '../../icons';
 
 /*
   SettingsModule
@@ -122,7 +115,7 @@ function SettingsModule() {
     <div className="space-y-6">
       {saved && (
     <div className="bg-success text-text-inverse px-4 py-3 rounded-lg flex items-center gap-2">
-          <Save size={18} />
+          <icons.Save size={18} />
           Settings saved successfully!
         </div>
       )}
@@ -180,7 +173,7 @@ function SettingsModule() {
             onClick={saveSiteSettings}
             className="bg-primary text-text-inverse px-4 py-2 rounded-lg hover:bg-primary-dark flex items-center gap-2"
           >
-            <Save size={18} />
+            <icons.Save size={18} />
             Save Site Settings
           </button>
         </div>
@@ -222,7 +215,7 @@ function SettingsModule() {
             onClick={saveAboutContent}
             className="bg-primary text-text-inverse px-4 py-2 rounded-lg hover:bg-primary-dark flex items-center gap-2"
           >
-            <Save size={18} />
+            <icons.Save size={18} />
             Save About Content
           </button>
         </div>
@@ -290,7 +283,7 @@ function SettingsModule() {
 const Module = {
   component: SettingsModule,
   name: 'Settings',
-  icon: Settings
+  icon: icons.Settings
 };
 
 export default Module;

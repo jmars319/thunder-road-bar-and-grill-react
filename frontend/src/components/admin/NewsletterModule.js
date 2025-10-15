@@ -1,12 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Mail, Trash2, Download } from '../../icons';
-
-// Developer notes:
-// - Newsletter admin UI uses tokenized classes for surfaces and text. Update
-//   `frontend/src/custom-styles.css` to change the site's color tokens.
-// - Icons are re-exported from `src/icons`; keep module-scope refs to avoid
-//   false-positive `no-unused-vars` in some lint setups.
-void Mail; void Trash2; void Download;
+import { icons } from '../../icons';
 
 /*
   NewsletterModule
@@ -100,7 +93,7 @@ function NewsletterModule() {
             onClick={exportSubscribers}
             className="bg-primary text-text-inverse px-4 py-2 rounded-lg hover:bg-primary-dark flex items-center gap-2"
           >
-            <Download size={18} />
+            <icons.Download size={18} />
             Export CSV
           </button>
         </div>
@@ -141,7 +134,7 @@ function NewsletterModule() {
                       className="text-error hover:bg-surface-warm p-2 rounded"
                       title="Remove subscriber"
                     >
-                      <Trash2 size={16} />
+                      <icons.Trash2 size={16} />
                     </button>
                   </td>
                 </tr>
@@ -163,7 +156,7 @@ function NewsletterModule() {
 const Module = {
   component: NewsletterModule,
   name: 'Newsletter',
-  icon: Mail
+  icon: icons.Mail
 };
 
 export default Module;

@@ -1,12 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Image, Upload, Trash2, Copy, CheckCircle } from '../../icons';
-
-// Developer notes:
-// - Media manager UI uses semantic tokens (bg-surface, bg-surface-warm, text-primary,
-//   text-secondary). Update `frontend/src/custom-styles.css` to modify the token palette.
-// - Icons are centralized in `src/icons` to simplify future icon library swaps.
-// Keep module-scope references to avoid false-positive `no-unused-vars` warnings.
-void Image; void Upload; void Trash2; void Copy; void CheckCircle;
+import { icons } from '../../icons';
 
 /*
   MediaModule
@@ -114,8 +107,8 @@ function MediaModule() {
     <div className="space-y-6">
       <div className="bg-surface rounded-lg shadow p-6">
         <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-divider rounded-lg cursor-pointer hover:bg-surface-warm" aria-label="Upload media">
-          <div className="flex flex-col items-center">
-            <Upload size={32} className="text-primary mb-2" />
+            <div className="flex flex-col items-center">
+            <icons.Upload size={32} className="text-primary mb-2" />
             <p className="text-sm text-text-secondary">
               {uploading ? 'Uploading...' : 'Click to upload media'}
             </p>
@@ -140,8 +133,8 @@ function MediaModule() {
                   alt={item.title}
                   className="w-full h-full object-cover"
                 />
-              ) : (
-                <Image size={48} className="text-primary" />
+                ) : (
+                <icons.Image size={48} className="text-primary" />
               )}
             </div>
             <div className="p-3">
@@ -156,12 +149,12 @@ function MediaModule() {
                 >
                   {copiedId === item.file_url ? (
                     <>
-                      <CheckCircle size={12} />
+                      <icons.CheckCircle size={12} />
                       Copied
                     </>
                   ) : (
                     <>
-                      <Copy size={12} />
+                      <icons.Copy size={12} />
                       Copy URL
                     </>
                   )}
@@ -172,7 +165,7 @@ function MediaModule() {
                   className="bg-surface-warm text-error py-1 px-2 rounded text-xs hover:bg-surface transition"
                   aria-label={`Delete media ${item.title}`}
                 >
-                  <Trash2 size={12} />
+                  <icons.Trash2 size={12} />
                 </button>
               </div>
             </div>
@@ -186,7 +179,7 @@ function MediaModule() {
 const Module = {
   component: MediaModule,
   name: 'Media',
-  icon: Image
+  icon: icons.Image
 };
 
 export default Module;

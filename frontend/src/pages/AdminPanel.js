@@ -17,7 +17,7 @@
 import React from 'react';
 import { useState } from 'react';
 // icons: used dynamically in menu registry/JSX — kept in the module registry
-import { Menu, X, LogOut, Home } from '../icons';
+import { icons } from '../icons';
 import ThemeToggle from '../components/ThemeToggle';
 
 // Import all admin modules
@@ -33,14 +33,14 @@ import NewsletterModule from '../components/admin/NewsletterModule';
 // Module Registry
 // Each entry may be either the component itself or an object { component, name, icon }
 const AdminModules = {
-  dashboard: { component: DashboardModule, name: 'Dashboard', icon: Home },
-  inbox: { component: InboxModule, name: 'Messages', icon: Home },
-  menu: { component: MenuModule, name: 'Menu', icon: Home },
-  reservations: { component: ReservationsModule, name: 'Reservations', icon: Home },
-  jobs: { component: JobsModule, name: 'Jobs', icon: Home },
-  media: { component: MediaModule, name: 'Media', icon: Home },
-  settings: { component: SettingsModule, name: 'Settings', icon: Home },
-  newsletters: { component: NewsletterModule, name: 'Newsletter', icon: Home }
+  dashboard: { component: DashboardModule, name: 'Dashboard', icon: icons.LayoutDashboard },
+  inbox: { component: InboxModule, name: 'Messages', icon: icons.Inbox },
+  menu: { component: MenuModule, name: 'Menu', icon: icons.UtensilsCrossed },
+  reservations: { component: ReservationsModule, name: 'Reservations', icon: icons.Calendar },
+  jobs: { component: JobsModule, name: 'Jobs', icon: icons.Briefcase },
+  media: { component: MediaModule, name: 'Media', icon: icons.Image },
+  settings: { component: SettingsModule, name: 'Settings', icon: icons.Settings },
+  newsletters: { component: NewsletterModule, name: 'Newsletter', icon: icons.Mail }
 };
 
 export default function AdminPanel({ user = { name: 'Admin' }, onLogout = () => {}, onBackToSite = () => {} }) {
@@ -72,14 +72,14 @@ export default function AdminPanel({ user = { name: 'Admin' }, onLogout = () => 
             onClick={() => setSidebarOpen(!sidebarOpen)} 
             className="hover:bg-surface-dark/90 p-2 rounded transition"
           >
-            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+            {sidebarOpen ? <icons.X size={20} /> : <icons.Menu size={20} />}
           </button>
         </div>
 
         {/* Module Navigation */}
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           {Object.entries(AdminModules).map(([key, moduleEntry]) => {
-            const entry = moduleEntry.component ? moduleEntry : { component: moduleEntry, name: moduleEntry.name || key, icon: moduleEntry.icon || Home };
+            const entry = moduleEntry.component ? moduleEntry : { component: moduleEntry, name: moduleEntry.name || key, icon: moduleEntry.icon || icons.Home };
             return (
               <button
                 key={key}
@@ -93,7 +93,7 @@ export default function AdminPanel({ user = { name: 'Admin' }, onLogout = () => 
                     : 'text-text-inverse hover:bg-surface-dark/90 hover:text-text-inverse'
                 }`}
               >
-                {React.createElement(entry.icon || Home, { size: 20 })}
+                {React.createElement(entry.icon || icons.Home, { size: 20 })}
                 {sidebarOpen && <span className="text-sm font-medium text-text-inverse">{entry.name}</span>}
               </button>
             );
@@ -106,14 +106,14 @@ export default function AdminPanel({ user = { name: 'Admin' }, onLogout = () => 
             onClick={onBackToSite}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-surface-dark/90 transition text-sm text-text-inverse"
           >
-            <Home size={20} />
+            <icons.Home size={20} />
             {sidebarOpen && <span>Back to Site</span>}
           </button>
           <button
             onClick={onLogout}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-surface-dark/90 transition text-sm text-text-inverse"
           >
-            <LogOut size={20} />
+            <icons.LogOut size={20} />
             {sidebarOpen && <span>Logout</span>}
           </button>
         </div>
@@ -152,6 +152,11 @@ export default function AdminPanel({ user = { name: 'Admin' }, onLogout = () => 
   );
 }
 
-// ensure imported symbols are considered used by linters where JSX usages
-// may appear indirect (e.g., dynamic React.createElement). These are no-ops.
-void Menu; void X; void LogOut; void Home; void ThemeToggle;
+// Icons are referenced via the `icons` map above so linters and tools pick up
+// the usage. No module-scope no-ops are necessary here.
+
+// Some editor/lint setups may still report `ThemeToggle` or `icons` as unused
+// when they are only used in JSX or via member-expressions like `icons.Home`.
+// Keep a tiny used-symbol object to silence those false-positives.
+const __usedAdmin = { icons, ThemeToggle };
+void __usedAdmin;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ChevronDown, ChevronUp } from '../../icons';
+import { icons } from '../../icons';
 
 /*
   MenuSection
@@ -56,9 +56,9 @@ export default function MenuSection() {
                 </div>
                 <div className="flex items-center gap-4">
                   {expandedCategory === category.id ? (
-                    <ChevronUp className="text-primary" size={24} />
+                    <icons.ChevronUp className="text-primary" size={24} />
                   ) : (
-                    <ChevronDown className="text-text-muted" size={24} />
+                    <icons.ChevronDown className="text-text-muted" size={24} />
                   )}
                 </div>
               </button>
@@ -107,5 +107,8 @@ export default function MenuSection() {
   );
 }
 
-// ensure lucide-react icons are considered used by some linters
-void ChevronDown; void ChevronUp;
+// Some editor/lint setups don't detect usage of member-expression JSX like
+// <icons.ChevronUp />. Keep a small module-scope reference to satisfy those
+// tools. This is intentional and safe.
+const __usedMenu = { icons };
+void __usedMenu;
