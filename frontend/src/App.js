@@ -22,9 +22,10 @@ import AdminPanel from './pages/AdminPanel';
  
 import LoginPage from './pages/LoginPage';
 
-// Keep module-scope references to avoid false-positive `no-unused-vars` in
-// some linting setups that don't detect JSX usage of component variables.
-void PublicSite; void AdminPanel; void LoginPage;
+// Some editor/lint setups don't follow JSX usages in the automatic runtime.
+// Keep a tiny used-symbol object so those tools don't report false positives.
+const __usedApp = { PublicSite, AdminPanel, LoginPage };
+void __usedApp;
 
 export default function App() {
   const [showAdmin, setShowAdmin] = useState(false);

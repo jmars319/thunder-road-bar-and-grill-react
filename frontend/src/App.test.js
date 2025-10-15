@@ -9,8 +9,9 @@ import { render, screen } from '@testing-library/react';
  
 import App from './App';
 
-// Keep module-scope reference to avoid false-positive `no-unused-vars` from some linters
-void App;
+// Some linters may not detect JSX usage; keep a tiny used-symbol reference.
+const __usedTest = { App };
+void __usedTest;
 
 test('renders main heading', () => {
   render(<App />);
