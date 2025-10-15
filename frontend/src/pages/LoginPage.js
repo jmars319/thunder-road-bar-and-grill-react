@@ -51,8 +51,8 @@ export default function LoginPage({ onLogin, onBack }) {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="inline-block w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-lg mb-4"></div>
-            <h1 className="text-2xl font-bold text-text-inverse">Thunder Road Admin</h1>
-            <p className="text-text-inverse text-sm mt-2">Sign in to manage your site</p>
+            <h1 className="text-2xl font-bold text-text-primary">Thunder Road Admin</h1>
+            <p className="text-text-secondary text-sm mt-2">Sign in to manage your site</p>
           </div>
 
           {/* Error Message */}
@@ -65,7 +65,7 @@ export default function LoginPage({ onLogin, onBack }) {
           {/* Login Form */}
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-text-inverse mb-1">
+              <label className="block text-sm font-medium text-text-primary mb-1">
                 Username
               </label>
               <input
@@ -79,7 +79,7 @@ export default function LoginPage({ onLogin, onBack }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-text-inverse mb-1">
+              <label className="block text-sm font-medium text-text-primary mb-1">
                 Password
               </label>
               <input
@@ -102,7 +102,7 @@ export default function LoginPage({ onLogin, onBack }) {
 
             <button
               onClick={onBack}
-              className="w-full bg-surface-warm text-text-inverse py-2 rounded-lg font-semibold hover:bg-surface transition"
+              className="w-full bg-surface-warm text-text-primary py-2 rounded-lg font-semibold hover:bg-surface transition"
             >
               Back to Website
             </button>
@@ -110,7 +110,7 @@ export default function LoginPage({ onLogin, onBack }) {
 
           {/* Demo Credentials */}
           <div className="mt-6 p-4 bg-surface-warm rounded-lg">
-            <p className="text-center text-sm text-text-inverse">
+            <p className="text-center text-sm text-text-primary">
               <strong>Demo Credentials:</strong><br />
               Username: admin<br />
               Password: admin123

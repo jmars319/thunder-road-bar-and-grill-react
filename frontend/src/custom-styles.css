@@ -62,10 +62,10 @@
     --secondary-color: #b45309;
     --accent-color: #f59e0b;
 
-    --text-primary: #e6eef8; /* near white */
-    --text-secondary: #cbd5e1;
-    --text-muted: #94a3b8;
-    --text-inverse: #0b1020;
+  --text-primary: #e6eef8; /* near white */
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
 
     --border-color: #1f2a37;
     --divider-color: #14202b;
@@ -88,7 +88,7 @@
   --text-primary: #e6eef8;
   --text-secondary: #cbd5e1;
   --text-muted: #94a3b8;
-  --text-inverse: #0b1020;
+  --text-inverse: #ffffff;
 
   --border-color: #1f2a37;
   --divider-color: #14202b;
@@ -412,12 +412,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Ensure text is readable on the dark surface utility (sidebar, chrome) */
-.bg-surface-dark .text-text-primary,
-.bg-surface-dark .text-text-secondary,
-.bg-surface-dark .text-text-muted,
-.bg-surface-dark .text-text-inverse {
-  color: var(--text-inverse) !important;
-}
+
 
 /* Print Styles */
 @media print {

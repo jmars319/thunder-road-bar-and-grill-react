@@ -51,7 +51,7 @@ function SettingsModule() {
   return (
     <div className="space-y-6">
       {saved && (
-        <div className="bg-success text-text-inverse px-4 py-3 rounded-lg flex items-center gap-2">
+    <div className="bg-success text-text-inverse px-4 py-3 rounded-lg flex items-center gap-2">
           <Save size={18} />
           Settings saved successfully!
         </div>
@@ -59,10 +59,10 @@ function SettingsModule() {
 
       {/* Site Settings */}
       <div className="bg-surface rounded-lg shadow p-6">
-  <h3 className="text-xl font-bold mb-4 text-text-inverse">Site Settings</h3>
+  <h3 className="text-xl font-bold mb-4 text-text-primary">Site Settings</h3>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-text-inverse mb-1">Business Name</label>
+            <label className="block text-sm font-medium text-text-primary mb-1">Business Name</label>
             <input
               type="text"
               value={siteSettings.business_name || ''}
@@ -71,7 +71,7 @@ function SettingsModule() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-inverse mb-1">Tagline</label>
+            <label className="block text-sm font-medium text-text-primary mb-1">Tagline</label>
             <input
               type="text"
               value={siteSettings.tagline || ''}
@@ -80,7 +80,7 @@ function SettingsModule() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-inverse mb-1">Phone</label>
+            <label className="block text-sm font-medium text-text-primary mb-1">Phone</label>
             <input
               type="text"
               value={siteSettings.phone || ''}
@@ -89,7 +89,7 @@ function SettingsModule() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-inverse mb-1">Email</label>
+            <label className="block text-sm font-medium text-text-primary mb-1">Email</label>
             <input
               type="email"
               value={siteSettings.email || ''}
@@ -98,7 +98,7 @@ function SettingsModule() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-inverse mb-1">Address</label>
+            <label className="block text-sm font-medium text-text-primary mb-1">Address</label>
             <textarea
               value={siteSettings.address || ''}
               onChange={(e) => setSiteSettings({...siteSettings, address: e.target.value})}
@@ -118,10 +118,10 @@ function SettingsModule() {
 
       {/* About Content */}
       <div className="bg-surface rounded-lg shadow p-6">
-  <h3 className="text-xl font-bold mb-4 text-text-inverse">About Section</h3>
+  <h3 className="text-xl font-bold mb-4 text-text-primary">About Section</h3>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-text-inverse mb-1">Header</label>
+            <label className="block text-sm font-medium text-text-primary mb-1">Header</label>
             <input
               type="text"
               value={aboutContent.header || ''}
@@ -130,7 +130,7 @@ function SettingsModule() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-inverse mb-1">Paragraph</label>
+            <label className="block text-sm font-medium text-text-primary mb-1">Paragraph</label>
             <textarea
               value={aboutContent.paragraph || ''}
               onChange={(e) => setAboutContent({...aboutContent, paragraph: e.target.value})}
@@ -139,7 +139,7 @@ function SettingsModule() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-inverse mb-1">Map Embed URL</label>
+            <label className="block text-sm font-medium text-text-primary mb-1">Map Embed URL</label>
             <input
               type="text"
               value={aboutContent.map_embed_url || ''}
@@ -160,11 +160,11 @@ function SettingsModule() {
 
       {/* Business Hours */}
       <div className="bg-surface rounded-lg shadow p-6">
-  <h3 className="text-xl font-bold mb-4 text-text-inverse">Business Hours</h3>
+  <h3 className="text-xl font-bold mb-4 text-text-primary">Business Hours</h3>
         <div className="space-y-3">
           {businessHours.map(day => (
             <div key={day.id} className="flex items-center gap-4">
-              <div className="w-32 font-medium text-text-inverse">{day.day_of_week}</div>
+              <div className="w-32 font-medium text-text-primary">{day.day_of_week}</div>
               <input
                 type="time"
                 value={day.opening_time || ''}
@@ -177,7 +177,7 @@ function SettingsModule() {
                 disabled={day.is_closed}
                 className="form-input"
               />
-              <span className="text-text-inverse">to</span>
+              <span className="text-text-secondary">to</span>
               <input
                 type="time"
                 value={day.closing_time || ''}
@@ -201,7 +201,7 @@ function SettingsModule() {
                     setBusinessHours(updated);
                   }}
                 />
-                <span className="text-sm text-text-inverse">Closed</span>
+                <span className="text-sm text-text-secondary">Closed</span>
               </label>
               <button
                 onClick={() => saveBusinessHours(day.id, day)}

@@ -31,8 +31,8 @@ function DashboardModule() {
     <div className="bg-surface rounded-lg shadow p-6 card-hover">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-text-inverse text-sm">{label}</p>
-          <p className="text-3xl font-bold mt-2 text-text-inverse">{value}</p>
+          <p className="text-text-primary text-sm">{label}</p>
+          <p className="text-3xl font-bold mt-2 text-text-primary">{value}</p>
         </div>
         <div className={`w-12 h-12 rounded-lg ${color} flex items-center justify-center`}>
           <Icon size={24} className="text-text-inverse" />
@@ -71,11 +71,11 @@ function DashboardModule() {
       </div>
 
       <div className="bg-surface rounded-lg shadow p-6">
-        <h3 className="text-xl font-bold mb-4 font-heading text-text-inverse">Welcome to Thunder Road Admin</h3>
-        <p className="text-text-inverse">
+  <h3 className="text-xl font-bold mb-4 font-heading text-text-primary">Welcome to Thunder Road Admin</h3>
+  <p className="text-text-primary">
           Use the sidebar to navigate between different sections. Here's what you can manage:
         </p>
-        <ul className="mt-4 space-y-2 text-text-inverse">
+  <ul className="mt-4 space-y-2 text-text-primary">
           <li>• <strong>Dashboard:</strong> Overview of your business metrics</li>
           <li>• <strong>Inbox:</strong> View all notifications and messages</li>
           <li>• <strong>Menu:</strong> Manage menu categories and items</li>
