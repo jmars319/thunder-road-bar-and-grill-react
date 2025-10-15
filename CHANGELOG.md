@@ -1,42 +1,41 @@
 # Changelog
 
-All notable changes to this repository are documented in this file.
+All notable changes to this project are documented below. This file follows a
+simple human-readable format. Keep entries concise and place new changes under
+`Unreleased` until you create a release.
 
-## [Unreleased] - 2025-10-14
+## Unreleased - 2025-10-14
 
 ### Added
-- Runtime theming support (light/dark/system) using CSS variables and a `ThemeContext`.
-- `ThemeToggle` component with Sun/Moon/Monitor icons and reduced-motion-safe animation.
-- Tailwind color mapping to CSS variables so utilities respond to runtime theme changes.
-- `CHANGELOG.md` (this file).
+- `DEVELOPERS.md` — developer onboarding and reference for the frontend. Covers:
+  - Theme tokens and runtime theming (ThemeContext)
+  - Toast API (ToastContext)
+  - Admin module registry/contract
+  - Common API endpoints and testing instructions
+  - Tailwind tokenization checklist
+
+- `RELEASE_NOTES.md` — release note for this documentation-focused update.
+- `CHANGELOG-RELEASE-ENTRY.md` — per-release entry file (for machine-assisted workflows).
 
 ### Changed
-- Replaced many literal Tailwind color utilities (e.g., `bg-white`, `text-gray-*`, direct hex usage) with design tokens across the frontend to centralize brand colors.
-- Tokenized toast variants and improved global `ToastContext` appearance.
-- Admin components: audited and updated text color tokens for both dark and light modes; ensured headings, labels, and table text use appropriate `text-text-primary`/`text-text-secondary` or `text-text-inverse` depending on context.
-- Improved `.form-input` styles for better contrast and placeholder readability in login and admin forms.
-- Mapped Tailwind theme values to CSS variables in `tailwind.config.js` so runtime changes apply to utility classes.
+- Repository-wide inline annotations added to many frontend components and
+  admin modules to clarify data shapes, API expectations, and accessibility
+  requirements.
+- `frontend/src/pages/LoginPage.js`: accessibility and UX improvements, including
+  labeled inputs, `form` + `onSubmit`, aria-live error region, and defensive
+  network handling.
+- `frontend/src/pages/PublicSite.js`: added composition notes and accessibility
+  suggestions (e.g. child components providing landmarks).
 
 ### Fixed
-- Fixed low-contrast issues in admin panels for dark mode by correcting dark-mode variables (notably `--text-inverse`) and applying explicit token classes where needed.
-- Fixed light-mode contrast issues by updating text tokens on light surfaces (`bg-surface`, `bg-surface-warm`).
-- Removed temporary CSS override that forced `.bg-surface-dark .text-*` to `--text-inverse` when explicit fixes were in place.
+- `frontend/src/components/admin/NewsletterModule.js`: CSV export now wrapped
+  in try/catch and delete failures log to console for easier debugging.
 
 ### Maintenance
-- Created a non-destructive `main-clean` branch containing a single cleaned commit for review before replacing `main`. The cleaned branch is available at `origin/main-clean`.
-- Pushed the finalized changes to `main` and removed the temporary feature branch `adopt-layout/from-php` from the remote.
-
-### Notes / How to review
-- The `main-clean` branch is pushed and a PR can be created from it (or merged directly). Review the PR to confirm the squashed history and file changes.
-- To test locally:
-  - Install dependencies and build the frontend: `cd frontend && npm install && npm run build`.
-  - Start the dev server for visual QA: `cd frontend && npm start` and visit the admin pages; use the ThemeToggle to test Light/Dark/System.
-
-### Next steps (suggested)
-- Visual QA: capture screenshots for main admin pages in both themes and verify toasts, modals, and forms.
-- Optionally replace `main` with the cleaned history (`main-clean`) after review (force-push) or merge the PR using GitHub's squash merge.
-- Add release tag if you're ready to publish.
+- `DEVELOPERS.md` was added to consolidate onboarding information and common
+  development commands.
+- Tests run: `cd frontend && npm test -- --watchAll=false` — PASS (representative test).
 
 ---
 
-For a complete commit history, refer to `git log` or the GitHub commits page.
+For a detailed file-by-file summary, see the commit history or `git log`.
