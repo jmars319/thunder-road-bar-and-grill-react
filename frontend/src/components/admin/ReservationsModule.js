@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-// eslint-disable-next-line no-unused-vars
 import { Calendar, CheckCircle, XCircle, Clock } from '../../icons';
 
 /*
@@ -16,6 +15,18 @@ import { Calendar, CheckCircle, XCircle, Clock } from '../../icons';
   - Deletion is intentionally omitted. Use status updates to manage lifecycle.
   - Consider server-side pagination if the reservations list grows large.
 */
+
+  // Developer notes:
+  // - UI uses semantic Tailwind tokens (bg-surface, bg-warning, text-text-inverse, etc.).
+  // - Icons are re-exported from `src/icons` to keep import surface consistent.
+  // - If icons appear unused during linting in some build setups, keep a module-scope no-op: `void Calendar;` (below).
+
+  // Keep these references at module scope to avoid false-positive `no-unused-vars` from some linters.
+  void Calendar;
+  void CheckCircle;
+  void XCircle;
+  void Clock;
+
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
