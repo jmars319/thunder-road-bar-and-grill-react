@@ -1,0 +1,52 @@
+const express = require('express');
+const router = express.Router();
+
+// JOB POSITIONS
+router.get('/job-positions', (req, res) => {
+  req.db.query('SELECT * FROM job_positions ORDER BY display_order, id', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+router.post('/job-positions', (req, res) => {
+  const { name, description, display_order = 0, is_active = true } = req.body;
+  req.db.query('INSERT INTO job_positions (name, description, display_order, is_active) VALUES (?, ?, ?, ?)', [name, description, display_order, is_active], (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ id: result.insertId, message: 'Position created' });
+  });
+});
+
+router.delete('/job-positions/:id', (req, res) => {
+  const { id } = req.params;
+  req.db.query('DELETE FROM job_positions WHERE id = ?', [id], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ message: 'Position deleted' });
+  });
+});
+
+// APPLICATION FIELDS (basic CRUD - admin only intended)
+router.get('/application-fields', (req, res) => {
+  req.db.query('SELECT * FROM application_fields ORDER BY display_order, id', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+router.post('/application-fields', (req, res) => {
+  const { field_name, field_type = 'text', required = false, options = null, display_order = 0 } = req.body;
+  req.db.query('INSERT INTO application_fields (field_name, field_type, required, options, display_order) VALUES (?, ?, ?, ?, ?)', [field_name, field_type, required, options, display_order], (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ id: result.insertId, message: 'Field created' });
+  });
+});
+
+router.delete('/application-fields/:id', (req, res) => {
+  const { id } = req.params;
+  req.db.query('DELETE FROM application_fields WHERE id = ?', [id], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ message: 'Field deleted' });
+  });
+});
+
+module.exports = router;

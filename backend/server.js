@@ -119,6 +119,7 @@ const mediaRoutes = require('./routes/media');
 const settingsRoutes = require('./routes/settings');
 const newsletterRoutes = require('./routes/newsletter');
 const contactRoutes = require('./routes/contact');
+const jobConfigRoutes = require('./routes/job-config');
 
 // Mount Routes
 // Each route file exports an Express Router; they are mounted under /api
@@ -129,6 +130,7 @@ app.use('/api', menuRoutes);
 app.use('/api', reservationRoutes);
 app.use('/api', jobRoutes);
 app.use('/api', mediaRoutes);
+app.use('/api', jobConfigRoutes);
 app.use('/api', settingsRoutes);
 app.use('/api', newsletterRoutes);
 app.use('/api', contactRoutes);

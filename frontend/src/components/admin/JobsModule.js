@@ -28,9 +28,12 @@ const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 function JobsModule() {
   const [applications, setApplications] = useState([]);
   const [selectedApp, setSelectedApp] = useState(null);
+  const [positions, setPositions] = useState([]);
+  const [newPositionName, setNewPositionName] = useState('');
 
   useEffect(() => {
     fetchApplications();
+    fetchPositions();
   }, []);
 
   const fetchApplications = () => {
@@ -41,6 +44,34 @@ function JobsModule() {
       })
       .then(data => setApplications(Array.isArray(data) ? data : []))
       .catch(() => setApplications([]));
+  };
+
+  const fetchPositions = () => {
+    fetch(`${API_BASE}/job-positions`)
+      .then(res => res.ok ? res.json() : [])
+      .then(data => setPositions(Array.isArray(data) ? data : []))
+      .catch(() => setPositions([]));
+  };
+
+  const createPosition = () => {
+    if (!newPositionName.trim()) return;
+    fetch(`${API_BASE}/job-positions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: newPositionName })
+    }).then(res => {
+      if (res.ok) {
+        setNewPositionName('');
+        fetchPositions();
+      }
+    }).catch(() => {});
+  };
+
+  const deletePosition = (id) => {
+    if (!window.confirm('Delete this position?')) return;
+    fetch(`${API_BASE}/job-positions/${id}`, { method: 'DELETE' })
+      .then(() => fetchPositions())
+      .catch(() => {});
   };
 
   const updateStatus = (id, status) => {
@@ -81,7 +112,23 @@ function JobsModule() {
         <div className="p-4 border-b">
           <h3 className="font-bold text-lg text-text-primary">Applications</h3>
         </div>
-        <div className="divide-y max-h-[600px] overflow-y-auto" role="list" aria-label="Job applications list">
+        <div className="p-4 border-b">
+          <label className="block text-sm font-medium text-text-primary mb-2">Manage Positions</label>
+          <div className="flex gap-2">
+            <input className="form-input flex-1" value={newPositionName} onChange={(e) => setNewPositionName(e.target.value)} placeholder="New position name" />
+            <button type="button" onClick={createPosition} className="btn">Add</button>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {positions.map(p => (
+              <div key={p.id} className="px-2 py-1 bg-surface-warm rounded flex items-center gap-2">
+                <span className="text-sm">{p.name}</span>
+                <button type="button" onClick={() => deletePosition(p.id)} className="text-error" aria-label={`Delete position ${p.name}`}>✕</button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="divide-y max-h-[420px] overflow-y-auto" role="list" aria-label="Job applications list">
           {applications.map(app => (
             <button
               key={app.id}
