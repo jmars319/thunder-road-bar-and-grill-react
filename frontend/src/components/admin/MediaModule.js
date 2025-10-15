@@ -32,9 +32,15 @@ function MediaModule() {
   const [uploading, setUploading] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
   const [sections, setSections] = useState({ logos: true, hero: true, gallery: true, all: false });
+  const [siteSettings, setSiteSettings] = useState(null);
+  const [selectedHeroIds, setSelectedHeroIds] = useState([]);
 
   useEffect(() => {
     fetchMedia();
+    fetch(`${API_BASE}/site-settings`).then(r => r.ok ? r.json() : {}).then(s => {
+      setSiteSettings(s || {});
+      if (Array.isArray(s?.hero_images)) setSelectedHeroIds(s.hero_images.map(h => h.id).filter(Boolean));
+    }).catch(() => {});
   }, []);
 
   const fetchMedia = () => {
@@ -74,6 +80,26 @@ function MediaModule() {
     const file = e.target.files?.[0];
     if (!file) return;
     await handleUpload(file, category);
+  };
+
+  const toggleHeroSelection = (id) => {
+    setSelectedHeroIds(s => s.includes(id) ? s.filter(x => x !== id) : [...s, id]);
+  };
+
+  const saveHeroImages = async () => {
+    // build hero_images array from selected ids
+    const items = media.filter(m => selectedHeroIds.includes(m.id)).map(m => ({ id: m.id, file_url: m.file_url, title: m.title }));
+    const payload = { ...(siteSettings || {}), hero_images: items };
+    try {
+      const res = await fetch(`${API_BASE}/site-settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (!res.ok) throw new Error('Failed to save');
+      const data = await res.json();
+      // refresh settings
+      setSiteSettings(payload);
+      alert('Hero images saved');
+    } catch (err) {
+      alert('Failed to save hero images');
+    }
   };
 
   const deleteMedia = (id) => {
@@ -166,8 +192,11 @@ function MediaModule() {
             </label>
             <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
               {media.filter(m => m.category === 'hero').map(item => (
-                <div key={item.id} className="bg-surface rounded overflow-hidden">
+                <div key={item.id} className="bg-surface rounded overflow-hidden relative">
                   <img src={`${API_BASE.replace(/\/api$/, '')}${item.file_url}`} alt={item.title} className="w-full h-24 object-cover" />
+                  <label className="absolute top-2 left-2 bg-white/80 rounded p-1 text-xs">
+                    <input type="checkbox" checked={selectedHeroIds.includes(item.id)} onChange={() => toggleHeroSelection(item.id)} />
+                  </label>
                   <div className="p-2 text-xs flex justify-between items-center">
                     <span className="truncate">{item.title}</span>
                     <div className="flex gap-2">
@@ -177,6 +206,9 @@ function MediaModule() {
                   </div>
                 </div>
               ))}
+            </div>
+            <div className="mt-3 flex justify-end">
+              <button type="button" onClick={saveHeroImages} className="bg-primary text-text-inverse px-3 py-2 rounded">Save hero images</button>
             </div>
           </div>
         )}

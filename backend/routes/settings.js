@@ -37,17 +37,25 @@ const router = express.Router();
 router.get('/site-settings', (req, res) => {
   req.db.query('SELECT * FROM site_settings WHERE id = 1', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
-    res.json(results[0] || {});
+    const row = results[0] || {};
+    // parse hero_images JSON if present
+    try {
+      row.hero_images = row.hero_images ? JSON.parse(row.hero_images) : [];
+    } catch (e) {
+      row.hero_images = [];
+    }
+    res.json(row);
   });
 });
 
 // Update site settings
 router.put('/site-settings', (req, res) => {
-  const { business_name, tagline, logo_url, phone, email, address } = req.body;
+  const { business_name, tagline, logo_url, phone, email, address, hero_images } = req.body;
   
+  const heroImagesJson = Array.isArray(hero_images) ? JSON.stringify(hero_images) : null;
   req.db.query(
-    'UPDATE site_settings SET business_name = ?, tagline = ?, logo_url = ?, phone = ?, email = ?, address = ? WHERE id = 1',
-    [business_name, tagline, logo_url, phone, email, address],
+    'UPDATE site_settings SET business_name = ?, tagline = ?, logo_url = ?, phone = ?, email = ?, address = ?, hero_images = ? WHERE id = 1',
+    [business_name, tagline, logo_url, phone, email, address, heroImagesJson],
     (err) => {
       if (err) return res.status(500).json({ error: err.message });
       res.json({ message: 'Settings updated' });
