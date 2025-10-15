@@ -14,6 +14,7 @@ const mysql = require('mysql2');
 const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const app = express();
@@ -82,6 +83,9 @@ app.use((req, res, next) => {
   req.db = db;
   next();
 });
+
+// Parse cookies (used by the simple adminAuth middleware)
+app.use(cookieParser());
 
 // File Upload Configuration
 const storage = multer.diskStorage({

@@ -53,8 +53,10 @@ router.post('/jobs', (req, res) => {
   );
 });
 
+const adminAuth = require('../middleware/adminAuth');
+
 // Update application status
-router.put('/jobs/:id', (req, res) => {
+router.put('/jobs/:id', adminAuth, (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
   
@@ -69,7 +71,7 @@ router.put('/jobs/:id', (req, res) => {
 });
 
 // Delete application
-router.delete('/jobs/:id', (req, res) => {
+router.delete('/jobs/:id', adminAuth, (req, res) => {
   const { id } = req.params;
   req.db.query('DELETE FROM job_applications WHERE id = ?', [id], (err) => {
     if (err) return res.status(500).json({ error: err.message });
