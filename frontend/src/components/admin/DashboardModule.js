@@ -23,6 +23,28 @@ import { LayoutDashboard, Users, Calendar, Briefcase, TrendingUp } from '../../i
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
+/* DEV:
+  StatCard accepts a `color` prop which should be a semantic token class
+  (e.g., bg-primary, bg-secondary, bg-accent). Update colors in
+  `frontend/src/custom-styles.css` to change the look site-wide rather
+  than modifying utilities here. This component intentionally keeps
+  presentation in tokens to support runtime theming.
+*/
+/* eslint-disable no-unused-vars */
+const StatCard = ({ icon: Icon, label, value, color }) => (
+  <div className="bg-surface rounded-lg shadow p-6 card-hover" role="region" aria-label={label}>
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-text-primary text-sm">{label}</p>
+        <p className="text-3xl font-bold mt-2 text-text-primary">{value}</p>
+      </div>
+      <div className={`w-12 h-12 rounded-lg ${color} flex items-center justify-center`}>
+        <Icon size={24} className="text-text-inverse" aria-hidden="true" />
+      </div>
+    </div>
+  </div>
+);
+
 function DashboardModule() {
   const [stats, setStats] = useState({
     reservations: 0,
@@ -50,20 +72,7 @@ function DashboardModule() {
     });
   }, []);
 
-  // eslint-disable-next-line no-unused-vars
-  const StatCard = ({ icon: Icon, label, value, color }) => (
-    <div className="bg-surface rounded-lg shadow p-6 card-hover" role="region" aria-label={label}>
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-text-primary text-sm">{label}</p>
-          <p className="text-3xl font-bold mt-2 text-text-primary">{value}</p>
-        </div>
-        <div className={`w-12 h-12 rounded-lg ${color} flex items-center justify-center`}>
-          <Icon size={24} className="text-text-inverse" aria-hidden="true" />
-        </div>
-      </div>
-    </div>
-  );
+
 
   return (
     <div className="space-y-6">
@@ -121,3 +130,4 @@ const Module = {
 };
 
 export default Module;
+
