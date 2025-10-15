@@ -100,14 +100,60 @@ export default function AboutSection() {
 
                 if (!embedSrc) return null;
 
+                // Build a destination URL suitable for opening in a new tab
+                // Prefer converting embed URLs to their non-embed equivalents
+                let destinationUrl = null;
+                try {
+                  if (/\/maps\/embed/i.test(embedSrc)) {
+                    // Convert /maps/embed? -> /maps? to open the place view
+                    destinationUrl = embedSrc.replace('/embed?', '/?');
+                  } else if (/\boutput=embed\b/i.test(embedSrc)) {
+                    // q=...&output=embed -> q=...
+                    destinationUrl = embedSrc.replace(/\&?output=embed/i, '');
+                  } else {
+                    destinationUrl = embedSrc;
+                  }
+                } catch (e) {
+                  destinationUrl = embedSrc;
+                }
+
+                // Directions link using Google Maps Directions (api=1)
+                // If we can extract an address from siteSettings, use that, otherwise
+                // fall back to destinationUrl as the destination param.
+                const directionsDestination = siteSettings?.address
+                  ? encodeURIComponent(siteSettings.address)
+                  : encodeURIComponent(destinationUrl || '');
+                const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${directionsDestination}`;
+
                 return (
-                  <div className="mt-0 md:mt-0">
-                    <iframe
-                      src={embedSrc}
-                      title="Location"
-                      className="w-full h-64 md:h-full border-0 rounded"
-                      allowFullScreen
-                    />
+                  <div className="mt-0 md:mt-0 flex flex-col h-full">
+                    <div className="flex-1">
+                      <iframe
+                        src={embedSrc}
+                        title="Location"
+                        className="w-full h-64 md:h-[480px] lg:h-[560px] border-0 rounded"
+                        allowFullScreen
+                      />
+                    </div>
+
+                    <div className="mt-4 flex flex-col gap-2">
+                      <a
+                        href={destinationUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full inline-block bg-primary text-text-inverse text-center py-2 rounded-lg hover:bg-primary-dark transition font-semibold"
+                      >
+                        Go To
+                      </a>
+                      <a
+                        href={directionsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full inline-block bg-surface-warm text-text-primary text-center py-2 rounded-lg hover:bg-surface hover:text-text-primary transition font-semibold"
+                      >
+                        Get Directions
+                      </a>
+                    </div>
                   </div>
                 );
               })()}
