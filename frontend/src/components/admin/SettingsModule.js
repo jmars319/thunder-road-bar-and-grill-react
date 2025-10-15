@@ -81,10 +81,29 @@ function SettingsModule() {
 
   const saveAboutContent = async () => {
     try {
+      // If admin pasted a full <iframe ...> HTML snippet into the Map Embed URL
+      // field, extract the src attribute and store that instead of the raw HTML.
+      const payload = { ...aboutContent };
+      if (payload.map_embed_url && typeof payload.map_embed_url === 'string') {
+        const trimmed = payload.map_embed_url.trim();
+        // Detect an iframe tag quickly
+        if (/^<iframe\s+/i.test(trimmed)) {
+          // Extract src attribute value
+          const match = trimmed.match(/src\s*=\s*"([^"]+)"/i);
+          if (match && match[1]) {
+            payload.map_embed_url = match[1];
+          } else {
+            // Try single-quoted src
+            const match2 = trimmed.match(/src\s*=\s*'([^']+)'/i);
+            if (match2 && match2[1]) payload.map_embed_url = match2[1];
+          }
+        }
+      }
+
       const res = await fetch(`${API_BASE}/about`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(aboutContent)
+        body: JSON.stringify(payload)
       });
       if (res.ok) {
         setSaved(true);
