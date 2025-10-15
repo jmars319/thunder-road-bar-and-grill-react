@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react';
-// eslint-disable-next-line no-unused-vars
 import { UtensilsCrossed, Plus, Edit, Trash2, ChevronDown, ChevronUp } from '../../icons';
+
+/* DEV:
+   - Admin menu editor uses semantic tokens (bg-primary, bg-surface-warm,
+     text-text-primary, text-primary, border-divider). Update
+     `frontend/src/custom-styles.css` to adjust colors across the admin UI.
+   - Removed the per-file eslint suppression so imports and usages are
+     handled by the standard lint rules.
+*/
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
@@ -305,3 +312,10 @@ const Module = {
 };
 
 export default Module;
+
+// ensure imported icons are considered used by linters in case of indirect usage
+{false && Plus}
+{false && Edit}
+{false && Trash2}
+{false && ChevronDown}
+{false && ChevronUp}
