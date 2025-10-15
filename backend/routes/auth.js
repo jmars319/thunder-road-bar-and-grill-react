@@ -18,6 +18,12 @@ const router = express.Router();
   Notes:
   - Responses should aim for a consistent shape so the frontend can handle
     errors and success cases uniformly. Do not store plaintext passwords.
+  Developer annotations:
+  - Inputs: JSON body with `email` and `password` for `/login`.
+  - Outputs: JSON { success: boolean, user?: { id, name, email, role }, message?: string }.
+  - Security: this file currently contains a development stub. Replace with a proper auth service (hashed passwords, rate limiting, secure session/JWT handling) before production. Never return sensitive fields in responses.
+  - Example (dev-stub):
+    curl -X POST http://localhost:5001/api/login -H "Content-Type: application/json" -d '{"email":"admin","password":"admin123"}'
 */
 
 // Login endpoint (development stub)

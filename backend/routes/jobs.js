@@ -20,6 +20,12 @@ const router = express.Router();
   - Validate applicant input server-side (email formats, file URL safety).
   - Consider sending notifications (email or Slack) on new submissions and
     storing an `email_sent` flag to avoid duplicate alerts.
+  Developer annotations:
+  - Inputs (POST /api/jobs): { name, email, phone?, position, experience?, cover_letter?, resume_url? }
+  - Inputs (PUT /api/jobs/:id): { status }
+  - Outputs: arrays for GET, and standard JSON { id, message } for creations. Errors return { error: string }.
+  - Security: sanitize user-submitted rich text (cover_letter) before rendering in admin; store file references rather than raw files when possible.
+  - Example: curl -X POST http://localhost:5001/api/jobs -H "Content-Type: application/json" -d '{"name":"Alice","email":"a@x.com","position":"Server"}'
 */
 
 // Get all job applications

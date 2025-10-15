@@ -28,6 +28,11 @@ const router = express.Router();
   - Validate inputs at the route boundary (e.g., ensure `price` is numeric
     and `display_order` is an integer). Consider normalizing menu schema if
     the menu grows more complex.
+  Developer annotations:
+  - Outputs: Public `GET /api/menu` returns an array of categories with nested items; admin endpoints return arrays or CRUD response objects.
+  - Inputs: POST/PUT endpoints accept JSON matching column names (see SQL queries in each route). Ensure numeric fields are validated.
+  - Security: sanitize any HTML in item descriptions if you later allow rich text. Consider transactionally updating categories/items where multiple related inserts/updates occur.
+  - Example: curl http://localhost:5001/api/menu
 */
 
 // Get all menu categories with items

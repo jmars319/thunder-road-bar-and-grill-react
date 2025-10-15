@@ -19,6 +19,12 @@ const router = express.Router();
     include spam protections (rate limiting and optionally a captcha).
   - Messages are stored in `contact_messages`. Consider indexing the
     email/submitted_at columns for faster admin queries.
+  Developer annotations:
+  - Inputs (POST /api/contact): { name, email, phone?, subject, message }
+  - Inputs (PUT /api/contact/messages/:id): { is_read: boolean }
+  - Outputs: standard JSON arrays or objects; errors return { error: string } with appropriate HTTP status codes.
+  - Security: validate/sanitize inputs to avoid XSS in admin views and use rate-limiting to avoid spam.
+  - Example: curl -X POST http://localhost:5001/api/contact -H "Content-Type: application/json" -d '{"name":"Jane","email":"jane@example.com","subject":"Hello","message":"Hi"}'
 */
 
 // Get all contact messages
