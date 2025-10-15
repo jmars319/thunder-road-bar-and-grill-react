@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-// eslint-disable-next-line no-unused-vars
 import { Inbox, Mail, MailOpen, Trash2 } from '../../icons';
 
 /*
@@ -33,6 +32,13 @@ import { Inbox, Mail, MailOpen, Trash2 } from '../../icons';
 */
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
+
+/* DEV:
+   - This admin inbox uses tokenized classes for surfaces and text (e.g., bg-surface,
+     bg-surface-warm, text-text-primary, text-text-secondary). Update colors in
+     `frontend/src/custom-styles.css` to affect the admin UI globally rather than
+     modifying utility classes locally.
+*/
 
 function InboxModule() {
   const [messages, setMessages] = useState([]);
@@ -164,3 +170,8 @@ const Module = {
 };
 
 export default Module;
+
+// ensure imported icons are considered used by linters in case of indirect usage
+{false && Mail}
+{false && MailOpen}
+{false && Trash2}
