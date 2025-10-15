@@ -67,7 +67,7 @@ export default function ReservationSection() {
       } else {
         setError('Failed to submit reservation');
       }
-    } catch (_err) {
+    } catch {
       setError('An error occurred');
     }
   };
