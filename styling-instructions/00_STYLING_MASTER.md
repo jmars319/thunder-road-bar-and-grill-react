@@ -224,16 +224,13 @@ Speed up updates with VS Code find & replace:
 
 | Find | Replace |
 |------|---------|
-| `bg-blue-600` | `bg-primary` |
-| `bg-blue-700` | `bg-primary-dark` |
-| `text-blue-600` | `text-primary` |
-| `bg-white` | `bg-surface` |
-| `bg-gray-50` | `bg-surface-warm` |
-| `text-gray-700` | `text-text-primary` |
-| `text-gray-600` | `text-text-secondary` |
-| `text-gray-500` | `text-text-muted` |
-| `border-gray-300` | `border-border` |
-| `hover:bg-blue-700` | `hover:bg-primary-dark transition` |
+| `legacy-button` | `bg-primary text-text-inverse` |
+| `legacy-button-hover` | `hover:bg-primary-dark transition` |
+| `legacy-text-primary` | `text-text-primary` |
+| `legacy-text-secondary` | `text-text-secondary` |
+| `legacy-surface` | `bg-surface` |
+| `legacy-surface-warm` | `bg-surface-warm` |
+| `legacy-border` | `border-border` |
 
 ---
 
@@ -325,9 +322,7 @@ className="hover:scale-105 transition-transform"
 ### **Use Semantic Color Names:**
 
 Instead of hardcoding colors, use the tokens:
-- `text-text-primary` (not `text-gray-900`)
-- `bg-primary` (not `bg-red-600`)
-- `border-border` (not `border-gray-300`)
+Use token names throughout (e.g. `text-text-primary`, `bg-primary`, `border-border`) instead of legacy Tailwind color classes.
 
 This way, dark mode works automatically!
 

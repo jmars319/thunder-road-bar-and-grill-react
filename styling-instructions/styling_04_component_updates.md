@@ -6,27 +6,24 @@
 
 ### Button Classes
 
-**Find:** `bg-blue-600 text-white`
-**Replace:** `bg-primary text-text-inverse`
+Use tokens for button backgrounds and text. Example replacements:
 
-**Find:** `hover:bg-blue-700`
-**Replace:** `hover:bg-primary-dark transition`
+- Primary: `bg-primary text-text-inverse` (hover: `hover:bg-primary-dark transition`)
+- Ghost/transparent: `bg-transparent text-text-primary border border-border`
 
 ### Text Colors
 
-**Find:** `text-gray-700`
-**Replace:** `text-text-primary`
+**Text color guidance:** Replace legacy gray text classes with tokens:
 
-**Find:** `text-gray-600`
-**Replace:** `text-text-secondary`
+- `text-text-primary` — main body text
+- `text-text-secondary` — secondary/supporting text
 
 ### Backgrounds
 
-**Find:** `bg-white`
-**Replace:** `bg-surface`
+Use surface tokens for backgrounds:
 
-**Find:** `bg-gray-50`
-**Replace:** `bg-surface-warm`
+- Page background / warm: `bg-background` / `bg-surface-warm`
+- Cards and panels: `bg-surface`
 
 ## Components to Update
 
@@ -45,7 +42,7 @@ Process these in order:
 ```
 @workspace Update PublicNavbar.js button colors from blue to primary
 @workspace Replace gray text colors with text-primary/secondary in HeroSection.js
-@workspace Update all bg-white to bg-surface in admin components
+Note: When updating admin components, use surface tokens such as `bg-surface` or `bg-surface-warm` for card and panel backgrounds.
 ```
 
 Use REFERENCE_examples.md for examples

@@ -85,7 +85,7 @@ DEVELOPMENT NOTES
 
 Tokenization checklist (Tailwind refactor to design tokens)
 ----------------------------------------------------------
-1. Identify literal color classes (e.g. `bg-[#123456]` or `bg-blue-500`) and
+1. Identify literal color classes (for example inline hex or legacy Tailwind color utilities) and
    replace with semantic token classes (`bg-primary`, `bg-surface`,
    `text-text-primary`).
 2. Ensure CSS variables backing tokens exist in `src/custom-styles.css` and

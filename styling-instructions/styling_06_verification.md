@@ -23,10 +23,11 @@
 
 ## Component Checks
 ```
-@workspace Search for "bg-blue-600" in frontend/src/components (replace with `bg-primary`)
-@workspace Search for "hover:bg-blue-700" in frontend/src/components (replace with `hover:bg-primary-dark`)
-@workspace Search for "text-gray-700" in frontend/src/components (replace with `text-text-primary`)
-@workspace Search for "text-gray-600" in frontend/src/components (replace with `text-text-secondary`)
+@workspace Search `frontend/src/components` for legacy color utilities and replace them with token classes. Use token families such as:
+
+- `bg-primary`, `bg-primary-dark`
+- `text-text-primary`, `text-text-secondary`, `text-text-muted`
+- `bg-surface`, `bg-surface-warm`
 ```
 
 If found, these need updating.

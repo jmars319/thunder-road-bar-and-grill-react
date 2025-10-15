@@ -409,15 +409,15 @@ Before and after examples for updating your React components with Thunder Road s
 
 **Before:**
 ```jsx
-<div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
-  <CheckCircle size={20} className="text-green-600" />
-  <p className="text-green-800">Success!</p>
+<div className="bg-surface-warm border border-success/20 rounded-lg p-4 flex items-center gap-3">
+  <CheckCircle size={20} className="text-success" />
+  <p className="text-success font-medium">Success!</p>
 </div>
 ```
 
 **After:**
 ```jsx
-<div className="bg-green-50 border border-success/20 rounded-lg p-4 flex items-center gap-3 shadow-sm">
+<div className="bg-surface-warm border border-success/20 rounded-lg p-4 flex items-center gap-3 shadow-sm">
   <CheckCircle size={20} className="text-success" />
   <p className="text-success font-medium">Success!</p>
 </div>
@@ -437,7 +437,7 @@ Before and after examples for updating your React components with Thunder Road s
 
 **After:**
 ```jsx
-<div className="bg-red-50 border border-error/20 rounded-lg p-4 flex items-center gap-3 shadow-sm">
+<div className="bg-surface-warm border border-error/20 rounded-lg p-4 flex items-center gap-3 shadow-sm">
   <AlertCircle size={20} className="text-error" />
   <p className="text-error font-medium">Error!</p>
 </div>
@@ -510,7 +510,7 @@ className="hover:scale-105 transition-transform"
 
 After updating components:
 
-- [ ] All buttons use `bg-primary` (not `bg-blue-600`)
+* [ ] All buttons use `bg-primary` (not legacy color classes)
 - [ ] Text uses `text-text-primary/secondary/muted`
 - [ ] Borders use `border-border`
 - [ ] Shadows use `shadow-sm/md/lg/xl`
