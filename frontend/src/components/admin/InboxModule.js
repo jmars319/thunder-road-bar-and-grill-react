@@ -25,6 +25,10 @@ import { Inbox, Mail, MailOpen, Trash2 } from 'lucide-react';
   - Protects against non-array GET responses (falls back to an empty list).
   - Marks a message as read only when opening an unread message.
   - Defensive date rendering when submitted_at is missing or invalid.
+  Accessibility:
+  - Message list renders as interactive buttons; these include type="button" to
+    avoid accidental submits. Buttons expose aria-labels and use visual focus
+    styles from the project's design tokens.
 */
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
@@ -76,10 +80,14 @@ function InboxModule() {
         <div className="p-4 border-b">
           <h3 className="font-bold text-lg text-text-primary">Messages</h3>
         </div>
-        <div className="divide-y max-h-[600px] overflow-y-auto">
+        <div className="divide-y max-h-[600px] overflow-y-auto" role="list" aria-label="Inbox messages">
           {(Array.isArray(messages) ? messages : []).map(msg => (
             <button
               key={msg.id}
+              type="button"
+              role="listitem"
+              aria-label={`Open message from ${msg.name}`}
+              aria-current={selectedMessage?.id === msg.id ? 'true' : undefined}
               onClick={() => {
                 setSelectedMessage(msg);
                 // Mark as read on open only if currently unread
@@ -123,7 +131,9 @@ function InboxModule() {
                 </p>
               </div>
               <button
+                type="button"
                 onClick={() => deleteMessage(selectedMessage.id)}
+                aria-label="Delete message"
                 className="text-error hover:text-error-muted p-2 rounded hover:bg-error/10"
               >
                 <Trash2 size={18} />

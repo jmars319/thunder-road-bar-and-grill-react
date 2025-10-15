@@ -15,6 +15,10 @@ import { LayoutDashboard, Users, Calendar, Briefcase, TrendingUp } from 'lucide-
     for better perceived performance.
   - The mapping of statuses (e.g., reservation.status === 'pending') is coupled
     to the backend. If status values change, update the filters here.
+  Accessibility:
+  - Stat cards are presented as distinct regions; assistive technologies can
+    discover them via their aria-label. The quick-links list uses semantic list
+    markup with role attributes for clearer navigation.
 */
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
@@ -47,7 +51,7 @@ function DashboardModule() {
   }, []);
 
   const StatCard = ({ icon: Icon, label, value, color }) => (
-    <div className="bg-surface rounded-lg shadow p-6 card-hover" role="group" aria-label={label}>
+    <div className="bg-surface rounded-lg shadow p-6 card-hover" role="region" aria-label={label}>
       <div className="flex items-center justify-between">
         <div>
           <p className="text-text-primary text-sm">{label}</p>
@@ -94,7 +98,7 @@ function DashboardModule() {
   <p className="text-text-primary">
           Use the sidebar to navigate between different sections. Here's what you can manage:
         </p>
-  <ul className="mt-4 space-y-2 text-text-primary">
+  <ul className="mt-4 space-y-2 text-text-primary" aria-label="Admin quick links">
           <li>• <strong>Dashboard:</strong> Overview of your business metrics</li>
           <li>• <strong>Inbox:</strong> View all notifications and messages</li>
           <li>• <strong>Menu:</strong> Manage menu categories and items</li>
