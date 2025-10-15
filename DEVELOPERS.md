@@ -1,3 +1,64 @@
+DEVELOPERS GUIDE
+================
+
+Overview
+--------
+This repository received a focused styling and accessibility pass that:
+- Replaced literal color utilities with semantic design token classes (Tailwind mapped to CSS variables).
+- Implemented runtime theming (light/dark) via CSS variables and a `ThemeToggle` component that persists the selection to localStorage and toggles `data-theme` on `<html>`.
+- Converted the repository logo to be recolorable (SVG uses `currentColor`) and added small CSS helpers so inline SVG logos inherit design tokens.
+- Improved accessibility (ARIA roles, labels, button types) and added concise developer header comments to admin modules and public components.
+
+Key locations
+-------------
+- Design tokens / SOT: `frontend/src/custom-styles.css`
+- Tailwind mapping: `frontend/tailwind.config.js`
+- Theme code: `frontend/src/context/ThemeContext.js` (or equivalent ThemeToggle component under `src/components`)
+- Recolorable logo: `frontend/src/logo.svg`
+- Admin modules updated: `frontend/src/components/admin/{DashboardModule.js,InboxModule.js,MenuModule.js,JobsModule.js,MediaModule.js}`
+
+How to add a recolorable logo
+-------------------------------
+Preferred (inline SVG)
+1. Place the SVG content directly in a React component or import the SVG as a React component (tooling permitting).
+2. Ensure colorable parts use `fill="currentColor"` (or `stroke="currentColor"`).
+3. Use a wrapper element with a token-driven color class, e.g. `<div className="logo-badge text-text-primary"><LogoSvg /></div>`.
+
+If you must use an external image (`<img src="..." />`)
+- External raster images cannot be recolored by CSS. Consider providing a secondary SVG variant or using a CSS mask if the asset is a single-color shape.
+- Alternatively, fetch and inline the SVG at runtime (carefully sanitize) or host a recolorable SVG asset per theme.
+
+Developer notes
+---------------
+- Keep semantic token names (e.g. `bg-primary`, `text-text-primary`, `bg-surface`) — they map to CSS variables in `custom-styles.css` and the Tailwind config provides fallbacks.
+- When adding new components, default interactive elements (buttons) should include `type="button"` unless they are form submit controls.
+- Use ARIA attributes for dynamic controls: `aria-expanded`, `aria-controls`, `role="region"` for grouped cards, and `aria-label` for icon buttons.
+
+Commands (local dev)
+--------------------
+Run tests:
+```bash
+cd frontend
+npm test -- --watchAll=false
+```
+
+Run ESLint (JS/JSX):
+```bash
+cd frontend
+npx eslint "src/**/*.{js,jsx}"
+```
+
+Run style checks (optional):
+```bash
+cd frontend
+npx stylelint "src/**/*.{css,scss}"
+```
+
+Contact / follow-ups
+--------------------
+If you'd like I can:
+- Add a persistent `stylelint` config and a `lint` script to `package.json`.
+- Continue tokenizing remaining components or produce a single automated codemod to replace common utility patterns.
 DEVELOPERS.md — Thunder Road (frontend)
 
 Purpose
