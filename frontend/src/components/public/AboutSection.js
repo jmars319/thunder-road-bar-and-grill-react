@@ -72,13 +72,13 @@ export default function AboutSection() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-4xl font-heading font-bold text-center mb-6">About Us</h2>
         <div className="bg-surface rounded-lg shadow-lg p-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-            <div className="md:col-span-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+            <div className="h-full">
               <h3 className="text-2xl font-heading font-semibold mb-4 text-text-primary">{about?.header}</h3>
               <p className="text-text-secondary mb-4">{about?.paragraph}</p>
             </div>
 
-            <div className="md:col-span-1">
+            <div className="h-full">
               {(() => {
                 // Determine the embed src. Priority:
                 // 1) about.map_embed_url if it looks like a URL (starts with http)
@@ -102,36 +102,52 @@ export default function AboutSection() {
 
                 // Build a destination URL suitable for opening in a new tab
                 // Prefer converting embed URLs to their non-embed equivalents
-                let destinationUrl = null;
+                let destinationUrl = embedSrc;
                 try {
                   if (/\/maps\/embed/i.test(embedSrc)) {
-                    // Convert /maps/embed? -> /maps? to open the place view
                     destinationUrl = embedSrc.replace('/embed?', '/?');
                   } else if (/\boutput=embed\b/i.test(embedSrc)) {
-                    // q=...&output=embed -> q=...
                     destinationUrl = embedSrc.replace(/\&?output=embed/i, '');
-                  } else {
-                    destinationUrl = embedSrc;
                   }
                 } catch (e) {
+                  // fallback to embedSrc
                   destinationUrl = embedSrc;
                 }
 
-                // Directions link using Google Maps Directions (api=1)
-                // If we can extract an address from siteSettings, use that, otherwise
-                // fall back to destinationUrl as the destination param.
-                const directionsDestination = siteSettings?.address
-                  ? encodeURIComponent(siteSettings.address)
-                  : encodeURIComponent(destinationUrl || '');
-                const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${directionsDestination}`;
+                // Try to extract a place_id from the embed URL if present.
+                // Patterns to check: place_id=..., query=place_id:..., or a pb encoded !1s... token
+                let placeId = null;
+                try {
+                  const m1 = embedSrc.match(/[?&]place_id=([^&]+)/i);
+                  const m2 = embedSrc.match(/query=place_id:([^&]+)/i);
+                  if (m1 && m1[1]) placeId = decodeURIComponent(m1[1]);
+                  else if (m2 && m2[1]) placeId = decodeURIComponent(m2[1]);
+                  else {
+                    // Some embed URLs include a pb parameter with !1s<encoded> which isn't a place_id
+                    // but could be a stable identifier — we won't treat it as place_id.
+                    placeId = null;
+                  }
+                } catch (e) {
+                  placeId = null;
+                }
+
+                // Build directions URL using place_id if available, otherwise fallback to address or destinationUrl
+                let directionsUrl;
+                if (placeId) {
+                  directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=place_id:${encodeURIComponent(placeId)}`;
+                } else if (siteSettings?.address) {
+                  directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(siteSettings.address)}`;
+                } else {
+                  directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destinationUrl || '')}`;
+                }
 
                 return (
                   <div className="mt-0 md:mt-0 flex flex-col h-full">
-                    <div className="flex-1">
+                    <div className="flex-1 h-full">
                       <iframe
                         src={embedSrc}
                         title="Location"
-                        className="w-full h-64 md:h-[480px] lg:h-[560px] border-0 rounded"
+                        className="w-full h-full border-0 rounded"
                         allowFullScreen
                       />
                     </div>
