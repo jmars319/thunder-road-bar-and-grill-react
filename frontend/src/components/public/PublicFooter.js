@@ -18,6 +18,9 @@ export default function PublicFooter() {
   // NOTE: Footer uses token classes (`bg-surface`, `text-text-inverse`,
   // `text-text-muted`) so it responds to runtime theme changes. Prefer token
   // updates in `custom-styles.css` when refining color styles.
+  // DEV: Footer color tokens are the canonical surface/text tokens. If you
+  // need to adjust contrast or spacing across the site, change the tokens in
+  // `frontend/src/custom-styles.css` so updates apply everywhere consistently.
   const [columns, setColumns] = useState([]);
 
   useEffect(() => {
