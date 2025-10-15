@@ -18,6 +18,12 @@ const router = express.Router();
     a consistent format compatible with MySQL.
   - Consider rate-limiting or adding captcha on the public POST endpoint to
     reduce spam and automated bookings.
+  Developer annotations:
+  - Inputs (POST /api/reservations): { name, email, phone?, reservation_date, reservation_time, number_of_guests, special_requests? }
+  - Inputs (PUT /api/reservations/:id): { status }
+  - Outputs: GET returns array of reservations; POST returns { id, message } on success.
+  - Security: validate and sanitize inputs; rate-limit public reservation POSTs; consider sending confirmation emails with unique tokens to verify bookings.
+  - Example: curl -X POST http://localhost:5001/api/reservations -H "Content-Type: application/json" -d '{"name":"John","email":"j@x.com","reservation_date":"2025-10-15","reservation_time":"19:00","number_of_guests":4}'
 */
 
 // Get all reservations

@@ -18,6 +18,12 @@ const router = express.Router();
   - The POST subscribe endpoint handles duplicate email errors (returns 400).
   - For large subscriber lists implement pagination or add a server-side CSV
     export to support bulk downloads in the admin UI.
+  Developer annotations:
+  - Inputs (POST /api/newsletter/subscribe): { email, name? }
+  - Inputs (POST /api/newsletter/unsubscribe): { email }
+  - Outputs: GET returns array of subscriber objects; POST/DELETE return { id?, message } or { error } on failure.
+  - Security: validate email format server-side and avoid leaking subscriber lists in logs. Consider rate-limiting subscribe endpoints to reduce abuse.
+  - Example: curl -X POST http://localhost:5001/api/newsletter/subscribe -H "Content-Type: application/json" -d '{"email":"user@example.com","name":"User"}'
 */
 
 // Get all subscribers

@@ -26,6 +26,11 @@ const router = express.Router();
   - For input validation and stricter error handling, adopt a schema
     validator (express-validator or Joi) and normalize date/time formats
     for business hours.
+  Developer annotations:
+  - Outputs: GET endpoints return objects/arrays for site settings, navigation, business hours, about content, and footer columns.
+  - Inputs: PUT endpoints accept JSON matching the described fields above. Validate lengths and sanitize any HTML stored for `about` content.
+  - Security: ensure admin-only protection on mutation endpoints (PUT/POST/DELETE). Consider using transactions for multi-step updates and a safe pattern for file URLs (store metadata, not raw user input).
+  - Example: curl http://localhost:5001/api/site-settings
 */
 
 // Get site settings
