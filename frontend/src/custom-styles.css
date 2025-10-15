@@ -10,21 +10,27 @@
 :root {
   /* Colors */
   --primary-color: #dc2626;
+  --primary-dark: #b91c1c;
   --secondary-color: #92400e;
   --accent-color: #f59e0b;
   --success-color: #059669;
+  --warning-color: #f59e0b;
   --error-color: #ef4444;
-  
+  --error-muted: #ef5b5b;
+
   /* Background */
   --background-color: #fef7ed;
+  --background-light: #fffbfa;
   --surface-color: #ffffff;
-  
+  --surface-warm: #fff7f2;
+  --surface-dark: #111827;
+
   /* Text */
   --text-primary: #1c1917;
   --text-secondary: #78716c;
   --text-muted: #94a3b8;
   --text-inverse: #ffffff;
-  
+
   /* Borders */
   --border-color: #e2e8f0;
   --divider-color: #f1f5f9;
@@ -43,14 +49,71 @@
 /* Dark Mode Variables */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background-color: #0f172a;
-    --surface-color: #1e293b;
-    --text-primary: #f1f5f9;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --border-color: #334155;
-    --divider-color: #475569;
+    /* Dark mode variable overrides */
+    --background-color: #0b1020; /* deep navy */
+    --background-light: #0f172a;
+    --surface-color: #0f1724; /* page surface */
+    --surface-warm: #111827;  /* warm admin cards slightly lighter */
+    --surface-dark: #03050a;  /* deepest surface for nav/admin chrome */
+
+    /* Keep brand colors but slightly tone down accents for dark */
+    --primary-color: #ef4444; /* slightly brighter on dark */
+    --primary-dark: #dc2626;
+    --secondary-color: #b45309;
+    --accent-color: #f59e0b;
+
+    --text-primary: #e6eef8; /* near white */
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --text-inverse: #0b1020;
+
+    --border-color: #1f2a37;
+    --divider-color: #14202b;
   }
+}
+
+/* Manual theme override via <html data-theme="dark"> or data-theme="light" */
+:root[data-theme='dark'] {
+  --background-color: #0b1020;
+  --background-light: #0f172a;
+  --surface-color: #0f1724;
+  --surface-warm: #111827;
+  --surface-dark: #03050a;
+
+  --primary-color: #ef4444;
+  --primary-dark: #dc2626;
+  --secondary-color: #b45309;
+  --accent-color: #f59e0b;
+
+  --text-primary: #e6eef8;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-inverse: #0b1020;
+
+  --border-color: #1f2a37;
+  --divider-color: #14202b;
+}
+
+:root[data-theme='light'] {
+  /* Reinforce light theme variables */
+  --background-color: #fef7ed;
+  --background-light: #fffbfa;
+  --surface-color: #ffffff;
+  --surface-warm: #fff7f2;
+  --surface-dark: #111827;
+
+  --primary-color: #dc2626;
+  --primary-dark: #b91c1c;
+  --secondary-color: #92400e;
+  --accent-color: #f59e0b;
+
+  --text-primary: #1c1917;
+  --text-secondary: #78716c;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+
+  --border-color: #e2e8f0;
+  --divider-color: #f1f5f9;
 }
 
 /* Global Styles */
@@ -241,6 +304,23 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
 }
 
+/* Form Input base styles (improve contrast and placeholder readability) */
+.form-input {
+  background-color: var(--surface-color);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.form-input::placeholder {
+  color: rgba(28, 25, 23, 0.45); /* slightly muted but readable */
+}
+
+.form-input:-webkit-autofill,
+.form-input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px var(--surface-color) inset !important;
+  box-shadow: 0 0 0px 1000px var(--surface-color) inset !important;
+}
+
 /* Price Badge */
 .price-badge {
   display: inline-block;
@@ -313,6 +393,30 @@ h1, h2, h3, h4, h5, h6 {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Theme toggle icon animation (small pop + rotate) */
+@keyframes themePop {
+  0% { transform: scale(0.85) rotate(0deg); opacity: 0; }
+  50% { transform: scale(1.08) rotate(8deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.theme-toggle-anim {
+  display: inline-block;
+  animation: themePop 420ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle-anim { animation: none !important; }
+}
+
+/* Ensure text is readable on the dark surface utility (sidebar, chrome) */
+.bg-surface-dark .text-text-primary,
+.bg-surface-dark .text-text-secondary,
+.bg-surface-dark .text-text-muted,
+.bg-surface-dark .text-text-inverse {
+  color: var(--text-inverse) !important;
 }
 
 /* Print Styles */

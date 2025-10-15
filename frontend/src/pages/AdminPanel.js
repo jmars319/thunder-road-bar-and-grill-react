@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react';
 import { Menu, X, LogOut, Home } from 'lucide-react';
+import ThemeToggle from '../components/ThemeToggle';
 
 // Import all admin modules
 import DashboardModule from '../components/admin/DashboardModule';
@@ -40,7 +41,7 @@ export default function AdminPanel({ user, onLogout, onBackToSite }) {
   <div className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-surface-dark text-text-inverse transition-all duration-300 flex flex-col`}>
         {/* Sidebar Header */}
         <div className="p-4 flex items-center justify-between border-b border-divider">
-          {sidebarOpen && <span className="font-heading font-bold text-lg">Thunder Road</span>}
+          {sidebarOpen && <span className="font-heading font-bold text-lg text-text-inverse">Thunder Road</span>}
           <button 
             onClick={() => setSidebarOpen(!sidebarOpen)} 
             className="hover:bg-surface-dark/90 p-2 rounded transition"
@@ -60,11 +61,11 @@ export default function AdminPanel({ user, onLogout, onBackToSite }) {
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${
                   activeModule === key 
                     ? 'bg-primary text-text-inverse' 
-          : 'text-text-muted hover:bg-surface-dark/90 hover:text-text-inverse'
+          : 'text-text-inverse hover:bg-surface-dark/90 hover:text-text-inverse'
                 }`}
               >
                 <Icon size={20} />
-                {sidebarOpen && <span className="text-sm font-medium">{module.name}</span>}
+                {sidebarOpen && <span className="text-sm font-medium text-text-inverse">{module.name}</span>}
               </button>
             );
           })}
@@ -74,14 +75,14 @@ export default function AdminPanel({ user, onLogout, onBackToSite }) {
         <div className="p-4 border-t border-divider space-y-2">
           <button
             onClick={onBackToSite}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-surface-dark/90 transition text-sm text-text-muted hover:text-text-inverse"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-surface-dark/90 transition text-sm text-text-inverse"
           >
             <Home size={20} />
             {sidebarOpen && <span>Back to Site</span>}
           </button>
           <button
             onClick={onLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-surface-dark/90 transition text-sm text-text-muted hover:text-text-inverse"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-surface-dark/90 transition text-sm text-text-inverse"
           >
             <LogOut size={20} />
             {sidebarOpen && <span>Logout</span>}
@@ -94,16 +95,17 @@ export default function AdminPanel({ user, onLogout, onBackToSite }) {
         {/* Top Bar */}
         <div className="bg-surface shadow-sm border-b border-divider">
           <div className="px-8 py-4 flex justify-between items-center">
-            <h2 className="text-2xl font-heading font-bold text-text-primary">
+            <h2 className="text-2xl font-heading font-bold text-text-inverse">
               {AdminModules[activeModule]?.name}
             </h2>
             <div className="flex items-center gap-4">
-              <span className="text-sm text-text-secondary">
+              <span className="text-sm text-text-inverse">
                 Welcome, <strong>{user.name}</strong>
               </span>
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-bold">
                 {user.name.charAt(0).toUpperCase()}
               </div>
+              <ThemeToggle inline className="ml-4" />
             </div>
           </div>
         </div>
@@ -111,7 +113,7 @@ export default function AdminPanel({ user, onLogout, onBackToSite }) {
         {/* Module Content */}
         <div className="flex-1 overflow-auto p-8">
           {CurrentModule ? <CurrentModule /> : (
-            <div className="text-center text-text-secondary py-12">
+            <div className="text-center text-text-inverse py-12">
               <p>Module not found</p>
             </div>
           )}

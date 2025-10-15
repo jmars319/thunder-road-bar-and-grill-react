@@ -59,8 +59,8 @@ function MediaModule() {
       <div className="bg-surface rounded-lg shadow p-6">
         <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-divider rounded-lg cursor-pointer hover:bg-surface-warm">
           <div className="flex flex-col items-center">
-            <Upload size={32} className="text-text-secondary mb-2" />
-            <p className="text-sm text-text-secondary">
+            <Upload size={32} className="text-text-inverse mb-2" />
+            <p className="text-sm text-text-inverse">
               {uploading ? 'Uploading...' : 'Click to upload media'}
             </p>
           </div>
@@ -85,12 +85,12 @@ function MediaModule() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <Image size={48} className="text-text-secondary" />
+                <Image size={48} className="text-text-inverse" />
               )}
             </div>
             <div className="p-3">
-              <p className="text-sm font-medium text-text-primary truncate">{item.title}</p>
-              <p className="text-xs text-text-secondary truncate">{item.file_name}</p>
+              <p className="text-sm font-medium text-text-inverse truncate">{item.title}</p>
+              <p className="text-xs text-text-inverse truncate">{item.file_name}</p>
               <div className="flex gap-2 mt-3">
                 <button
                   onClick={() => copyUrl(item.file_url)}

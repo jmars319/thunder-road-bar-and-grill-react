@@ -33,11 +33,11 @@ function ReservationsModule() {
 
   const getStatusColor = (status) => {
     switch(status) {
-      case 'pending': return 'bg-warning text-text-primary';
+  case 'pending': return 'bg-warning text-text-inverse';
       case 'confirmed': return 'bg-success text-text-inverse';
       case 'cancelled': return 'bg-error text-text-inverse';
-      case 'completed': return 'bg-surface text-text-secondary';
-      default: return 'bg-surface text-text-secondary';
+      case 'completed': return 'bg-surface text-text-inverse';
+      default: return 'bg-surface text-text-inverse';
     }
   };
 
@@ -51,7 +51,7 @@ function ReservationsModule() {
             className={`px-4 py-2 rounded-lg font-medium ${
               filter === status 
                 ? 'bg-primary text-text-inverse' 
-                : 'bg-surface text-text-primary hover:bg-surface-warm'
+                : 'bg-surface text-text-inverse hover:bg-surface-warm'
             }`}
           >
             {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -64,32 +64,32 @@ function ReservationsModule() {
           <table className="w-full">
             <thead className="bg-surface-warm border-b border-divider">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Contact</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Date & Time</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Guests</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-text-inverse uppercase">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-text-inverse uppercase">Contact</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-text-inverse uppercase">Date & Time</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-text-inverse uppercase">Guests</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-text-inverse uppercase">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-text-inverse uppercase">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y">
               {filteredReservations.map(res => (
                 <tr key={res.id} className="hover:bg-surface-warm">
                   <td className="px-6 py-4">
-                    <div className="font-medium text-text-primary">{res.name}</div>
+                    <div className="font-medium text-text-inverse">{res.name}</div>
                     {res.special_requests && (
-                      <div className="text-sm text-text-secondary mt-1">{res.special_requests}</div>
+                      <div className="text-sm text-text-inverse mt-1">{res.special_requests}</div>
                     )}
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm text-text-primary">{res.phone}</div>
-                    {res.email && <div className="text-sm text-text-secondary">{res.email}</div>}
+                    <div className="text-sm text-text-inverse">{res.phone}</div>
+                    {res.email && <div className="text-sm text-text-inverse">{res.email}</div>}
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm text-text-primary">{new Date(res.reservation_date).toLocaleDateString()}</div>
-                    <div className="text-sm text-text-secondary">{res.reservation_time}</div>
+                    <div className="text-sm text-text-inverse">{new Date(res.reservation_date).toLocaleDateString()}</div>
+                    <div className="text-sm text-text-inverse">{res.reservation_time}</div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-text-primary">{res.number_of_guests}</td>
+                  <td className="px-6 py-4 text-sm text-text-inverse">{res.number_of_guests}</td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(res.status)}`}>
                       {res.status}

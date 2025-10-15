@@ -6,57 +6,49 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Primary Brand Colors (from your PHP project)
+        // Use CSS variables so Tailwind utilities follow the runtime color variables
         primary: {
-          DEFAULT: '#dc2626', // Red
-          dark: '#b91c1c',
+          DEFAULT: 'var(--primary-color, #dc2626)',
+          dark: 'var(--primary-dark, #b91c1c)'
         },
-        secondary: {
-          DEFAULT: '#92400e', // Brown
-        },
-        accent: {
-          DEFAULT: '#f59e0b', // Orange/Amber
-        },
-        success: '#059669',
-        warning: '#f59e0b',
+        secondary: { DEFAULT: 'var(--secondary-color, #92400e)' },
+        accent: { DEFAULT: 'var(--accent-color, #f59e0b)' },
+        success: 'var(--success-color, #059669)',
+        warning: 'var(--warning-color, #f59e0b)',
         error: {
-          DEFAULT: '#ef4444',
-          muted: '#ef5b5b',
+          DEFAULT: 'var(--error-color, #ef4444)',
+          muted: 'var(--error-muted, #ef5b5b)'
         },
-        
-        // Background Colors
+
+        // Background / Surface
         background: {
-          DEFAULT: '#fef7ed',
-          light: '#fffbfa',
+          DEFAULT: 'var(--background-color, #fef7ed)',
+          light: 'var(--background-light, #fffbfa)'
         },
         surface: {
-          DEFAULT: '#ffffff',
-          warm: '#fff7f2', // Admin card background
-          dark: '#111827', // semantic dark surface for admin chrome (replaces bg-gray-900)
+          DEFAULT: 'var(--surface-color, #ffffff)',
+          warm: 'var(--surface-warm, #fff7f2)',
+          dark: 'var(--surface-dark, #111827)'
         },
-        
+
         // Text Colors
         text: {
-          primary: '#1c1917',
-          secondary: '#78716c',
-          muted: '#94a3b8',
-          inverse: '#ffffff',
+          primary: 'var(--text-primary, #1c1917)',
+          secondary: 'var(--text-secondary, #78716c)',
+          muted: 'var(--text-muted, #94a3b8)',
+          inverse: 'var(--text-inverse, #ffffff)'
         },
-        
+
         // Border & Divider
-        border: {
-          DEFAULT: '#e2e8f0',
-        },
-        divider: {
-          DEFAULT: '#f1f5f9',
-        },
-        
-        // Admin Specific
+        border: { DEFAULT: 'var(--border-color, #e2e8f0)' },
+        divider: { DEFAULT: 'var(--divider-color, #f1f5f9)' },
+
+        // Admin Specific (kept for convenience)
         admin: {
-          grad1: '#dc2626',
-          grad2: '#92400e',
-          cardBg: '#fff7f2',
-          pageBg: '#fffbfa',
+          grad1: 'var(--primary-color, #dc2626)',
+          grad2: 'var(--secondary-color, #92400e)',
+          cardBg: 'var(--surface-warm, #fff7f2)',
+          pageBg: 'var(--background-light, #fffbfa)'
         }
       },
       

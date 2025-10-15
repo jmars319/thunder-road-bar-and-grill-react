@@ -46,8 +46,8 @@ function NewsletterModule() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-xl font-bold text-text-primary">Newsletter Subscribers</h3>
-          <p className="text-sm text-text-secondary">
+          <h3 className="text-xl font-bold text-text-inverse">Newsletter Subscribers</h3>
+          <p className="text-sm text-text-inverse">
             {subscribers.filter(s => s.is_active).length} active subscribers
           </p>
         </div>
@@ -65,26 +65,26 @@ function NewsletterModule() {
           <table className="w-full">
             <thead className="bg-surface-warm border-b border-divider">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Subscribed</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-text-inverse uppercase">Email</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-text-inverse uppercase">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-text-inverse uppercase">Subscribed</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-text-inverse uppercase">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-text-inverse uppercase">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y">
               {subscribers.map(sub => (
                 <tr key={sub.id} className="hover:bg-surface-warm">
-                  <td className="px-6 py-4 text-sm text-text-primary">{sub.email}</td>
-                  <td className="px-6 py-4 text-sm text-text-primary">{sub.name || '-'}</td>
-                  <td className="px-6 py-4 text-sm text-text-primary">
+                  <td className="px-6 py-4 text-sm text-text-inverse">{sub.email}</td>
+                  <td className="px-6 py-4 text-sm text-text-inverse">{sub.name || '-'}</td>
+                  <td className="px-6 py-4 text-sm text-text-inverse">
                     {new Date(sub.subscribed_at).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                       sub.is_active 
                         ? 'bg-success text-text-inverse' 
-                        : 'bg-surface text-text-secondary'
+                        : 'bg-surface text-text-inverse'
                     }`}>
                       {sub.is_active ? 'Active' : 'Inactive'}
                     </span>

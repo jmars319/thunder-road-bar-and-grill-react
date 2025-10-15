@@ -68,7 +68,7 @@ function MenuModule() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-text-primary">Menu Management</h2>
+  <h2 className="text-2xl font-bold text-text-inverse">Menu Management</h2>
         <button
           onClick={() => setEditingCategory({ name: '', description: '', display_order: 0 })}
           className="bg-primary text-text-inverse px-4 py-2 rounded-lg hover:bg-primary-dark flex items-center gap-2"
@@ -81,13 +81,13 @@ function MenuModule() {
       {/* Category Editor Modal */}
       {editingCategory && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-surface rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-xl font-bold mb-4 text-text-primary">
+                <div className="bg-surface rounded-lg p-6 max-w-md w-full">
+            <h3 className="text-xl font-bold mb-4 text-text-inverse">
               {editingCategory.id ? 'Edit' : 'Add'} Category
             </h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-text-secondary mb-1">Name</label>
+                <label className="block text-sm font-medium text-text-inverse mb-1">Name</label>
                 <input
                   type="text"
                   value={editingCategory.name}
@@ -96,7 +96,7 @@ function MenuModule() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-text-secondary mb-1">Description</label>
+                <label className="block text-sm font-medium text-text-inverse mb-1">Description</label>
                 <textarea
                   value={editingCategory.description}
                   onChange={(e) => setEditingCategory({...editingCategory, description: e.target.value})}
@@ -113,7 +113,7 @@ function MenuModule() {
                 </button>
                 <button
                   onClick={() => setEditingCategory(null)}
-                  className="flex-1 bg-surface-warm text-text-secondary py-2 rounded-lg hover:bg-surface"
+                  className="flex-1 bg-surface-warm text-text-inverse py-2 rounded-lg hover:bg-surface"
                 >
                   Cancel
                 </button>
@@ -126,13 +126,13 @@ function MenuModule() {
       {/* Item Editor Modal */}
       {editingItem && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-surface rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-xl font-bold mb-4 text-text-primary">
+                <div className="bg-surface rounded-lg p-6 max-w-md w-full">
+            <h3 className="text-xl font-bold mb-4 text-text-inverse">
               {editingItem.id ? 'Edit' : 'Add'} Menu Item
             </h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-text-secondary mb-1">Name</label>
+                <label className="block text-sm font-medium text-text-inverse mb-1">Name</label>
                 <input
                   type="text"
                   value={editingItem.name}
@@ -141,7 +141,7 @@ function MenuModule() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-text-secondary mb-1">Description</label>
+                <label className="block text-sm font-medium text-text-inverse mb-1">Description</label>
                 <textarea
                   value={editingItem.description}
                   onChange={(e) => setEditingItem({...editingItem, description: e.target.value})}
@@ -150,7 +150,7 @@ function MenuModule() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-text-secondary mb-1">Price</label>
+                <label className="block text-sm font-medium text-text-inverse mb-1">Price</label>
                 <input
                   type="number"
                   step="0.01"
@@ -168,7 +168,7 @@ function MenuModule() {
                 </button>
                 <button
                   onClick={() => setEditingItem(null)}
-                  className="flex-1 bg-surface-warm text-text-secondary py-2 rounded-lg hover:bg-surface"
+                  className="flex-1 bg-surface-warm text-text-inverse py-2 rounded-lg hover:bg-surface"
                 >
                   Cancel
                 </button>
@@ -191,11 +191,11 @@ function MenuModule() {
                   {expandedCategory === category.id ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-text-primary">{category.name}</h3>
-                  <p className="text-sm text-text-secondary">{category.description}</p>
+                  <h3 className="font-bold text-lg text-text-inverse">{category.name}</h3>
+                  <p className="text-sm text-text-inverse">{category.description}</p>
                 </div>
               </button>
-              <div className="flex gap-2">
+                <div className="flex gap-2">
                 <button
                   onClick={() => setEditingItem({ category_id: category.id, name: '', description: '', price: 0 })}
                   className="text-primary hover:bg-surface-warm p-2 rounded"
@@ -204,7 +204,7 @@ function MenuModule() {
                 </button>
                 <button
                   onClick={() => setEditingCategory(category)}
-                  className="text-text-secondary hover:bg-surface-warm p-2 rounded"
+                  className="text-text-inverse hover:bg-surface-warm p-2 rounded"
                 >
                   <Edit size={18} />
                 </button>
@@ -224,14 +224,14 @@ function MenuModule() {
                     {category.items.map(item => (
                       <div key={item.id} className="flex items-center justify-between p-3 bg-surface-warm rounded-lg">
                         <div className="flex-1">
-                          <p className="font-medium text-text-primary">{item.name}</p>
-                          <p className="text-sm text-text-secondary">{item.description}</p>
+                          <p className="font-medium text-text-inverse">{item.name}</p>
+                          <p className="text-sm text-text-inverse">{item.description}</p>
                           <p className="text-lg font-heading text-primary mt-1">${item.price.toFixed(2)}</p>
                         </div>
                         <div className="flex gap-2">
                           <button
                             onClick={() => setEditingItem(item)}
-                            className="text-text-secondary hover:bg-surface p-2 rounded"
+                            className="text-text-inverse hover:bg-surface p-2 rounded"
                           >
                             <Edit size={16} />
                           </button>
@@ -246,7 +246,7 @@ function MenuModule() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-center text-text-secondary py-4">No items in this category</p>
+                  <p className="text-center text-text-inverse py-4">No items in this category</p>
                 )}
               </div>
             )}

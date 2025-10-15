@@ -4,14 +4,17 @@ import './index.css';
 import './custom-styles.css';
 import App from './App';
 import { ToastProvider } from './contexts/ToastContext';
+import ThemeProvider from './contexts/ThemeContext';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ToastProvider>
-      <App />
-    </ToastProvider>
+      <ThemeProvider>
+      <ToastProvider>
+        <App />
+      </ToastProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );
 

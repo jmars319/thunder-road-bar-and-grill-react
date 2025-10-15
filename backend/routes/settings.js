@@ -1,0 +1,126 @@
+const express = require('express');
+const router = express.Router();
+
+// Get site settings
+router.get('/site-settings', (req, res) => {
+  req.db.query('SELECT * FROM site_settings WHERE id = 1', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results[0] || {});
+  });
+});
+
+// Update site settings
+router.put('/site-settings', (req, res) => {
+  const { business_name, tagline, logo_url, phone, email, address } = req.body;
+  
+  req.db.query(
+    'UPDATE site_settings SET business_name = ?, tagline = ?, logo_url = ?, phone = ?, email = ?, address = ? WHERE id = 1',
+    [business_name, tagline, logo_url, phone, email, address],
+    (err) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ message: 'Settings updated' });
+    }
+  );
+});
+
+// Get navigation links
+router.get('/navigation', (req, res) => {
+  req.db.query(
+    'SELECT * FROM navigation_links ORDER BY display_order',
+    (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(results);
+    }
+  );
+});
+
+// Get business hours
+router.get('/business-hours', (req, res) => {
+  req.db.query('SELECT * FROM business_hours ORDER BY id', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+// Update business hours
+router.put('/business-hours/:id', (req, res) => {
+  const { id } = req.params;
+  const { opening_time, closing_time, is_closed } = req.body;
+  
+  req.db.query(
+    'UPDATE business_hours SET opening_time = ?, closing_time = ?, is_closed = ? WHERE id = ?',
+    [opening_time, closing_time, is_closed, id],
+    (err) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ message: 'Hours updated' });
+    }
+  );
+});
+
+// Get about content
+router.get('/about', (req, res) => {
+  req.db.query('SELECT * FROM about_content WHERE id = 1', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results[0] || {});
+  });
+});
+
+// Update about content
+router.put('/about', (req, res) => {
+  const { header, paragraph, phone, email, address, map_embed_url } = req.body;
+  
+  req.db.query(
+    'UPDATE about_content SET header = ?, paragraph = ?, phone = ?, email = ?, address = ?, map_embed_url = ? WHERE id = 1',
+    [header, paragraph, phone, email, address, map_embed_url],
+    (err) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ message: 'About content updated' });
+    }
+  );
+});
+
+// Get footer columns
+router.get('/footer-columns', (req, res) => {
+  const query = `
+    SELECT 
+      fc.id as column_id,
+      fc.column_title,
+      fc.display_order as column_order,
+      fl.id as link_id,
+      fl.label as link_label,
+      fl.url as link_url,
+      fl.display_order as link_order
+    FROM footer_columns fc
+    LEFT JOIN footer_links fl ON fc.id = fl.column_id
+    ORDER BY fc.display_order, fl.display_order
+  `;
+
+  req.db.query(query, (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+
+    const columns = {};
+    results.forEach(row => {
+      if (!columns[row.column_id]) {
+        columns[row.column_id] = {
+          id: row.column_id,
+          column_title: row.column_title,
+          display_order: row.column_order,
+          links: []
+        };
+      }
+      
+      if (row.link_id) {
+        columns[row.column_id].links.push({
+          id: row.link_id,
+          label: row.link_label,
+          url: row.link_url,
+          display_order: row.link_order
+        });
+      }
+    });
+
+    res.json(Object.values(columns));
+  });
+});
+
+module.exports = router;

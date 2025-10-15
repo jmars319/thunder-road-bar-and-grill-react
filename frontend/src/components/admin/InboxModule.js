@@ -39,7 +39,7 @@ function InboxModule() {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-1 bg-surface rounded-lg shadow">
         <div className="p-4 border-b">
-          <h3 className="font-bold text-lg text-text-primary">Messages</h3>
+          <h3 className="font-bold text-lg text-text-inverse">Messages</h3>
         </div>
         <div className="divide-y max-h-[600px] overflow-y-auto">
           {messages.map(msg => (
@@ -59,8 +59,8 @@ function InboxModule() {
                   <p className={`font-medium truncate ${!msg.is_read ? 'text-primary' : ''}`}>
                     {msg.name}
                   </p>
-                  <p className="text-sm text-text-secondary truncate">{msg.subject}</p>
-                  <p className="text-xs text-text-secondary mt-1">
+                  <p className="text-sm text-text-inverse truncate">{msg.subject}</p>
+                  <p className="text-xs text-text-inverse mt-1">
                     {new Date(msg.submitted_at).toLocaleDateString()}
                   </p>
                 </div>
@@ -75,14 +75,14 @@ function InboxModule() {
           <div className="p-6">
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h3 className="text-xl font-bold text-text-primary">{selectedMessage.subject}</h3>
-                <p className="text-sm text-text-secondary mt-1">
+                <h3 className="text-xl font-bold text-text-inverse">{selectedMessage.subject}</h3>
+                <p className="text-sm text-text-inverse mt-1">
                   From: {selectedMessage.name} ({selectedMessage.email})
                 </p>
                 {selectedMessage.phone && (
-                  <p className="text-sm text-text-secondary">Phone: {selectedMessage.phone}</p>
+                  <p className="text-sm text-text-inverse">Phone: {selectedMessage.phone}</p>
                 )}
-                <p className="text-xs text-text-secondary mt-2">
+                <p className="text-xs text-text-inverse mt-2">
                   {new Date(selectedMessage.submitted_at).toLocaleString()}
                 </p>
               </div>
@@ -94,11 +94,11 @@ function InboxModule() {
               </button>
             </div>
             <div className="border-t pt-4">
-              <p className="text-text-primary whitespace-pre-wrap">{selectedMessage.message}</p>
+              <p className="text-text-inverse whitespace-pre-wrap">{selectedMessage.message}</p>
             </div>
           </div>
         ) : (
-          <div className="flex items-center justify-center h-full p-12 text-center text-text-secondary">
+          <div className="flex items-center justify-center h-full p-12 text-center text-text-inverse">
             <div>
               <Inbox size={48} className="mx-auto mb-4" />
               <p>Select a message to view</p>

@@ -1,31 +1,122 @@
-# Website Template (React + Vite + TypeScript)
+# Thunder Road Bar and Grill
 
-Opinionated starter to speed up new website builds using React, Vite and TypeScript.
+Complete restaurant management system with public website and admin panel.
 
-Getting started
+## Features
 
-1. Install dependencies:
+- **Public Website**
+  - Menu display with categories
+  - Online reservations
+  - About section with map
+  - Contact form
+  
+- **Admin Panel**
+  - Dashboard with metrics
+  - Inbox for messages
+  - Menu management
+  - Reservation management
+  - Job application reviews
+  - Media library
+  - Business settings
+  - Newsletter management
 
-   npm install
+## Technology Stack
 
-2. Start dev server:
+- **Frontend:** React 18, Tailwind CSS, Lucide React
+- **Backend:** Node.js, Express
+- **Database:** MySQL
 
-   npm run dev
+## Setup Instructions
 
-3. Run tests:
+### 1. Database Setup
 
-   npm test
+1. Open MySQL Workbench
+2. Connect to your MySQL server
+3. Open `database/schema.sql`
+4. Execute the entire script
+5. Verify tables were created
 
-What I included
+### 2. Backend Setup
 
-- Vite + React + TypeScript
-- Tailwind-ready CSS (Tailwind/PostCSS config included)
-- React Router with sample routes
-- Minimal component structure (Header, pages)
-- Vitest + Testing Library test example
+```bash
+cd backend
+npm install
+```
 
-Next steps / suggestions
+Edit `backend/.env` and set your MySQL password:
+```
+DB_PASSWORD=your_actual_password
+```
 
-- Add project-specific ESLint/Prettier configs
-- Wire in CI (GitHub Actions) and deploy scripts
-- Add component library or design tokens
+Start backend server:
+```bash
+npm start
+```
+
+Server runs on: `http://localhost:5001`
+
+### 3. Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+Website opens at: `http://localhost:3000`
+
+## Admin Access
+
+- Username: `admin`
+- Password: `admin123`
+
+Click "Admin" in the navbar to access the admin panel.
+
+## Project Structure
+
+```
+thunder-road/
+├── backend/
+│   ├── server.js
+│   ├── routes/
+│   ├── uploads/
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── App.js
+│   │   ├── pages/
+│   │   └── components/
+│   └── package.json
+└── database/
+    └── schema.sql
+```
+
+## API Endpoints
+
+- `POST /api/login` - Admin login
+- `GET /api/menu` - Get menu with categories
+- `POST /api/reservations` - Create reservation
+- `GET /api/reservations` - Get all reservations (admin)
+- `POST /api/jobs` - Submit job application
+- `POST /api/media/upload` - Upload media file (admin)
+- `GET /api/site-settings` - Get site settings
+- `PUT /api/site-settings` - Update site settings (admin)
+- `GET /api/about` - Get about content
+- `GET /api/business-hours` - Get business hours
+- `GET /api/newsletter/subscribers` - Get subscribers (admin)
+- `POST /api/contact` - Submit contact message
+
+## Customizing for Other Businesses
+
+This codebase is designed to be easily copied and customized:
+
+1. Copy the entire project folder
+2. Rename the folder (e.g., `bow-wows-spa`)
+3. Update `database/schema.sql` with new business name
+4. Run schema in MySQL Workbench
+5. Update site settings in admin panel
+6. Customize menu/services as needed
+
+## Support
+
+For issues or questions, contact: info@thunderroad.com

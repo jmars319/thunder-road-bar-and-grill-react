@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
+import ThemeToggle from '../ThemeToggle';
 
 const API_BASE = 'http://localhost:5001/api';
 
@@ -58,6 +59,7 @@ export default function PublicNavbar({ onGoToAdmin }) {
             >
               Admin
             </button>
+            <ThemeToggle inline className="ml-2" />
           </div>
 
           <button
