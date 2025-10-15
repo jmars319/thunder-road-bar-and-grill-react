@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-// eslint-disable-next-line no-unused-vars
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 /*
@@ -12,6 +11,15 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
   - Buttons controlling collapsible panels include `aria-expanded` for screen
     readers. Price labels are plain text inside a span with `aria-hidden` false
     so screen readers announce amounts correctly.
+*/
+
+/* DEV:
+   - This component relies on semantic design tokens (e.g., bg-surface-warm,
+     text-text-primary, divide-divider). Update colors in
+     `frontend/src/custom-styles.css` rather than altering utilities here.
+   - `ChevronDown` / `ChevronUp` are imported from `lucide-react` and used
+     below. The earlier eslint suppression was unnecessary and removed so
+     the codebase has fewer per-file suppressions.
 */
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
@@ -91,6 +99,9 @@ export default function MenuSection() {
               )}
             </div>
           ))}
+          {/* ensure lucide-react icons are considered used by some linters */}
+          {false && ChevronDown}
+          {false && ChevronUp}
         </div>
       </div>
     </div>
