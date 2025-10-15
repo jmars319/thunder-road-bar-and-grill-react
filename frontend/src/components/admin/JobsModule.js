@@ -17,6 +17,10 @@ import { Briefcase, Trash2 } from 'lucide-react';
     server-side, update the mapping here for consistent UI.
   - The component performs best-effort network calls and refetches after updates.
     For an improved UX consider optimistic updates or per-item loading states.
+  Accessibility:
+  - Interactive list items are rendered as buttons; ensure they have type="button"
+    to avoid accidental form submissions. The applications list uses role="list"
+    and each item uses role="listitem" for better screen reader semantics.
 */
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
@@ -77,10 +81,14 @@ function JobsModule() {
         <div className="p-4 border-b">
           <h3 className="font-bold text-lg text-text-primary">Applications</h3>
         </div>
-        <div className="divide-y max-h-[600px] overflow-y-auto">
+        <div className="divide-y max-h-[600px] overflow-y-auto" role="list" aria-label="Job applications list">
           {applications.map(app => (
             <button
               key={app.id}
+              type="button"
+              role="listitem"
+              aria-label={`View application from ${app.name}`}
+              aria-current={selectedApp?.id === app.id ? 'true' : undefined}
               onClick={() => setSelectedApp(app)}
               className={`w-full p-4 text-left hover:bg-surface-warm transition ${
                 selectedApp?.id === app.id ? 'bg-surface-warm' : ''
@@ -94,7 +102,7 @@ function JobsModule() {
                     {app.submitted_at ? new Date(app.submitted_at).toLocaleDateString() : ''}
                   </p>
                 </div>
-                <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(app.status)}`}>
+                <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(app.status)}`} aria-hidden>
                   {app.status}
                 </span>
               </div>
@@ -119,8 +127,10 @@ function JobsModule() {
                 </p>
               </div>
               <button
+                type="button"
                 onClick={() => deleteApplication(selectedApp.id)}
                 className="text-error p-2 rounded hover:bg-surface-warm"
+                aria-label={`Delete application from ${selectedApp.name}`}
               >
                 <Trash2 size={18} />
               </button>
