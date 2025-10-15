@@ -167,7 +167,9 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Hero Section with Gradient */
 .hero-gradient {
-  background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+  /* Use design token for the second gradient stop so runtime theming applies
+     instead of a hard-coded utility color */
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
   position: relative;
   overflow: hidden;
 }
@@ -180,7 +182,8 @@ h1, h2, h3, h4, h5, h6 {
 /* Hero Text Outline (for readability) */
 .hero-title,
 .hero-subtitle {
-  color: #fff;
+  /* Use token for inverse text so dark/light themes remain consistent */
+  color: var(--text-inverse);
   text-shadow:
     1px 1px 0 var(--primary-color),
     -1px -1px 0 var(--primary-color),
@@ -362,14 +365,15 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Logo Badge (white oval background) */
+/* Logo Badge (surface background) */
 .logo-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 6px 10px;
   border-radius: 9999px;
-  background: #ffffff;
+  /* Use surface token so the badge follows theming */
+  background: var(--surface-color);
   box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
 }
 
