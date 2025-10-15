@@ -1,30 +1,16 @@
-import React, { useEffect, useState } from 'react';
-
 /*
-  PublicFooter
-
   Purpose:
-  - Render the site footer using columns provided by the backend. Keeps content
-    editable from the CMS/backend rather than hardcoded here.
+  - Render the site footer using content from the backend (footer columns).
 
-  Expected API:
-  - GET /api/footer-columns -> [
-      {
-        id: string | number,
-        column_title: string,
-        links: [ { id, label, url }, ... ]
-      },
-      ...
-    ]
+  Contract:
+  - Expects GET /api/footer-columns returning columns with `links` arrays.
 
-  Notes for maintainers:
-  - The component fetches on mount and uses a simple array shape. If the backend
-    returns a different shape, add a small adapter here rather than changing callers.
-  - Links are rendered as plain anchors. If you later adopt a router, replace <a>
-    with a Link component and preserve the same link objects.
-  - Accessibility: headings use semantic <h4>. If the footer is the first/only
-    landmark on some pages, consider adding an aria-label to the <footer> element.
+  Notes:
+  - Links are plain anchors to keep the footer router-agnostic. Adapt the data
+    shape here if the backend changes rather than changing callers.
 */
+
+import React, { useEffect, useState } from 'react';
 
 const API_BASE = 'http://localhost:5001/api';
 

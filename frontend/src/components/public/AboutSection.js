@@ -1,20 +1,15 @@
-import React, { useEffect, useState } from 'react';
-
 /*
-  AboutSection
-
   Purpose:
-  - Display the 'About Us' content retrieved from the backend. Keeps copy
-    editable in the CMS instead of hardcoding it in the frontend.
+  - Render editable 'About' content pulled from the backend.
 
-  Expected API:
-  - GET /api/about -> { header?: string, paragraph?: string, map_embed_url?: string }
+  Contract:
+  - Expects GET /api/about returning an object with header, paragraph, and an optional map URL.
 
   Notes:
-  - The component tolerates missing fields by rendering nothing for absent values.
-  - If richer HTML or markup is needed from the CMS, sanitize or render via a
-    trusted renderer here rather than trusting raw HTML in templates.
+  - Sanitize any rich HTML from the backend before rendering to avoid XSS.
 */
+
+import React, { useEffect, useState } from 'react';
 
 const API_BASE = 'http://localhost:5001/api';
 

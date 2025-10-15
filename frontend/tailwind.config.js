@@ -1,3 +1,18 @@
+/**
+ * Tailwind configuration for Thunder Road
+ *
+ * Purpose:
+ * - Define design tokens (colors, fonts, spacing) mapped to CSS variables so
+ *   runtime theming (ThemeContext) can change appearance without rebuilding.
+ *
+ * Notes:
+ * - Colors are defined using CSS variables (var(--primary-color)) so the
+ *   ThemeProvider can switch themes by updating :root variables or
+ *   `data-theme` on <html>.
+ * - darkMode is set to 'media' to follow the user's OS preference by default.
+ *   The app also supports explicit theme switching via the ThemeContext.
+ */
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [

@@ -3,29 +3,17 @@ import { Menu, X } from 'lucide-react';
 import ThemeToggle from '../ThemeToggle';
 
 /*
-  PublicNavbar
-
   Purpose:
-  - Top-of-page navigation used on the public-facing site.
-  - Loads minimal site settings and navigation links from the backend and
-    renders a responsive navigation bar with an optional mobile menu.
+  - Site navigation used by the public website. Loads `site-settings` and
+    `navigation` from the backend and renders responsive navigation.
 
-  Props:
-  - onGoToAdmin: function called when the user clicks the Admin button/link.
+  Contract:
+  - Props: { onGoToAdmin?: function }
+  - Data: expects GET /api/site-settings and GET /api/navigation endpoints.
 
-  Data expectations (from API):
-  - GET /api/site-settings -> { business_name?, logo_url?, tagline?, ... }
-  - GET /api/navigation -> [ { id, label, url }, ... ]
-
-  Notes for maintainers:
-  - The component does a simple fetch on mount; this is intentionally lightweight.
-    If these endpoints become slow, consider moving data loading higher (SSR) or
-    adding caching.
-  - Links are rendered as plain anchor tags (href). If the app uses client-side
-    routing later, replace <a> with the router's Link component and preserve
-    the same data shape (id, url, label).
-  - Keep visual/accessibility changes centralized: logo alt text uses the
-    `business_name` field when available.
+  Notes:
+  - Fetches on mount; for heavy traffic consider caching or server-side
+    rendering. Keep link shape stable for router integration.
 */
 
 const API_BASE = 'http://localhost:5001/api';

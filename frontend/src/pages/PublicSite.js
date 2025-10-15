@@ -1,7 +1,16 @@
-// ============================================
-// Thunder Road - Public Website
-// File: frontend/src/pages/PublicSite.js
-// ============================================
+/*
+  Purpose:
+  - Top-level composition for the public-facing website. This page stitches
+    together smaller presentational components (Navbar, Hero, Menu, Reservation,
+    About, Footer).
+
+  Contract:
+  - Props: { onGoToAdmin?: function }
+  - Responsibilities: layout composition only; children handle data fetching.
+
+  Notes:
+  - Consider lazy-loading heavy sections if the page becomes large.
+*/
 
 import React from 'react';
 import PublicNavbar from '../components/public/PublicNavbar';

@@ -1,26 +1,19 @@
 import React, { useState } from 'react';
 
 /*
-  LoginPage
-
   Purpose:
   - Lightweight admin sign-in page used by the AdminPanel. Posts credentials
     to the backend and calls `onLogin(user)` when the server confirms success.
 
-  Expected backend contract:
-  - POST /api/login
-    Request: { email, password }
-    Response: { success: boolean, user?: { name, id, roles... }, message?: string }
+  Contract:
+  - Expects backend POST /api/login with { email, password } and a JSON
+    response containing a `success` boolean and optionally a `user` object.
 
-  Developer notes / considerations:
-  - API_BASE is hard-coded here for local development. In production move this
-    to an environment variable (process.env.REACT_APP_API_BASE) or a config
-    provider so deployments can change endpoints without editing source.
-  - This component intentionally keeps client-side validation minimal. For a
-    production admin area add stronger validation, throttling, CSRF protection,
-    and better error reporting based on server error shapes.
-  - Accessibility: we add input ids, associated labels, and an aria-live error
-    region so screen readers announce authentication errors.
+  Notes:
+  - API_BASE is currently hard-coded for local development. Move to
+    environment configuration for deployments.
+  - Accessibility: uses labels, input ids, and an aria-live error region for
+    screen reader announcements.
 */
 
 // TODO: replace with process.env.REACT_APP_API_BASE or a config module

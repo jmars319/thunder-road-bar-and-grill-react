@@ -1,25 +1,14 @@
-import React from 'react';
-
 /*
-  HeroSection
-
   Purpose:
-  - The main marketing hero used on the public homepage. It's intentionally
-    simple: a headline, a short subtitle, and two call-to-action buttons.
+  - Hero section for the homepage: headline, subtitle, and CTAs. Presentational
+    and intentionally static to avoid unexpected layout changes.
 
-  Developer notes:
-  - Content is currently static to keep the component predictable. If you later
-    need dynamic content (from a CMS), prefer passing `title`, `subtitle`, and
-    `actions` as props so the component remains presentational.
-  - The visual background uses the `hero-gradient` utility which is defined in
-    global styles. Keep those styles centralized so other pages can reuse them.
-
-  Accessibility:
-  - Headline uses an <h1> which is correct for a homepage hero. If this component
-    is moved to another page, ensure the document outline still has a single H1.
-  - CTAs are anchor links that navigate within the page; if they instead trigger
-    actions (e.g., modal), convert them to <button> and provide aria attributes.
+  Notes:
+  - For dynamic content prefer props to keep the component presentational.
+  - Maintain accessibility (single H1 on homepage) if this component is moved.
 */
+
+import React from 'react';
 
 export default function HeroSection() {
   return (
