@@ -11,7 +11,7 @@
     correct semantic structure.
 */
 
-import React from 'react';
+// React 17+ with new JSX transform doesn't require importing React for JSX usage.
 
 export default function HeroSection() {
   // NOTE: This component uses the `.hero-gradient` helper which references
