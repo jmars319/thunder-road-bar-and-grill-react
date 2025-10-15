@@ -14,7 +14,7 @@
 
 import React from 'react';
 
-export default function Button({ children, className = '', variant = 'primary', ...props }) {
+export default function Button({ children, className = '', variant = 'primary', type = 'button', ...props }) {
   const base = 'px-4 py-2 rounded-lg font-bold transition shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40';
   const variants = {
     primary: 'bg-primary text-text-inverse hover:bg-primary-dark',
@@ -22,7 +22,7 @@ export default function Button({ children, className = '', variant = 'primary', 
     danger: 'bg-error text-text-inverse hover:brightness-95'
   };
   return (
-    <button className={`${base} ${variants[variant] || variants.primary} ${className}`} {...props}>
+    <button type={type} className={`${base} ${variants[variant] || variants.primary} ${className}`} {...props}>
       {children}
     </button>
   );

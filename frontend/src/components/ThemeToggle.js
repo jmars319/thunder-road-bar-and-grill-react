@@ -60,6 +60,7 @@ export default function ThemeToggle({ inline = false, className = '' }) {
 
   return (
     <button
+      type="button"
       aria-label="Toggle theme"
       title={`Theme: ${labelFor(theme)} (click to change)`}
       onClick={cycle}

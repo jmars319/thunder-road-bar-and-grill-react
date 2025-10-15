@@ -51,8 +51,10 @@ import PublicFooter from '../components/public/PublicFooter';
 export default function PublicSite({ onGoToAdmin }) {
   return (
     <div className="min-h-screen bg-background">
+      {/* Skip link for keyboard users */}
+      <a href="#site-main" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:bg-surface focus:text-text-primary focus:px-2 focus:py-1 rounded">Skip to main content</a>
       <PublicNavbar onGoToAdmin={onGoToAdmin} />
-      <main>
+      <main id="site-main" role="main">
         <HeroSection />
         <MenuSection />
         <ReservationSection />

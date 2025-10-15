@@ -29,15 +29,16 @@ import SettingsModule from '../components/admin/SettingsModule';
 import NewsletterModule from '../components/admin/NewsletterModule';
 
 // Module Registry
+// Each entry may be either the component itself or an object { component, name, icon }
 const AdminModules = {
-  dashboard: DashboardModule,
-  inbox: InboxModule,
-  menu: MenuModule,
-  reservations: ReservationsModule,
-  jobs: JobsModule,
-  media: MediaModule,
-  settings: SettingsModule,
-  newsletters: NewsletterModule
+  dashboard: { component: DashboardModule, name: 'Dashboard', icon: Home },
+  inbox: { component: InboxModule, name: 'Messages', icon: Home },
+  menu: { component: MenuModule, name: 'Menu', icon: Home },
+  reservations: { component: ReservationsModule, name: 'Reservations', icon: Home },
+  jobs: { component: JobsModule, name: 'Jobs', icon: Home },
+  media: { component: MediaModule, name: 'Media', icon: Home },
+  settings: { component: SettingsModule, name: 'Settings', icon: Home },
+  newsletters: { component: NewsletterModule, name: 'Newsletter', icon: Home }
 };
 
 export default function AdminPanel({ user = { name: 'Admin' }, onLogout = () => {}, onBackToSite = () => {} }) {
@@ -49,7 +50,8 @@ export default function AdminPanel({ user = { name: 'Admin' }, onLogout = () => 
   // key to an object { component, name, icon } so new modules can be added by
   // updating the AdminModules object above. Modules should be pure components
   // that render their own data fetching and state.
-  const CurrentModule = AdminModules[activeModule]?.component;
+  const registryEntry = AdminModules[activeModule];
+  const CurrentModule = registryEntry ? (registryEntry.component || registryEntry) : null;
 
   return (
     <div className="min-h-screen bg-admin-pageBg flex">
@@ -68,20 +70,24 @@ export default function AdminPanel({ user = { name: 'Admin' }, onLogout = () => 
 
         {/* Module Navigation */}
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-          {Object.entries(AdminModules).map(([key, module]) => {
-            const Icon = module.icon;
+          {Object.entries(AdminModules).map(([key, moduleEntry]) => {
+            const entry = moduleEntry.component ? moduleEntry : { component: moduleEntry, name: moduleEntry.name || key, icon: moduleEntry.icon || Home };
+            const Icon = entry.icon || Home;
             return (
               <button
                 key={key}
+                type="button"
                 onClick={() => setActiveModule(key)}
+                aria-pressed={activeModule === key}
+                aria-label={`Open ${entry.name}`}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${
                   activeModule === key 
                     ? 'bg-primary text-text-inverse' 
-          : 'text-text-inverse hover:bg-surface-dark/90 hover:text-text-inverse'
+                    : 'text-text-inverse hover:bg-surface-dark/90 hover:text-text-inverse'
                 }`}
               >
                 <Icon size={20} />
-                {sidebarOpen && <span className="text-sm font-medium text-text-inverse">{module.name}</span>}
+                {sidebarOpen && <span className="text-sm font-medium text-text-inverse">{entry.name}</span>}
               </button>
             );
           })}

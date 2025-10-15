@@ -27,7 +27,7 @@ export default function PublicFooter() {
   }, []);
 
   return (
-    <footer className="bg-surface text-text-inverse py-12">
+    <footer className="bg-surface text-text-inverse py-12" role="contentinfo" aria-label="Site footer">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
         {columns.map(col => (
           <div key={col.id}>
@@ -42,7 +42,7 @@ export default function PublicFooter() {
           </div>
         ))}
       </div>
-      <div className="mt-8 text-center text-sm text-text-secondary">© {new Date().getFullYear()} Thunder Road Bar and Grill</div>
+      <div className="mt-8 text-center text-sm text-text-secondary" aria-hidden="false">© {new Date().getFullYear()} Thunder Road Bar and Grill</div>
     </footer>
   );
 }
