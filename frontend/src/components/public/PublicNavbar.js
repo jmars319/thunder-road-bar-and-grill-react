@@ -47,6 +47,31 @@ export default function PublicNavbar({ onGoToAdmin }) {
       .catch(() => setNavLinks([]));
   }, []);
 
+  // Smooth-scroll handler for same-page hash links. For links that begin
+  // with '#', prevent default navigation and scroll the matching element
+  // into view with smooth behavior. Also close the mobile menu when used.
+  function handleNavClick(e, url) {
+    if (!url) return;
+    try {
+      // normalize to a hash fragment if present, e.g. '/#about' or 'https://site/#about'
+      const hashIndex = url.indexOf('#');
+      if (hashIndex !== -1) {
+        e.preventDefault();
+        const id = url.slice(hashIndex + 1);
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          // Fallback to setting the hash so the browser can attempt navigation
+          window.location.hash = url;
+        }
+        setMobileMenuOpen(false);
+      }
+    } catch (err) {
+      // swallow any errors to avoid breaking the nav
+    }
+  }
+
   // If the logo_url is an SVG file, fetch the content and render inline so it
   // inherits currentColor (recolorable). This is a best-effort fetch and will
   // gracefully fall back to <img> on error.
@@ -99,16 +124,27 @@ export default function PublicNavbar({ onGoToAdmin }) {
 
           {/* Desktop navigation */}
           <div className="hidden md:flex items-center gap-8">
-            {navLinks.map(link => (
-              // Render each nav item. If integrating with a router later, swap <a>.
-              <a
-                key={link.id}
-                href={link.url}
-                className="text-text-secondary hover:text-text-primary font-medium transition"
-              >
-                {link.label}
-              </a>
-            ))}
+            {/**
+             * Small mapping: treat an incoming 'Contact' navigation item as the
+             * public-facing careers link. This keeps the admin-driven navigation
+             * flexible while making the public nav point to the JobSection on the
+             * page (id="#jobs"). Admins can still update navigation in the DB.
+             */}
+            {navLinks.map(link => {
+              const isContactLink = (link.url && link.url.toLowerCase() === '#contact') || (link.label && link.label.toLowerCase().includes('contact'));
+              const renderLabel = isContactLink ? 'Careers' : link.label;
+              const renderUrl = isContactLink ? '#jobs' : link.url;
+              return (
+                <a
+                  key={link.id}
+                  href={renderUrl}
+                  onClick={(e) => handleNavClick(e, renderUrl)}
+                  className="text-text-secondary hover:text-text-primary font-medium transition"
+                >
+                  {renderLabel}
+                </a>
+              );
+            })}
             {/* DEV: Admin button and nav links use semantic design tokens (bg-primary, text-text-inverse,
                 hover:bg-primary-dark, text-text-primary, etc.). Adjust tokens in
                 `frontend/src/custom-styles.css` rather than changing utility classes here. */}
@@ -143,16 +179,21 @@ export default function PublicNavbar({ onGoToAdmin }) {
         {mobileMenuOpen && (
           <div id="mobile-menu" className="md:hidden pb-4 border-t">
             <div className="flex flex-col gap-4 pt-4">
-              {navLinks.map(link => (
-                <a
-                  key={link.id}
-                  href={link.url}
-                  className="text-text-primary hover:text-primary font-medium transition-colors px-4 py-2 hover:bg-surface-warm rounded"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </a>
-              ))}
+              {navLinks.map(link => {
+                const isContactLink = (link.url && link.url.toLowerCase() === '#contact') || (link.label && link.label.toLowerCase().includes('contact'));
+                const renderLabel = isContactLink ? 'Careers' : link.label;
+                const renderUrl = isContactLink ? '#jobs' : link.url;
+                return (
+                  <a
+                    key={link.id}
+                    href={renderUrl}
+                    className="text-text-primary hover:text-primary font-medium transition-colors px-4 py-2 hover:bg-surface-warm rounded"
+                    onClick={(e) => handleNavClick(e, renderUrl)}
+                  >
+                    {renderLabel}
+                  </a>
+                );
+              })}
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);

@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { icons } from '../../icons';
+import Toast from '../ui/Toast';
 
 /* DEV:
    - Admin menu editor uses semantic tokens (bg-primary, bg-surface-warm,
@@ -15,6 +16,10 @@ function MenuModule() {
   const [categories, setCategories] = useState([]);
   const [expandedCategory, setExpandedCategory] = useState(null);
   const [editingCategory, setEditingCategory] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadError, setUploadError] = useState(null);
+  const uploadXhr = useRef(null);
   const [editingItem, setEditingItem] = useState(null);
 
     /*
@@ -49,6 +54,11 @@ function MenuModule() {
   };
 
   const saveCategory = () => {
+    // client-side validation: name required
+    if (!editingCategory.name || !editingCategory.name.trim()) {
+      setUploadError(null);
+      return alert('Category name is required');
+    }
     const method = editingCategory.id ? 'PUT' : 'POST';
     const url = editingCategory.id 
       ? `${API_BASE}/menu/categories/${editingCategory.id}`
@@ -62,6 +72,66 @@ function MenuModule() {
       fetchCategories();
       setEditingCategory(null);
     });
+  };
+
+  // Upload helper: XMLHttpRequest-based so we can track progress and cancel
+  const uploadFile = (file) => {
+    if (!file) return Promise.resolve(null);
+    return new Promise((resolve, reject) => {
+      setUploading(true);
+      setUploadProgress(0);
+      setUploadError(null);
+      const xhr = new window.XMLHttpRequest();
+      uploadXhr.current = xhr;
+      const fd = new FormData();
+      fd.append('file', file);
+
+      xhr.open('POST', `${API_BASE}/media/upload`);
+
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const pct = Math.round((e.loaded / e.total) * 100);
+          setUploadProgress(pct);
+        }
+      };
+
+      xhr.onload = () => {
+        uploadXhr.current = null;
+        setUploading(false);
+        setUploadProgress(100);
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            const data = JSON.parse(xhr.responseText);
+            resolve(data.file_url || null);
+          } catch (err) {
+            setUploadError('Invalid server response');
+            reject(new Error('Invalid response'));
+          }
+        } else {
+          setUploadError('Upload failed');
+          reject(new Error('Upload failed'));
+        }
+      };
+
+      xhr.onerror = () => {
+        uploadXhr.current = null;
+        setUploading(false);
+        setUploadError('Network error');
+        reject(new Error('Network error'));
+      };
+
+      xhr.send(fd);
+    });
+  };
+
+  const cancelUpload = () => {
+    if (uploadXhr.current) {
+      try { uploadXhr.current.abort(); } catch (e) {}
+      uploadXhr.current = null;
+    }
+    setUploading(false);
+    setUploadProgress(0);
+    setUploadError('Upload cancelled');
   };
 
   const deleteCategory = (id) => {
@@ -135,14 +205,59 @@ function MenuModule() {
                   rows="3"
                 />
               </div>
+              <div>
+                  <label className="block text-sm font-medium text-text-primary mb-1">Image URL (optional)</label>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    value={editingCategory.image_url || ''}
+                    onChange={(e) => setEditingCategory({...editingCategory, image_url: e.target.value})}
+                    placeholder="https://.../image.jpg"
+                    className="w-full form-input"
+                    disabled={uploading}
+                  />
+                  <label className={`px-3 py-2 rounded cursor-pointer text-sm ${uploading ? 'opacity-60 pointer-events-none' : 'bg-surface'}`}>
+                    <input type="file" accept="image/*" className="hidden" onChange={async (ev) => {
+                      const f = ev.target.files?.[0];
+                      if (!f) return;
+                      // client-side checks: image type and size <= 5MB
+                      const MAX_BYTES = 5 * 1024 * 1024;
+                      if (!f.type.startsWith('image/')) {
+                        setUploadError('Please select an image file');
+                        return;
+                      }
+                      if (f.size > MAX_BYTES) {
+                        setUploadError('Image must be 5 MB or smaller');
+                        return;
+                      }
+                      try {
+                        const url = await uploadFile(f);
+                        if (url) setEditingCategory(c => ({ ...c, image_url: url }));
+                      } catch (err) {
+                        // error state is handled by uploadError
+                      }
+                    }} />
+                    {uploading ? `Uploading ${uploadProgress}%` : 'Upload'}
+                  </label>
+                </div>
+                {uploadError && <Toast type="error" onClose={() => setUploadError(null)}>{uploadError}</Toast>}
+                {editingCategory.image_url && (
+                  <div className="mt-2">
+                    <img src={editingCategory.image_url} alt="preview" className="h-24 rounded object-cover" />
+                    {uploading && <div className="w-full bg-surface-warm h-2 rounded mt-2 overflow-hidden"><div className="bg-accent h-2" style={{ width: `${uploadProgress}%` }} /></div>}
+                    {uploading && <div className="mt-2"><button type="button" onClick={cancelUpload} className="btn btn-ghost btn-sm">Cancel</button></div>}
+                  </div>
+                )}
+              </div>
               <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={saveCategory}
-                  className="flex-1 bg-primary text-text-inverse py-2 rounded-lg hover:bg-primary-dark"
-                >
-                  Save
-                </button>
+                  <button
+                    type="button"
+                    onClick={saveCategory}
+                    className="flex-1 bg-primary text-text-inverse py-2 rounded-lg hover:bg-primary-dark"
+                    disabled={uploading}
+                  >
+                    {uploading ? 'Uploading…' : 'Save'}
+                  </button>
                 <button
                   type="button"
                   onClick={() => setEditingCategory(null)}
