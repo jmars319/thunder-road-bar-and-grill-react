@@ -22,6 +22,8 @@ export default function JobSection() {
   const [fieldErrors, setFieldErrors] = useState({});
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
+  const inputRefs = useRef({});
+  const uploadXhrRef = useRef(null);
 
   // Validation rules
   const MAX_FILE_BYTES = 3 * 1024 * 1024; // 3 MB
@@ -30,6 +32,15 @@ export default function JobSection() {
   function handleChange(e) {
     const { name, value } = e.target;
     setForm((s) => ({ ...s, [name]: value }));
+    // clear inline field error for this field
+    setFieldErrors((errs) => {
+      if (!errs || !errs[name]) return errs;
+      const next = { ...errs };
+      delete next[name];
+      return next;
+    });
+    setError(null);
+    setMessage(null);
   }
 
   // Upload using XMLHttpRequest to provide progress feedback
@@ -37,7 +48,9 @@ export default function JobSection() {
     if (!file) return Promise.resolve(null);
 
     return new Promise((resolve, reject) => {
-  const xhr = new window.XMLHttpRequest();
+      const xhr = new window.XMLHttpRequest();
+      // keep reference so upload can be cancelled
+      uploadXhrRef.current = xhr;
       const fd = new FormData();
       fd.append('file', file);
 
@@ -55,21 +68,33 @@ export default function JobSection() {
         if (xhr.status >= 200 && xhr.status < 300) {
           try {
             const data = JSON.parse(xhr.responseText);
+            uploadXhrRef.current = null;
             resolve(data.file_url || null);
           } catch (err) {
+            uploadXhrRef.current = null;
             reject(new Error('Invalid upload response'));
           }
         } else {
+          uploadXhrRef.current = null;
           reject(new Error('Resume upload failed'));
         }
       };
 
       xhr.onerror = function () {
+        uploadXhrRef.current = null;
         reject(new Error('Network error during upload'));
       };
-
       xhr.send(fd);
     });
+  }
+
+  function cancelUpload() {
+    if (uploadXhrRef.current) {
+      try { uploadXhrRef.current.abort(); } catch (e) {}
+      uploadXhrRef.current = null;
+      setUploadProgress(0);
+      setError('Upload cancelled');
+    }
   }
 
   async function handleSubmit(e) {
@@ -83,7 +108,7 @@ export default function JobSection() {
       const errs = {};
       if (!form.name.trim()) errs.name = 'Please enter your full name';
       if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = 'Please enter a valid email address';
-      if (!form.position) errs.position = 'Please select a position';
+  if (!form.position) errs.position = 'Please select a position';
       // Phone simple validation (digits, spaces, dashes, parentheses)
       if (form.phone && !/^[0-9()+\-\s]+$/.test(form.phone)) errs.phone = 'Please enter a valid phone number';
 
@@ -103,6 +128,10 @@ export default function JobSection() {
 
       if (Object.keys(errs).length) {
         setFieldErrors(errs);
+        // focus the first invalid field for accessibility
+        const firstKey = Object.keys(errs)[0];
+        const el = inputRefs.current[firstKey];
+        if (el && typeof el.focus === 'function') el.focus();
         throw new Error('Please fix the highlighted fields');
       }
       setFieldErrors({});
@@ -181,22 +210,22 @@ export default function JobSection() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <label className="flex flex-col">
               <span className="text-sm mb-1">Full name</span>
-              <input name="name" value={form.name} onChange={handleChange} required className="input" aria-invalid={!!fieldErrors.name} aria-describedby={fieldErrors.name ? 'err-name' : undefined} />
+              <input ref={el => inputRefs.current.name = el} name="name" value={form.name} onChange={handleChange} required className="input" aria-invalid={!!fieldErrors.name} aria-describedby={fieldErrors.name ? 'err-name' : undefined} />
               {fieldErrors.name && <div id="err-name" className="text-sm text-red-600 mt-1">{fieldErrors.name}</div>}
             </label>
             <label className="flex flex-col">
               <span className="text-sm mb-1">Email</span>
-              <input name="email" type="email" value={form.email} onChange={handleChange} required className="input" aria-invalid={!!fieldErrors.email} aria-describedby={fieldErrors.email ? 'err-email' : undefined} />
+              <input ref={el => inputRefs.current.email = el} name="email" type="email" value={form.email} onChange={handleChange} required className="input" aria-invalid={!!fieldErrors.email} aria-describedby={fieldErrors.email ? 'err-email' : undefined} />
               {fieldErrors.email && <div id="err-email" className="text-sm text-red-600 mt-1">{fieldErrors.email}</div>}
             </label>
             <label className="flex flex-col">
               <span className="text-sm mb-1">Phone</span>
-              <input name="phone" value={form.phone} onChange={handleChange} className="input" aria-invalid={!!fieldErrors.phone} aria-describedby={fieldErrors.phone ? 'err-phone' : undefined} />
+              <input ref={el => inputRefs.current.phone = el} name="phone" value={form.phone} onChange={handleChange} className="input" aria-invalid={!!fieldErrors.phone} aria-describedby={fieldErrors.phone ? 'err-phone' : undefined} />
               {fieldErrors.phone && <div id="err-phone" className="text-sm text-red-600 mt-1">{fieldErrors.phone}</div>}
             </label>
             <label className="flex flex-col">
               <span className="text-sm mb-1">Position</span>
-              <select name="position" value={form.position} onChange={handleChange} className="input" aria-invalid={!!fieldErrors.position} aria-describedby={fieldErrors.position ? 'err-position' : undefined}>
+              <select ref={el => inputRefs.current.position = el} name="position" value={form.position} onChange={handleChange} className="input" aria-invalid={!!fieldErrors.position} aria-describedby={fieldErrors.position ? 'err-position' : undefined}>
                 {positions.map((p) => (
                   <option key={p} value={p}>{p}</option>
                 ))}
@@ -237,6 +266,11 @@ export default function JobSection() {
                 <div className="bg-accent h-2" style={{ width: `${uploadProgress}%` }} />
               </div>
             )}
+            {uploadProgress > 0 && uploadProgress < 100 && (
+              <div className="mt-2">
+                <button type="button" onClick={cancelUpload} className="btn btn-ghost btn-sm">Cancel upload</button>
+              </div>
+            )}
           </label>
 
           {error && <div className="text-sm text-red-600">{error}</div>}
@@ -249,10 +283,10 @@ export default function JobSection() {
                 <label key={f.id} className="flex flex-col mb-3">
                   <span className="text-sm mb-1">{f.field_name}{f.required ? ' *' : ''}</span>
                   {f.field_type === 'text' && (
-                    <input name={f.field_name} value={form[f.field_name] || ''} onChange={handleChange} className="input" aria-invalid={!!fieldErrors[f.field_name]} />
+                    <input ref={el => inputRefs.current[f.field_name] = el} name={f.field_name} value={form[f.field_name] || ''} onChange={handleChange} className="input" aria-invalid={!!fieldErrors[f.field_name]} />
                   )}
                   {f.field_type === 'textarea' && (
-                    <textarea name={f.field_name} value={form[f.field_name] || ''} onChange={handleChange} className="input" rows={3} />
+                    <textarea ref={el => inputRefs.current[f.field_name] = el} name={f.field_name} value={form[f.field_name] || ''} onChange={handleChange} className="input" rows={3} />
                   )}
                   {fieldErrors[f.field_name] && <div className="text-sm text-red-600 mt-1">{fieldErrors[f.field_name]}</div>}
                 </label>
