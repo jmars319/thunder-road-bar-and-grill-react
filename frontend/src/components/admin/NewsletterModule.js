@@ -47,7 +47,7 @@ function NewsletterModule() {
       .catch((err) => {
         // Intentionally quiet in UI, but log to console for debugging in dev.
         // Replace with toast/notification in future iterations.
-        // eslint-disable-next-line no-console
+         
         console.error('Failed to remove subscriber', err);
       });
   };
@@ -75,7 +75,7 @@ function NewsletterModule() {
       a.click();
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      // eslint-disable-next-line no-console
+       
       console.error('Failed to export subscribers', err);
     }
   };

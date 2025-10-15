@@ -27,11 +27,15 @@ module.exports = {
       // Node/process
       process: 'readonly',
 
-      // Timers
+  // Timers
       setTimeout: 'readonly',
       clearTimeout: 'readonly',
       requestAnimationFrame: 'readonly',
       cancelAnimationFrame: 'readonly',
+
+  // Common globals
+  console: 'readonly',
+  alert: 'readonly',
 
       // Jest globals
       test: 'readonly',
