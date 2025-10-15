@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
-// eslint-disable-next-line no-unused-vars
 import { Image, Upload, Trash2, Copy, CheckCircle } from '../../icons';
+
+// Developer notes:
+// - Media manager UI uses semantic tokens (bg-surface, bg-surface-warm, text-primary,
+//   text-secondary). Update `frontend/src/custom-styles.css` to modify the token palette.
+// - Icons are centralized in `src/icons` to simplify future icon library swaps.
+// Keep module-scope references to avoid false-positive `no-unused-vars` warnings.
+void Image; void Upload; void Trash2; void Copy; void CheckCircle;
 
 /*
   MediaModule
