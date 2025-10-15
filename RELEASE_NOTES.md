@@ -1,5 +1,10 @@
 Release Notes — Thunder Road Frontend
 
+Purpose:
+- Brief release notes document for maintainers and release consumers. Use this
+  file to summarize what a given release contains and any manual verification
+  steps.
+
 Release: Documentation & Developer Onboarding
 Date: 2025-10-14
 Commit: 642a17e (HEAD of main)

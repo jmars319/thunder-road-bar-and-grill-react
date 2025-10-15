@@ -1,5 +1,10 @@
 # Changelog
 
+Purpose:
+- Human-readable changelog for the repository. Keep entries under `Unreleased`
+  until they're promoted for a release. This file is intended for maintainers
+  and release notes generation.
+
 All notable changes to this project are documented below. This file follows a
 simple human-readable format. Keep entries concise and place new changes under
 `Unreleased` until you create a release.

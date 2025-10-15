@@ -1,23 +1,16 @@
+/*
+  Purpose:
+  - Provide media management endpoints used by the admin UI: list media,
+    upload files (multipart/form-data), and delete media records.
+  - This route relies on the `upload` instance configured in `server.js` and
+    exposed via `app.get('upload')`.
+  Notes:
+  - Keep file handling and metadata insertion here; avoid moving business
+    logic into server.js.
+*/
+
 const express = require('express');
 const router = express.Router();
-
-/*
-  Media routes
-
-  Endpoints:
-  - GET /api/media
-  - POST /api/media/upload (multipart/form-data field: 'file')
-  - DELETE /api/media/:id
-
-  Notes:
-  - Upload handling is delegated to the `upload` instance configured in
-  server.js and exposed via `app.set('upload', upload)`.
-  - The upload handler performs MIME type checks and size limits. This
-    route expects a `file` field in the multipart body and metadata (title,
-    alt_text, category) in the body.
-  - After inserting metadata into `media_library`, the route returns a
-    `file_url` which the frontend can use to display the asset.
-*/
 
 // Get all media
 router.get('/media', (req, res) => {

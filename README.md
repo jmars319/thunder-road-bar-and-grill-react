@@ -1,5 +1,10 @@
 # Thunder Road Bar and Grill
 
+Purpose:
+- Monorepo for the Thunder Road public website and admin panel. This README
+  contains high-level setup steps, API endpoint pointers, and a quick runbook
+  for local development.
+
 Complete restaurant management system with public website and admin panel.
 
 ## Features

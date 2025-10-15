@@ -1,3 +1,14 @@
+/*
+  Purpose:
+  - Bootstrap the Express server, attach middleware (CORS, JSON body parser),
+    configure file uploads, and mount route modules under `/api`.
+  - Exposes a configured `upload` instance via `app.get('upload')` and attaches
+    the MySQL connection on `req.db` for route handlers to use.
+  Notes:
+  - Keep business logic in `backend/routes/*` files. This file should remain a
+    lightweight wire-up layer.
+*/
+
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
@@ -8,6 +19,23 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+/*
+  server.js - Express app bootstrap
+
+  This file wires the main HTTP server, middleware, database connection, and
+  route modules. Keep this file lightweight: complex business logic belongs in
+  the `backend/routes/` files and helper modules.
+
+  Security & deployment notes:
+  - The CORS origin is restricted to FRONTEND_URL (set in .env). For production
+    environments explicitly set FRONTEND_URL to your app origin(s).
+  - We set a small subset of security headers here. For stricter protection add
+    `helmet()` and other hardening in front of this service (e.g., a reverse
+    proxy or CDN with WAF rules).
+  - Sensitive values (DB credentials, API keys) must be provided via environment
+    variables; do not commit them to source.
+*/
+
 // Middleware
 // Restrict CORS to the frontend origin by default (set FRONTEND_URL in .env for production)
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
@@ -16,7 +44,7 @@ app.use(cors({ origin: FRONTEND_URL }));
 // Limit JSON body size to avoid large payload abuse
 app.use(express.json({ limit: '1mb' }));
 
-// Serve uploaded files from absolute path
+// Serve uploaded files from absolute path (uploads/)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Basic security headers (small subset of what helmet provides)
@@ -30,6 +58,9 @@ app.use((req, res, next) => {
 });
 
 // MySQL Connection
+// Note: mysql2 createConnection is fine for small apps. For larger workloads
+// prefer a pooled connection (createPool) and proper connection lifecycle
+// handling.
 const db = mysql.createConnection({
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
@@ -45,7 +76,8 @@ db.connect(err => {
   console.log('\u2705 Connected to MySQL database');
 });
 
-// Make db available to routes
+// Make db available to routes via req.db. This is a simple pattern used in
+// small apps; in larger codebases consider a centralized data layer instead.
 app.use((req, res, next) => {
   req.db = db;
   next();
@@ -75,6 +107,7 @@ const upload = multer({
     return cb(err);
   }
 });
+// expose configured upload instance to routes via app.get('upload') or app.set
 app.set('upload', upload);
 
 // Import Routes
@@ -87,7 +120,10 @@ const settingsRoutes = require('./routes/settings');
 const newsletterRoutes = require('./routes/newsletter');
 const contactRoutes = require('./routes/contact');
 
-// Use Routes
+// Mount Routes
+// Each route file exports an Express Router; they are mounted under /api
+// so a route defined as `router.get('/menu', ...)` will be available at
+// `/api/menu`.
 app.use('/api', authRoutes);
 app.use('/api', menuRoutes);
 app.use('/api', reservationRoutes);

@@ -1,5 +1,9 @@
 # Getting Started with Create React App
 
+Purpose:
+- Quick reference for running the frontend dev server, tests, and building
+	production output. See the repo root `README.md` for full-stack setup notes.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
