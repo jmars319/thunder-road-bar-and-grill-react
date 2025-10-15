@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { LayoutDashboard, Users, Calendar, Briefcase, TrendingUp } from 'lucide-react';
+import { LayoutDashboard, Users, Calendar, Briefcase, TrendingUp } from '../../icons';
 
 /*
   DashboardModule

@@ -1,6 +1,6 @@
-/* eslint-disable no-unused-vars */
 import { useContext, useEffect, useState } from 'react';
-import { Sun, Moon, Monitor } from 'lucide-react';
+import * as Icons from '../icons';
+import React from 'react';
 import { ThemeContext } from '../contexts/ThemeContext';
 
 /*
@@ -28,11 +28,7 @@ const labelFor = (t) => {
   return 'Light';
 };
 
-function Icon({ theme }) {
-  if (theme === 'dark') return <Moon size={16} />;
-  if (theme === 'light') return <Sun size={16} />;
-  return <Monitor size={16} />;
-}
+
 
 export default function ThemeToggle({ inline = false, className = '' }) {
   const { theme, setTheme } = useContext(ThemeContext);
@@ -68,9 +64,9 @@ export default function ThemeToggle({ inline = false, className = '' }) {
       aria-pressed={theme === 'dark'}
       className={`${base} ${className}`}
     >
-      <span className={`inline-flex items-center justify-center ${anim ? 'theme-toggle-anim' : ''}`}>
-        <Icon theme={theme} />
-      </span>
+        <span className={`inline-flex items-center justify-center ${anim ? 'theme-toggle-anim' : ''}`}>
+          {theme === 'dark' ? React.createElement(Icons.Moon, { size: 16 }) : theme === 'light' ? React.createElement(Icons.Sun, { size: 16 }) : React.createElement(Icons.Monitor, { size: 16 })}
+        </span>
       <span className="sr-only">Theme: {labelFor(theme)}</span>
     </button>
   );

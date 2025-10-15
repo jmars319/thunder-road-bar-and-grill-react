@@ -17,7 +17,7 @@
 import React from 'react';
 import { useState } from 'react';
 // icons: used dynamically in menu registry/JSX — kept in the module registry
-import { Menu, X, LogOut, Home } from 'lucide-react';
+import { Menu, X, LogOut, Home } from '../icons';
 import ThemeToggle from '../components/ThemeToggle';
 
 // Import all admin modules
@@ -152,5 +152,10 @@ export default function AdminPanel({ user = { name: 'Admin' }, onLogout = () => 
   );
 }
 
-// Silence ESLint if it incorrectly flags imported-but-JSX-used symbols
-void ThemeToggle; void Menu; void X; void LogOut; void Home;
+// ensure imported symbols are considered used by linters where JSX usages
+// may appear indirect (e.g., dynamic React.createElement). These are no-ops.
+{false && Menu}
+{false && X}
+{false && LogOut}
+{false && Home}
+{false && ThemeToggle}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
-import { Settings, Save } from 'lucide-react';
+import { Settings, Save } from '../../icons';
 
 /*
   SettingsModule

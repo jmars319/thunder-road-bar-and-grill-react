@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
-import { Mail, Trash2, Download } from 'lucide-react';
+import { Mail, Trash2, Download } from '../../icons';
 
 /*
   NewsletterModule

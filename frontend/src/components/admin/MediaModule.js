@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
-import { Image, Upload, Trash2, Copy, CheckCircle } from 'lucide-react';
+import { Image, Upload, Trash2, Copy, CheckCircle } from '../../icons';
 
 /*
   MediaModule

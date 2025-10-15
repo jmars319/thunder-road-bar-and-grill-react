@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
-import { UtensilsCrossed, Plus, Edit, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+import { UtensilsCrossed, Plus, Edit, Trash2, ChevronDown, ChevronUp } from '../../icons';
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
