@@ -200,3 +200,16 @@ Where to next (I can do these if you want)
 Completed: Update this file with the consolidated backend summary and run
 steps.
 
+Recent frontend theming/tokenization updates
+-------------------------------------------
+- Files updated in the latest batch:
+  - `frontend/src/pages/AdminPanel.js`
+  - `frontend/src/components/admin/MenuModule.js`
+  - `frontend/src/pages/LoginPage.js`
+  - `frontend/src/components/public/PublicFooter.js`
+  - `frontend/src/components/admin/SettingsModule.js`
+
+These small changes standardize the runtime `API_BASE` usage and swap a few
+literal/backdrop classes for token-aware helpers (`modal-backdrop`,
+`text-text-inverse`, etc.).
+
