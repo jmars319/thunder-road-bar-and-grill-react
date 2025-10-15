@@ -28,3 +28,6 @@ yarn-error.log*
 
 # Ignore backend uploads (backend/.gitignore already allows uploads/.gitkeep)
 backend/uploads/
+
+# Local stylelint config - keep it untracked
+frontend/.stylelintrc.json
