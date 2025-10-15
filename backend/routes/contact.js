@@ -1,6 +1,26 @@
 const express = require('express');
 const router = express.Router();
 
+/*
+  Contact routes
+
+  Purpose:
+  - Receive messages from the public site and provide admin endpoints to
+    review, mark, and delete messages.
+
+  Endpoints:
+  - GET /api/contact/messages
+  - POST /api/contact
+  - PUT /api/contact/messages/:id
+  - DELETE /api/contact/messages/:id
+
+  Notes:
+  - The public POST should validate inputs (lengths, email format) and
+    include spam protections (rate limiting and optionally a captcha).
+  - Messages are stored in `contact_messages`. Consider indexing the
+    email/submitted_at columns for faster admin queries.
+*/
+
 // Get all contact messages
 router.get('/contact/messages', (req, res) => {
   req.db.query(

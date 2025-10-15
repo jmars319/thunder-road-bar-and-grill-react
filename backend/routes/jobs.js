@@ -1,6 +1,27 @@
 const express = require('express');
 const router = express.Router();
 
+/*
+  Jobs routes
+
+  Purpose:
+  - Accept and manage job applications. The public POST endpoint should
+    allow applicants to submit resume links (or integrate with the media
+    upload route to store resume files) and store applications in
+    `job_applications`.
+
+  Endpoints:
+  - GET /api/jobs
+  - POST /api/jobs
+  - PUT /api/jobs/:id
+  - DELETE /api/jobs/:id
+
+  Notes:
+  - Validate applicant input server-side (email formats, file URL safety).
+  - Consider sending notifications (email or Slack) on new submissions and
+    storing an `email_sent` flag to avoid duplicate alerts.
+*/
+
 // Get all job applications
 router.get('/jobs', (req, res) => {
   req.db.query(

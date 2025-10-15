@@ -1,6 +1,25 @@
 const express = require('express');
 const router = express.Router();
 
+/*
+  Reservations routes
+
+  Purpose:
+  - Provide public reservation creation and admin management endpoints.
+
+  Endpoints:
+  - GET /api/reservations
+  - POST /api/reservations
+  - PUT /api/reservations/:id
+  - DELETE /api/reservations/:id
+
+  Notes:
+  - Ensure `reservation_date` and `reservation_time` are validated and use
+    a consistent format compatible with MySQL.
+  - Consider rate-limiting or adding captcha on the public POST endpoint to
+    reduce spam and automated bookings.
+*/
+
 // Get all reservations
 router.get('/reservations', (req, res) => {
   req.db.query(

@@ -1,6 +1,35 @@
 const express = require('express');
 const router = express.Router();
 
+/*
+  Menu routes
+
+  Purpose:
+  - Provide public menu data (categories and their items) and admin CRUD
+    endpoints for categories and items used by the admin UI.
+
+  Public endpoints:
+  - GET /api/menu -> returns categories with nested items (for public site)
+
+  Admin endpoints (CRUD for categories and items):
+  - GET /api/menu/categories
+  - GET /api/menu/categories/:categoryId/items
+  - POST /api/menu/categories
+  - PUT /api/menu/categories/:id
+  - DELETE /api/menu/categories/:id
+  - POST /api/menu/items
+  - PUT /api/menu/items/:id
+  - DELETE /api/menu/items/:id
+
+  Notes:
+  - Routes use `req.db` (a mysql2 connection) injected by server.js. Queries
+    are callback-based; consider using `db.promise()` and async/await for
+    clearer async flow.
+  - Validate inputs at the route boundary (e.g., ensure `price` is numeric
+    and `display_order` is an integer). Consider normalizing menu schema if
+    the menu grows more complex.
+*/
+
 // Get all menu categories with items
 router.get('/menu', (req, res) => {
   const query = `

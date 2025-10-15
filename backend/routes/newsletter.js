@@ -1,6 +1,25 @@
 const express = require('express');
 const router = express.Router();
 
+/*
+  Newsletter routes
+
+  Purpose:
+  - Manage newsletter subscriptions. Store subscribers in `newsletter_subscribers`
+    and provide admin access to list and remove subscribers.
+
+  Endpoints:
+  - GET /api/newsletter/subscribers
+  - POST /api/newsletter/subscribe
+  - POST /api/newsletter/unsubscribe
+  - DELETE /api/newsletter/subscribers/:id
+
+  Notes:
+  - The POST subscribe endpoint handles duplicate email errors (returns 400).
+  - For large subscriber lists implement pagination or add a server-side CSV
+    export to support bulk downloads in the admin UI.
+*/
+
 // Get all subscribers
 router.get('/newsletter/subscribers', (req, res) => {
   req.db.query(
