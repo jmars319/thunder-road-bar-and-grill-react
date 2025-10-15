@@ -1,7 +1,18 @@
-// ============================================
-// Thunder Road - Admin Panel
-// File: frontend/src/pages/AdminPanel.js
-// ============================================
+/*
+  Purpose:
+  - Admin control surface. Hosts a registry of admin modules (dashboard,
+    inbox, menu, reservations, etc.) and renders the selected module.
+
+  Contract:
+  - Modules are registered in `AdminModules` as components. Each module
+    should be a self-contained React component responsible for its own data
+    fetching and local UI state.
+
+  Notes:
+  - To add a new admin module: create a component under
+    `src/components/admin/`, then add it to the `AdminModules` registry here
+    with a `name` and `icon` property.
+*/
 
 import React, { useState } from 'react';
 import { Menu, X, LogOut, Home } from 'lucide-react';

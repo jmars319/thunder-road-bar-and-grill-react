@@ -1,7 +1,18 @@
-// ============================================
-// Thunder Road - Main App Router
-// File: frontend/src/App.js
-// ============================================
+/*
+  Purpose:
+  - Main application router for the public site and admin panel. Controls
+  application-level UI state (current user, logged-in status) and decides
+  whether to render the public site, login page, or admin panel.
+
+  Contract:
+  - Inputs: none (top-level app). Internal state tracks `isLoggedIn`,
+    `currentUser`, and `showAdmin`.
+  - Outputs: renders one of: <PublicSite />, <LoginPage />, or <AdminPanel />.
+
+  Notes:
+  - Keep this file presentation-focused; individual pages/components should
+    handle their own data fetching and side-effects.
+*/
 
 import React, { useState } from 'react';
 import PublicSite from './pages/PublicSite';

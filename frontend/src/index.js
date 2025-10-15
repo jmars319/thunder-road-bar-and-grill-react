@@ -1,3 +1,17 @@
+/*
+  Purpose:
+  - Application entrypoint. Mounts the React tree, wires global providers
+    (Theme + Toast) and configures performance reporting.
+
+  Contract:
+  - Wrap the app in `ThemeProvider` (applies CSS tokens and persisted theme)
+    and `ToastProvider` (global toast notifications).
+
+  Notes:
+  - Avoid introducing heavy logic here. If you need global initialization
+    make it idempotent and side-effect-free where possible.
+*/
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';

@@ -1,3 +1,18 @@
+/*
+  Purpose:
+  - Tiny hook that returns a ref and boolean indicating whether the element
+    is in view using IntersectionObserver when available. Falls back to a
+    bounding-client check on older browsers.
+
+  Contract:
+  - Inputs: `options` for the IntersectionObserver (threshold, rootMargin).
+  - Output: [ref, inView]
+
+  Notes:
+  - Keep threshold tuned for your UI. The hook is lightweight and avoids
+    depending on large intersection libraries.
+*/
+
 import { useEffect, useState, useRef } from 'react';
 
 export default function useInView(options = { threshold: 0.1 }) {
