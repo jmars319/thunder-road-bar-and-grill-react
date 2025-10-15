@@ -99,6 +99,7 @@ export const icons = {
   Inbox,
   Mail,
   MailOpen,
+  Folder,
   Trash2,
   UtensilsCrossed,
   Plus,
