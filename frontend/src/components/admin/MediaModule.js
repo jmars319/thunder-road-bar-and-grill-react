@@ -31,6 +31,7 @@ function MediaModule() {
   const [media, setMedia] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
+  const [sections, setSections] = useState({ logos: true, hero: true, gallery: true, all: false });
 
   useEffect(() => {
     fetchMedia();
@@ -45,29 +46,34 @@ function MediaModule() {
   .then(data => setMedia(Array.isArray(data) ? data : []))
   .catch(() => setMedia([]));
   };
-
-  const handleUpload = async (e) => {
-    const file = e.target.files[0];
+  // generic upload used by section-specific handlers. category string is optional.
+  const handleUpload = async (file, category = 'general') => {
     if (!file) return;
-
     setUploading(true);
     const formData = new FormData();
     formData.append('file', file);
     formData.append('title', file.name);
-    formData.append('category', 'general');
+    formData.append('category', category);
 
     try {
       await fetch(`${API_BASE}/media/upload`, {
         method: 'POST',
         body: formData
       });
-      fetchMedia();
-  } catch {
-      // Keep UX simple: use alert for now. Could be replaced with Toasts.
+      await fetchMedia();
+    } catch (err) {
+      console.error('upload failed', err);
       alert('Upload failed');
     } finally {
       setUploading(false);
     }
+  };
+
+  // helper that returns an onChange handler bound to a category
+  const makeUploadHandler = (category) => async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    await handleUpload(file, category);
   };
 
   const deleteMedia = (id) => {
@@ -105,72 +111,174 @@ function MediaModule() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-surface rounded-lg shadow p-6">
-        <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-divider rounded-lg cursor-pointer hover:bg-surface-warm" aria-label="Upload media">
-            <div className="flex flex-col items-center">
-            <icons.Upload size={32} className="text-primary mb-2" />
-            <p className="text-sm text-text-secondary">
-              {uploading ? 'Uploading...' : 'Click to upload media'}
-            </p>
+      {/* Section: Logos */}
+      <div className="bg-surface rounded-lg shadow">
+        <button type="button" className="w-full flex items-center justify-between p-4" onClick={() => setSections(s => ({ ...s, logos: !s.logos }))} aria-expanded={sections.logos}>
+          <div className="flex items-center gap-3">
+            <icons.Image size={20} />
+            <h3 className="text-lg font-medium">Logos</h3>
           </div>
-          <input
-            type="file"
-            className="hidden"
-            onChange={handleUpload}
-            accept="image/*"
-            disabled={uploading}
-          />
-        </label>
+          <div>{sections.logos ? <icons.ChevronUp /> : <icons.ChevronDown />}</div>
+        </button>
+        {sections.logos && (
+          <div className="p-4 border-t border-divider">
+            <label className="flex items-center gap-4">
+              <span className="text-sm text-text-secondary">Upload logo</span>
+              <input type="file" className="hidden" accept="image/*" onChange={makeUploadHandler('logo')} disabled={uploading} />
+              <label className={`px-3 py-2 rounded cursor-pointer text-sm ${uploading ? 'opacity-60 pointer-events-none' : 'bg-surface'}`}>
+                <input type="file" accept="image/*" className="hidden" onChange={makeUploadHandler('logo')} />
+                {uploading ? 'Uploading…' : 'Choose file'}
+              </label>
+            </label>
+            <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+              {media.filter(m => m.category === 'logo').map(item => (
+                <div key={item.id} className="bg-surface rounded overflow-hidden">
+                  <img src={`${API_BASE.replace(/\/api$/, '')}${item.file_url}`} alt={item.title} className="w-full h-24 object-cover" />
+                  <div className="p-2 text-xs flex justify-between items-center">
+                    <span className="truncate">{item.title}</span>
+                    <div className="flex gap-2">
+                      <button onClick={() => copyUrl(item.file_url)} className="text-xs">Copy</button>
+                      <button onClick={() => deleteMedia(item.id)} className="text-xs text-error">Del</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {media.map(item => (
-          <div key={item.id} className="bg-surface rounded-lg shadow overflow-hidden card-hover">
-            <div className="aspect-square bg-surface-warm flex items-center justify-center">
-              {item.file_type?.startsWith('image/') ? (
-                <img
-                  src={`${API_BASE.replace(/\/api$/, '')}${item.file_url}`}
-                  alt={item.title}
-                  className="w-full h-full object-cover"
-                />
-                ) : (
-                <icons.Image size={48} className="text-primary" />
-              )}
-            </div>
-            <div className="p-3">
-              <p className="text-sm font-medium text-text-primary truncate">{item.title}</p>
-              <p className="text-xs text-text-secondary truncate">{item.file_name}</p>
-              <div className="flex gap-2 mt-3">
-                <button
-                  type="button"
-                  onClick={() => copyUrl(item.file_url)}
-                  className="flex-1 bg-surface-warm text-text-primary py-1 px-2 rounded text-xs hover:bg-surface transition flex items-center justify-center gap-1"
-                  aria-label={`Copy URL for ${item.title}`}
-                >
-                  {copiedId === item.file_url ? (
-                    <>
-                      <icons.CheckCircle size={12} />
-                      Copied
-                    </>
-                  ) : (
-                    <>
-                      <icons.Copy size={12} />
-                      Copy URL
-                    </>
-                  )}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => deleteMedia(item.id)}
-                  className="bg-surface-warm text-error py-1 px-2 rounded text-xs hover:bg-surface transition"
-                  aria-label={`Delete media ${item.title}`}
-                >
-                  <icons.Trash2 size={12} />
-                </button>
-              </div>
+      {/* Section: Hero */}
+      <div className="bg-surface rounded-lg shadow">
+        <button type="button" className="w-full flex items-center justify-between p-4" onClick={() => setSections(s => ({ ...s, hero: !s.hero }))} aria-expanded={sections.hero}>
+          <div className="flex items-center gap-3">
+            <icons.Image size={20} />
+            <h3 className="text-lg font-medium">Hero</h3>
+          </div>
+          <div>{sections.hero ? <icons.ChevronUp /> : <icons.ChevronDown />}</div>
+        </button>
+        {sections.hero && (
+          <div className="p-4 border-t border-divider">
+            <p className="text-sm text-text-secondary mb-2">Upload large hero images</p>
+            <label className={`px-3 py-2 rounded cursor-pointer text-sm ${uploading ? 'opacity-60 pointer-events-none' : 'bg-surface'}`}>
+              <input type="file" accept="image/*" className="hidden" onChange={makeUploadHandler('hero')} />
+              {uploading ? 'Uploading…' : 'Choose file'}
+            </label>
+            <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+              {media.filter(m => m.category === 'hero').map(item => (
+                <div key={item.id} className="bg-surface rounded overflow-hidden">
+                  <img src={`${API_BASE.replace(/\/api$/, '')}${item.file_url}`} alt={item.title} className="w-full h-24 object-cover" />
+                  <div className="p-2 text-xs flex justify-between items-center">
+                    <span className="truncate">{item.title}</span>
+                    <div className="flex gap-2">
+                      <button onClick={() => copyUrl(item.file_url)} className="text-xs">Copy</button>
+                      <button onClick={() => deleteMedia(item.id)} className="text-xs text-error">Del</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        ))}
+        )}
+      </div>
+
+      {/* Section: Gallery */}
+      <div className="bg-surface rounded-lg shadow">
+        <button type="button" className="w-full flex items-center justify-between p-4" onClick={() => setSections(s => ({ ...s, gallery: !s.gallery }))} aria-expanded={sections.gallery}>
+          <div className="flex items-center gap-3">
+            <icons.Image size={20} />
+            <h3 className="text-lg font-medium">Gallery</h3>
+          </div>
+          <div>{sections.gallery ? <icons.ChevronUp /> : <icons.ChevronDown />}</div>
+        </button>
+        {sections.gallery && (
+          <div className="p-4 border-t border-divider">
+            <p className="text-sm text-text-secondary mb-2">Upload gallery images</p>
+            <label className={`px-3 py-2 rounded cursor-pointer text-sm ${uploading ? 'opacity-60 pointer-events-none' : 'bg-surface'}`}>
+              <input type="file" accept="image/*" className="hidden" onChange={makeUploadHandler('gallery')} />
+              {uploading ? 'Uploading…' : 'Choose file'}
+            </label>
+            <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+              {media.filter(m => m.category === 'gallery').map(item => (
+                <div key={item.id} className="bg-surface rounded overflow-hidden">
+                  <img src={`${API_BASE.replace(/\/api$/, '')}${item.file_url}`} alt={item.title} className="w-full h-24 object-cover" />
+                  <div className="p-2 text-xs flex justify-between items-center">
+                    <span className="truncate">{item.title}</span>
+                    <div className="flex gap-2">
+                      <button onClick={() => copyUrl(item.file_url)} className="text-xs">Copy</button>
+                      <button onClick={() => deleteMedia(item.id)} className="text-xs text-error">Del</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Section: All uploads (optional) */}
+      <div className="bg-surface rounded-lg shadow">
+        <button type="button" className="w-full flex items-center justify-between p-4" onClick={() => setSections(s => ({ ...s, all: !s.all }))} aria-expanded={sections.all}>
+          <div className="flex items-center gap-3">
+            <icons.Folder size={20} />
+            <h3 className="text-lg font-medium">All uploads</h3>
+          </div>
+          <div>{sections.all ? <icons.ChevronUp /> : <icons.ChevronDown />}</div>
+        </button>
+        {sections.all && (
+          <div className="p-4 border-t border-divider">
+            <p className="text-sm text-text-secondary mb-2">All uploaded media (latest first)</p>
+            <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {media.slice().reverse().map(item => (
+                <div key={item.id} className="bg-surface rounded-lg shadow overflow-hidden card-hover">
+                  <div className="aspect-square bg-surface-warm flex items-center justify-center">
+                    {item.file_type?.startsWith('image/') ? (
+                      <img
+                        src={`${API_BASE.replace(/\/api$/, '')}${item.file_url}`}
+                        alt={item.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <icons.Image size={48} className="text-primary" />
+                    )}
+                  </div>
+                  <div className="p-3">
+                    <p className="text-sm font-medium text-text-primary truncate">{item.title}</p>
+                    <p className="text-xs text-text-secondary truncate">{item.file_name}</p>
+                    <div className="flex gap-2 mt-3">
+                      <button
+                        type="button"
+                        onClick={() => copyUrl(item.file_url)}
+                        className="flex-1 bg-surface-warm text-text-primary py-1 px-2 rounded text-xs hover:bg-surface transition flex items-center justify-center gap-1"
+                        aria-label={`Copy URL for ${item.title}`}
+                      >
+                        {copiedId === item.file_url ? (
+                          <>
+                            <icons.CheckCircle size={12} />
+                            Copied
+                          </>
+                        ) : (
+                          <>
+                            <icons.Copy size={12} />
+                            Copy URL
+                          </>
+                        )}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => deleteMedia(item.id)}
+                        className="bg-surface-warm text-error py-1 px-2 rounded text-xs hover:bg-surface transition"
+                        aria-label={`Delete media ${item.title}`}
+                      >
+                        <icons.Trash2 size={12} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
