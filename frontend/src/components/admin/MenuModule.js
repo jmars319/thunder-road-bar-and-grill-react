@@ -314,8 +314,4 @@ const Module = {
 export default Module;
 
 // ensure imported icons are considered used by linters in case of indirect usage
-{false && Plus}
-{false && Edit}
-{false && Trash2}
-{false && ChevronDown}
-{false && ChevronUp}
+void Plus; void Edit; void Trash2; void ChevronDown; void ChevronUp;

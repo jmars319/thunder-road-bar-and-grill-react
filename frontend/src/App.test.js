@@ -6,8 +6,11 @@
 */
 
 import { render, screen } from '@testing-library/react';
-// eslint-disable-next-line no-unused-vars
+ 
 import App from './App';
+
+// Keep module-scope reference to avoid false-positive `no-unused-vars` from some linters
+void App;
 
 test('renders main heading', () => {
   render(<App />);

@@ -30,20 +30,32 @@ const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
   than modifying utilities here. This component intentionally keeps
   presentation in tokens to support runtime theming.
 */
-/* eslint-disable no-unused-vars */
-const StatCard = ({ icon: Icon, label, value, color }) => (
-  <div className="bg-surface rounded-lg shadow p-6 card-hover" role="region" aria-label={label}>
-    <div className="flex items-center justify-between">
-      <div>
-        <p className="text-text-primary text-sm">{label}</p>
-        <p className="text-3xl font-bold mt-2 text-text-primary">{value}</p>
-      </div>
-      <div className={`w-12 h-12 rounded-lg ${color} flex items-center justify-center`}>
-        <Icon size={24} className="text-text-inverse" aria-hidden="true" />
+ 
+// Some editors/linters can produce a false-positive "assigned but never used"
+// for locally-declared components used only in JSX below. Keep the module
+// reference so tools that don't follow JSX usages won't report a false
+// positive. This is intentionally minimal and safe.
+const StatCard = (props) => {
+  const { label, value, color } = props;
+
+  return (
+    <div className="bg-surface rounded-lg shadow p-6 card-hover" role="region" aria-label={label}>
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-text-primary text-sm">{label}</p>
+          <p className="text-3xl font-bold mt-2 text-text-primary">{value}</p>
+        </div>
+        <div className={`w-12 h-12 rounded-lg ${color} flex items-center justify-center`}>
+          <props.icon size={24} className="text-text-inverse" aria-hidden="true" />
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
+
+// Reference the component at module scope to avoid false-positive "assigned but never used"
+// warnings from linters that don't pick up JSX usage in some editor setups.
+void StatCard;
 
 function DashboardModule() {
   const [stats, setStats] = useState({

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-// eslint-disable-next-line no-unused-vars
+ 
 import { Menu, X } from '../../icons';
 import ThemeToggle from '../ThemeToggle';
 

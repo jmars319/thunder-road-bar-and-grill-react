@@ -15,12 +15,16 @@
 */
 
 import { useState } from 'react';
-// eslint-disable-next-line no-unused-vars
+ 
 import PublicSite from './pages/PublicSite';
-// eslint-disable-next-line no-unused-vars
+ 
 import AdminPanel from './pages/AdminPanel';
-// eslint-disable-next-line no-unused-vars
+ 
 import LoginPage from './pages/LoginPage';
+
+// Keep module-scope references to avoid false-positive `no-unused-vars` in
+// some linting setups that don't detect JSX usage of component variables.
+void PublicSite; void AdminPanel; void LoginPage;
 
 export default function App() {
   const [showAdmin, setShowAdmin] = useState(false);

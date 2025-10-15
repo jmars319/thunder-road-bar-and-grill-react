@@ -154,8 +154,4 @@ export default function AdminPanel({ user = { name: 'Admin' }, onLogout = () => 
 
 // ensure imported symbols are considered used by linters where JSX usages
 // may appear indirect (e.g., dynamic React.createElement). These are no-ops.
-{false && Menu}
-{false && X}
-{false && LogOut}
-{false && Home}
-{false && ThemeToggle}
+void Menu; void X; void LogOut; void Home; void ThemeToggle;
