@@ -1,0 +1,12 @@
+/** Backup of existing tailwind.config.js created before applying Thunder Road config */
+
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
