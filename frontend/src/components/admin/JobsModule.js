@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react';
-// eslint-disable-next-line no-unused-vars
 import { Briefcase, Trash2 } from '../../icons';
+
+// Developer notes:
+// - Admin components use semantic Tailwind tokens (bg-surface, bg-surface-warm,
+//   text-text-primary, text-text-secondary, text-error, etc.). Adjust colors
+//   in `frontend/src/custom-styles.css` to change the site's token palette.
+// - Icons are centralized in `src/icons` for easier refactors and consistent
+//   import paths across the codebase.
+// Keep module-scope references so linters don't complain about conditional usage.
+void Briefcase; void Trash2;
 
 /*
   JobsModule
