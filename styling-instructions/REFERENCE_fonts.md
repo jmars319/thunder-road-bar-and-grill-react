@@ -80,10 +80,10 @@ Complete guide to typography in the design system.
 
 ### Hero Section
 ```jsx
-<h1 className="font-heading font-extrabold text-5xl md:text-6xl text-white">
+<h1 className="font-heading font-extrabold text-5xl md:text-6xl text-text-inverse">
   Welcome to Thunder Road
 </h1>
-<p className="text-xl md:text-2xl text-white opacity-90">
+<p className="text-xl md:text-2xl text-text-muted opacity-90">
   Great Food. Cold Drinks. Good Times.
 </p>
 ```

@@ -118,23 +118,18 @@ Use the examples in COMPONENT_EXAMPLES.md to update your components.
 ### **Buttons**
 
 ```jsx
-// Old
-<button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-
-// New  
+// Example (use tokens)
 <button className="bg-primary text-text-inverse px-4 py-2 rounded-lg hover:bg-primary-dark transition font-bold">
+  Save
+</button>
 ```
 
 ### **Text Colors**
 
 ```jsx
-// Old
-<p className="text-gray-700">
-<p className="text-gray-500">
-
-// New
-<p className="text-text-primary">
-<p className="text-text-secondary">
+// Use semantic text tokens
+<p className="text-text-primary">Primary text</p>
+<p className="text-text-secondary">Secondary text</p>
 ```
 
 ### **Headings**
@@ -150,11 +145,10 @@ Use the examples in COMPONENT_EXAMPLES.md to update your components.
 ### **Cards**
 
 ```jsx
-// Old
-<div className="bg-white rounded-lg shadow p-6">
-
-// New
+// Card (use surface token)
 <div className="bg-surface rounded-lg shadow-lg p-6 card-hover">
+  <!-- card content -->
+</div>
 ```
 
 ---
@@ -233,7 +227,8 @@ Speed up updates with VS Code find & replace:
 | `bg-blue-600` | `bg-primary` |
 | `bg-blue-700` | `bg-primary-dark` |
 | `text-blue-600` | `text-primary` |
-| `bg-gray-900` | `bg-surface` |
+| `bg-white` | `bg-surface` |
+| `bg-gray-50` | `bg-surface-warm` |
 | `text-gray-700` | `text-text-primary` |
 | `text-gray-600` | `text-text-secondary` |
 | `text-gray-500` | `text-text-muted` |

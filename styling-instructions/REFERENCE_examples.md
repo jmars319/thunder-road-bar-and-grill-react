@@ -10,7 +10,7 @@ Before and after examples for updating your React components with Thunder Road s
 
 **Before:**
 ```jsx
-<button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+<button className="bg-primary text-text-inverse px-4 py-2 rounded-lg hover:bg-primary-dark transition">
   Submit
 </button>
 ```
@@ -35,7 +35,7 @@ Before and after examples for updating your React components with Thunder Road s
 
 **Before:**
 ```jsx
-<button className="bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50">
+<button className="bg-surface text-text-primary border border-border px-4 py-2 rounded-lg hover:bg-surface-warm">
   Cancel
 </button>
 ```
@@ -53,7 +53,7 @@ Before and after examples for updating your React components with Thunder Road s
 
 **Before:**
 ```jsx
-<button className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+<button className="bg-error text-text-inverse px-4 py-2 rounded-lg hover:brightness-95">
   Delete
 </button>
 ```
@@ -73,14 +73,14 @@ Before and after examples for updating your React components with Thunder Road s
 
 **Before:**
 ```jsx
-<nav className="bg-white shadow-md sticky top-0 z-50">
+<nav className="bg-surface shadow-md header-sticky top-0 z-50">
   <div className="max-w-7xl mx-auto px-4">
     <div className="flex justify-between items-center h-20">
-      <div className="text-xl font-bold text-gray-900">
+      <div className="text-xl font-bold text-text-primary">
         Thunder Road Bar and Grill
       </div>
       <div className="flex items-center gap-8">
-        <a href="#menu" className="text-gray-700 hover:text-blue-600">
+        <a href="#menu" className="text-text-secondary hover:text-primary">
           Menu
         </a>
       </div>
@@ -118,16 +118,16 @@ Before and after examples for updating your React components with Thunder Road s
 
 **Before:**
 ```jsx
-<div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-32">
+<div className="hero-gradient text-text-inverse py-32">
   <div className="max-w-7xl mx-auto px-4 text-center">
-    <h1 className="text-5xl md:text-6xl font-bold mb-6">
+    <h1 className="text-5xl md:text-6xl font-heading font-extrabold mb-6">
       Welcome to Thunder Road
     </h1>
-    <p className="text-xl md:text-2xl text-gray-300 mb-8">
+    <p className="text-xl md:text-2xl text-text-muted mb-8">
       Great Food. Cold Drinks. Good Times.
     </p>
     <div className="flex gap-4 justify-center">
-      <a href="#menu" className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700">
+      <a href="#menu" className="bg-primary text-text-inverse px-8 py-3 rounded-lg hover:bg-primary-dark transition font-bold shadow-lg">
         View Menu
       </a>
     </div>
@@ -165,13 +165,13 @@ Before and after examples for updating your React components with Thunder Road s
 
 **Before:**
 ```jsx
-<div className="bg-white rounded-lg shadow-lg overflow-hidden">
-  <div className="aspect-square bg-gray-100 flex items-center justify-center">
+  <div className="bg-surface rounded-lg shadow-lg overflow-hidden">
+  <div className="aspect-square bg-surface-warm flex items-center justify-center">
     <img src={category.image_url} alt={category.name} className="w-full h-full object-cover" />
   </div>
   <div className="p-6">
-    <h3 className="text-2xl font-bold text-gray-900">{category.name}</h3>
-    <p className="text-gray-600 text-sm mt-1">{category.description}</p>
+  <h3 className="text-2xl font-heading font-bold text-text-primary">{category.name}</h3>
+  <p className="text-text-secondary text-sm mt-1">{category.description}</p>
   </div>
 </div>
 ```
@@ -201,20 +201,20 @@ Before and after examples for updating your React components with Thunder Road s
 
 **Before:**
 ```jsx
-<div className="p-6 flex justify-between items-start">
+  <div className="p-6 flex justify-between items-start">
   <div className="flex-1">
-    <h4 className="text-lg font-semibold text-gray-900">{item.name}</h4>
-    <p className="text-gray-600 text-sm mt-1">{item.description}</p>
+  <h4 className="text-lg font-heading font-semibold text-text-primary">{item.name}</h4>
+  <p className="text-text-secondary text-sm mt-1">{item.description}</p>
   </div>
   <div className="ml-4">
-    <p className="text-2xl font-bold text-green-600">${item.price.toFixed(2)}</p>
+  <span className="price-badge font-mono">${item.price.toFixed(2)}</span>
   </div>
 </div>
 ```
 
 **After:**
 ```jsx
-<div className="p-6 flex justify-between items-start hover:bg-gray-50 transition">
+<div className="p-6 flex justify-between items-start hover:bg-surface-warm transition">
   <div className="flex-1">
     <h4 className="text-lg font-heading font-semibold text-text-primary">{item.name}</h4>
     <p className="text-text-secondary text-sm mt-1">{item.description}</p>
@@ -233,12 +233,12 @@ Before and after examples for updating your React components with Thunder Road s
 
 **Before:**
 ```jsx
-<div className="bg-gray-50 rounded-lg shadow-lg p-8 space-y-4">
+<div className="bg-surface-warm rounded-lg shadow-lg p-8 space-y-4">
   <div>
-    <label className="block text-sm font-medium text-gray-700 mb-2">Name *</label>
+    <label className="block text-sm font-medium text-text-primary mb-2">Name *</label>
     <input
       type="text"
-      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className="form-input w-full px-4 py-2 border border-border rounded-lg focus:outline-none transition"
     />
   </div>
 </div>
@@ -268,22 +268,8 @@ Before and after examples for updating your React components with Thunder Road s
 
 **Before:**
 ```jsx
-<div className="w-64 bg-gray-900 text-white flex flex-col">
-  <div className="p-4 border-b border-gray-800">
-    <span className="font-bold text-lg">Thunder Road</span>
-  </div>
-  <nav className="flex-1 p-4 space-y-2">
-    <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-blue-600 text-white">
-      Dashboard
-    </button>
-  </nav>
-</div>
-```
-
-**After:**
-```jsx
-<div className="w-64 bg-gray-900 text-white flex flex-col">
-  <div className="p-4 border-b border-gray-800">
+<div className="w-64 bg-surface-dark text-text-inverse flex flex-col">
+  <div className="p-4 border-b border-divider">
     <div className="logo-badge">
       <img src={logo} alt="Thunder Road" className="h-10 w-auto" />
     </div>
@@ -293,7 +279,24 @@ Before and after examples for updating your React components with Thunder Road s
       <Icon size={20} />
       Dashboard
     </button>
-    <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 hover:text-white transition font-medium">
+  </nav>
+</div>
+```
+
+**After:**
+```jsx
+<div className="w-64 bg-surface-dark text-text-inverse flex flex-col">
+  <div className="p-4 border-b border-divider">
+    <div className="logo-badge">
+      <img src={logo} alt="Thunder Road" className="h-10 w-auto" />
+    </div>
+  </div>
+  <nav className="flex-1 p-4 space-y-2">
+    <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-primary text-text-inverse hover:bg-primary-dark transition font-medium">
+      <Icon size={20} />
+      Dashboard
+    </button>
+    <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-text-muted hover:bg-surface-dark hover:text-text-inverse transition font-medium">
       <Icon size={20} />
       Menu
     </button>
@@ -307,8 +310,8 @@ Before and after examples for updating your React components with Thunder Road s
 
 **Before:**
 ```jsx
-<div className="bg-white rounded-lg shadow p-6">
-  <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
+<div className="admin-card bg-surface-warm rounded-xl shadow-xxl p-6 relative">
+  <h2 className="text-2xl font-heading font-bold text-text-primary mb-4">Dashboard</h2>
   {/* Content */}
 </div>
 ```
@@ -328,14 +331,14 @@ Before and after examples for updating your React components with Thunder Road s
 
 **Before:**
 ```jsx
-<div className="bg-white rounded-lg shadow p-6">
+<div className="bg-surface-warm rounded-lg shadow-lg p-6 hover:shadow-xl transition">
   <div className="flex items-center justify-between">
     <div>
-      <p className="text-gray-600 text-sm">Pending Reservations</p>
-      <p className="text-3xl font-bold mt-2">{count}</p>
+      <p className="text-text-secondary text-sm">Pending Reservations</p>
+      <p className="text-3xl font-bold font-mono mt-2 text-text-primary">{count}</p>
     </div>
-    <div className="w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center">
-      <Icon size={24} className="text-white" />
+    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-md">
+      <Icon size={24} className="text-text-inverse" />
     </div>
   </div>
 </div>
@@ -350,7 +353,7 @@ Before and after examples for updating your React components with Thunder Road s
       <p className="text-3xl font-bold font-mono mt-2 text-text-primary">{count}</p>
     </div>
     <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-md">
-      <Icon size={24} className="text-white" />
+  <Icon size={24} className="text-text-inverse" />
     </div>
   </div>
 </div>
@@ -364,19 +367,21 @@ Before and after examples for updating your React components with Thunder Road s
 
 **Before:**
 ```jsx
-<table className="w-full">
-  <thead className="bg-gray-50 border-b">
+<table className="w-full border-collapse">
+  <thead>
     <tr>
-      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+      <th className="px-6 py-3 text-left text-xs font-semibold text-text-muted uppercase bg-transparent border-b border-divider">
+        Name
+      </th>
     </tr>
   </thead>
-  <tbody className="divide-y">
-    <tr className="hover:bg-gray-50">
-      <td className="px-6 py-4 text-sm">{name}</td>
+  <tbody className="divide-y divide-divider">
+    <tr className="hover:bg-surface-warm transition">
+      <td className="px-6 py-4 text-sm text-text-primary">{name}</td>
     </tr>
   </tbody>
 </table>
-```
+
 
 **After:**
 ```jsx
@@ -424,9 +429,9 @@ Before and after examples for updating your React components with Thunder Road s
 
 **Before:**
 ```jsx
-<div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
-  <AlertCircle size={20} className="text-red-600" />
-  <p className="text-red-800">Error!</p>
+<div className="bg-surface-warm border border-error/20 rounded-lg p-4 flex items-center gap-3">
+  <AlertCircle size={20} className="text-error" />
+  <p className="text-error font-medium">Error!</p>
 </div>
 ```
 
@@ -445,14 +450,6 @@ Before and after examples for updating your React components with Thunder Road s
 ### **Basic Card**
 
 **Before:**
-```jsx
-<div className="bg-white rounded-lg shadow p-6">
-  <h3 className="text-xl font-bold mb-2">Title</h3>
-  <p className="text-gray-600">Content here</p>
-</div>
-```
-
-**After:**
 ```jsx
 <div className="bg-surface rounded-lg shadow-lg p-6 card-hover">
   <h3 className="text-xl font-heading font-bold text-text-primary mb-2">Title</h3>
