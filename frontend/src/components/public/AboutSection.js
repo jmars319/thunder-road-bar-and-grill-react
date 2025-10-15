@@ -21,6 +21,9 @@ export default function AboutSection() {
   // NOTE: This component uses `bg-surface` and `bg-surface-warm` tokens for
   // panels and page background. Edit tokens in `custom-styles.css` for global
   // changes (preferred) rather than in-component literal utilities.
+  // DEV: Keep panel/background colors tokenized so runtime theming and
+  // accessibility adjustments remain centralized. Avoid inline hex or
+  // Tailwind color shades here; update `frontend/src/custom-styles.css`.
   const [about, setAbout] = useState(null);
 
   useEffect(() => {
