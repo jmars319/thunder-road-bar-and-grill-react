@@ -27,7 +27,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
   - Images use `alt` text from the category name for accessibility.
 */
 
-const API_BASE = 'http://localhost:5001/api';
+const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 export default function MenuSection() {
   const [categories, setCategories] = useState([]);
@@ -66,14 +66,14 @@ export default function MenuSection() {
                 </div>
               </button>
 
-              {category.image_url && (
+                {category.image_url && (
                 <div className="relative">
                   <img
                     src={category.image_url}
                     alt={category.name}
                     className="w-full h-40 object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/10"></div>
+                  <div className="absolute inset-0 overlay-gradient"></div>
                 </div>
               )}
 

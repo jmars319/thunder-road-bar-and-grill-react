@@ -19,7 +19,7 @@ import { CheckCircle, AlertCircle } from 'lucide-react';
     the app's Toast system for consistent UX.
 */
 
-const API_BASE = 'http://localhost:5001/api';
+const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 export default function ReservationSection() {
   const [formData, setFormData] = useState({

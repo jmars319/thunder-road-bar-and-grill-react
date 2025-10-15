@@ -155,6 +155,11 @@ h1, h2, h3, h4, h5, h6 {
   overflow: hidden;
 }
 
+/* Overlay gradient used on images to improve text readability */
+.overlay-gradient {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.20), rgba(0,0,0,0.10));
+}
+
 /* Hero Text Outline (for readability) */
 .hero-title,
 .hero-subtitle {

@@ -17,7 +17,7 @@ import { LayoutDashboard, Users, Calendar, Briefcase, TrendingUp } from 'lucide-
     to the backend. If status values change, update the filters here.
 */
 
-const API_BASE = 'http://localhost:5001/api';
+const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 function DashboardModule() {
   const [stats, setStats] = useState({
@@ -85,7 +85,7 @@ function DashboardModule() {
           icon={TrendingUp} 
           label="Unread Messages" 
           value={stats.messages} 
-          color="bg-cta" 
+          color="bg-accent" 
         />
       </div>
 

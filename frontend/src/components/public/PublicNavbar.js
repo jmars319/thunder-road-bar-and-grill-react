@@ -16,7 +16,7 @@ import ThemeToggle from '../ThemeToggle';
     rendering. Keep link shape stable for router integration.
 */
 
-const API_BASE = 'http://localhost:5001/api';
+const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 export default function PublicNavbar({ onGoToAdmin }) {
   const [siteSettings, setSiteSettings] = useState(null);
@@ -69,7 +69,7 @@ export default function PublicNavbar({ onGoToAdmin }) {
               <a
                 key={link.id}
                 href={link.url}
-                className="text-text-secondary hover:text-primary font-medium transition"
+                className="text-text-secondary hover:text-text-primary font-medium transition"
               >
                 {link.label}
               </a>

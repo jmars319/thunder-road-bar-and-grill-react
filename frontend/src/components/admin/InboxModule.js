@@ -27,7 +27,7 @@ import { Inbox, Mail, MailOpen, Trash2 } from 'lucide-react';
   - Defensive date rendering when submitted_at is missing or invalid.
 */
 
-const API_BASE = 'http://localhost:5001/api';
+const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 function InboxModule() {
   const [messages, setMessages] = useState([]);
@@ -92,7 +92,7 @@ function InboxModule() {
               <div className="flex items-start gap-3">
                 {msg.is_read ? <MailOpen size={18} /> : <Mail size={18} className="text-primary" />}
                 <div className="flex-1 min-w-0">
-                  <p className={`font-medium truncate ${!msg.is_read ? 'text-primary' : ''}`}>
+                  <p className={`font-medium truncate ${!msg.is_read ? 'text-text-primary' : ''}`}>
                     {msg.name}
                   </p>
                   <p className="text-sm text-text-secondary truncate">{msg.subject}</p>
