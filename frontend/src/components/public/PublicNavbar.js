@@ -3,6 +3,8 @@ import { Menu, X } from 'lucide-react';
 import ThemeToggle from '../ThemeToggle';
 
 /*
+  PublicNavbar
+
   Purpose:
   - Site navigation used by the public website. Loads `site-settings` and
     `navigation` from the backend and renders responsive navigation.
@@ -11,15 +13,20 @@ import ThemeToggle from '../ThemeToggle';
   - Props: { onGoToAdmin?: function }
   - Data: expects GET /api/site-settings and GET /api/navigation endpoints.
 
-  Notes:
-  - Fetches on mount; for heavy traffic consider caching or server-side
-    rendering. Keep link shape stable for router integration.
+  Accessibility & logo notes:
+  - If the configured `siteSettings.logo_url` points to an SVG file, this
+    component will attempt to fetch the SVG and render it inline so it can
+    inherit `currentColor` from CSS tokens (recolorable). If fetch fails or
+    the URL is not an SVG, it falls back to a normal <img> element.
+  - Inline SVG content is injected as raw HTML; only use this with trusted
+    sources. If your admin allows arbitrary uploads, sanitize SVGs server-side.
 */
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 export default function PublicNavbar({ onGoToAdmin }) {
   const [siteSettings, setSiteSettings] = useState(null);
+  const [logoSvg, setLogoSvg] = useState(null);
   const [navLinks, setNavLinks] = useState([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -37,6 +44,22 @@ export default function PublicNavbar({ onGoToAdmin }) {
       .catch(() => setNavLinks([]));
   }, []);
 
+  // If the logo_url is an SVG file, fetch the content and render inline so it
+  // inherits currentColor (recolorable). This is a best-effort fetch and will
+  // gracefully fall back to <img> on error.
+  useEffect(() => {
+    if (!siteSettings?.logo_url) return;
+    const url = siteSettings.logo_url;
+    if (typeof url === 'string' && url.toLowerCase().endsWith('.svg')) {
+      fetch(url)
+        .then(r => (r.ok ? r.text() : Promise.reject()))
+        .then(svgText => setLogoSvg(svgText))
+        .catch(() => setLogoSvg(null));
+    } else {
+      setLogoSvg(null);
+    }
+  }, [siteSettings]);
+
   return (
     <nav className="bg-surface shadow-md header-sticky top-0 z-50 backdrop-blur-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -44,12 +67,21 @@ export default function PublicNavbar({ onGoToAdmin }) {
           <div className="flex items-center gap-3">
             {siteSettings?.logo_url && (
               <div className="logo-badge">
-                {/* Logo image - alt text uses business_name when available for accessibility */}
-                <img
-                  src={siteSettings.logo_url}
-                  alt={siteSettings.business_name}
-                  className="h-11 w-auto"
-                />
+                {/* Prefer inline SVG when available so logos can inherit token colors */}
+                {logoSvg ? (
+                  <span
+                    role="img"
+                    aria-label={siteSettings.business_name || 'Site logo'}
+                    className="h-11 w-auto inline-block"
+                    dangerouslySetInnerHTML={{ __html: logoSvg }}
+                  />
+                ) : (
+                  <img
+                    src={siteSettings.logo_url}
+                    alt={siteSettings.business_name}
+                    className="h-11 w-auto"
+                  />
+                )}
               </div>
             )}
             <div>
@@ -75,7 +107,9 @@ export default function PublicNavbar({ onGoToAdmin }) {
               </a>
             ))}
             <button
+              type="button"
               onClick={onGoToAdmin}
+              aria-label="Open admin panel"
               className="bg-primary text-text-inverse px-4 py-2 rounded-lg hover:bg-primary-dark transition text-sm font-semibold"
             >
               Admin
@@ -85,9 +119,11 @@ export default function PublicNavbar({ onGoToAdmin }) {
 
           {/* Mobile menu toggle */}
           <button
+            type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-2 rounded-lg hover:bg-surface-warm"
             aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
             aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -96,7 +132,7 @@ export default function PublicNavbar({ onGoToAdmin }) {
 
         {/* Mobile menu content - keeps markup separate for clarity */}
         {mobileMenuOpen && (
-          <div className="md:hidden pb-4 border-t">
+          <div id="mobile-menu" className="md:hidden pb-4 border-t">
             <div className="flex flex-col gap-4 pt-4">
               {navLinks.map(link => (
                 <a
@@ -113,6 +149,8 @@ export default function PublicNavbar({ onGoToAdmin }) {
                   setMobileMenuOpen(false);
                   onGoToAdmin();
                 }}
+                type="button"
+                aria-label="Admin login"
                 className="bg-primary text-text-inverse px-4 py-2 rounded-lg hover:bg-primary-dark transition text-sm font-semibold mx-4"
               >
                 Admin Login

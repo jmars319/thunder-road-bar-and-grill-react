@@ -1,12 +1,16 @@
 /*
+  AboutSection
+
   Purpose:
   - Render editable 'About' content pulled from the backend.
 
   Contract:
   - Expects GET /api/about returning an object with header, paragraph, and an optional map URL.
 
-  Notes:
-  - Sanitize any rich HTML from the backend before rendering to avoid XSS.
+  Security note:
+  - Sanitize any rich HTML from the backend before rendering to avoid XSS. This
+    component renders plain text from the `about` payload and is intentionally
+    conservative.
 */
 
 import React, { useEffect, useState } from 'react';

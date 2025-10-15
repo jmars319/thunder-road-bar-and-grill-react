@@ -7,24 +7,10 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
   Purpose:
   - Render the restaurant menu grouped by categories fetched from the backend.
 
-  Expected API:
-  - GET /api/menu -> [
-      {
-        id,
-        name,
-        description,
-        image_url?,
-        items: [ { id, name, description, price }, ... ]
-      },
-      ...
-    ]
-
-  Notes and defensive behavior:
-  - Guard against missing arrays and missing prices. If `price` is not a number,
-    display a placeholder (e.g., '—') instead of crashing.
-  - The expand/collapse state is local to this component. If you need deep-linking
-    to an expanded category, consider lifting state to the page and syncing with the URL.
-  - Images use `alt` text from the category name for accessibility.
+  Accessibility & contract:
+  - Buttons controlling collapsible panels include `aria-expanded` for screen
+    readers. Price labels are plain text inside a span with `aria-hidden` false
+    so screen readers announce amounts correctly.
 */
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
@@ -49,9 +35,11 @@ export default function MenuSection() {
           {categories.map(category => (
             <div key={category.id} className="menu-card bg-surface rounded-lg shadow-lg overflow-hidden card-hover transition-all">
               <button
+                type="button"
                 onClick={() => setExpandedCategory(expandedCategory === category.id ? null : category.id)}
                 className="w-full flex items-center justify-between p-6 hover:bg-surface-warm transition"
                 aria-expanded={expandedCategory === category.id}
+                aria-controls={`menu-cat-${category.id}`}
               >
                 <div className="text-left">
                   <h3 className="text-2xl font-heading font-bold text-text-primary">{category.name}</h3>
@@ -78,7 +66,7 @@ export default function MenuSection() {
               )}
 
               {expandedCategory === category.id && (
-                <div className="border-t bg-surface-warm">
+                <div id={`menu-cat-${category.id}`} className="border-t bg-surface-warm">
                   {Array.isArray(category.items) && category.items.length > 0 ? (
                     <div className="divide-y divide-divider">
                       {category.items.map(item => (
@@ -88,7 +76,9 @@ export default function MenuSection() {
                             <p className="text-text-secondary text-sm mt-1">{item.description}</p>
                           </div>
                           <div className="ml-4">
-                            <span className="price-badge">{typeof item.price === 'number' ? `$${item.price.toFixed(2)}` : '—'}</span>
+                            <span className="price-badge" aria-label={typeof item.price === 'number' ? `Price ${item.price}` : 'Price not available'}>
+                              {typeof item.price === 'number' ? `$${item.price.toFixed(2)}` : '\u2014'}
+                            </span>
                           </div>
                         </div>
                       ))}

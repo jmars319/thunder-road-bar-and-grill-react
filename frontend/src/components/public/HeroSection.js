@@ -1,11 +1,14 @@
 /*
+  HeroSection
+
   Purpose:
   - Hero section for the homepage: headline, subtitle, and CTAs. Presentational
     and intentionally static to avoid unexpected layout changes.
 
-  Notes:
-  - For dynamic content prefer props to keep the component presentational.
-  - Maintain accessibility (single H1 on homepage) if this component is moved.
+  Accessibility:
+  - This component renders the main H1 for the public site. If you embed
+    multiple instances on the same page, ensure only one H1 remains for
+    correct semantic structure.
 */
 
 import React from 'react';
@@ -23,12 +26,16 @@ export default function HeroSection() {
         <div className="flex gap-4 justify-center flex-wrap">
           <a
             href="#menu"
+            role="button"
+            aria-label="View menu"
             className="bg-primary text-text-inverse px-8 py-3 rounded-lg hover:bg-primary-dark transition font-bold shadow-lg"
           >
             View Menu
           </a>
           <a
             href="#reservations"
+            role="button"
+            aria-label="Make a reservation"
             className="bg-surface text-text-primary px-8 py-3 rounded-lg hover:bg-surface-warm transition font-bold shadow-lg"
           >
             Make a Reservation

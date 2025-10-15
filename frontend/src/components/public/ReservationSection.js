@@ -7,16 +7,10 @@ import { CheckCircle, AlertCircle } from 'lucide-react';
   Purpose:
   - Provide a simple reservation form that posts to the backend API.
 
-  Expected API:
-  - POST /api/reservations with body {
-      name, email, phone, reservation_date, reservation_time, number_of_guests, special_requests
-    }
-
-  Notes and validation guidance:
-  - This component contains minimal client-side validation. For a production app
-    you should validate required fields and the date/time values before submission.
-  - The UI shows simple success and error banners. Consider replacing these with
-    the app's Toast system for consistent UX.
+  Accessibility:
+  - Labels are associated with inputs using explicit ids. Required fields are
+    marked with aria-required to aid assistive tech. This component performs
+    minimal validation; enhance as needed upstream.
 */
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
@@ -88,18 +82,22 @@ export default function ReservationSection() {
         <div className="bg-surface-warm rounded-lg shadow-lg p-8 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-2">Name *</label>
+              <label htmlFor="res-name" className="block text-sm font-medium text-text-primary mb-2">Name *</label>
               <input
+                id="res-name"
                 type="text"
+                aria-required="true"
                 value={formData.name}
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
                 className="form-input w-full px-4 py-2 border border-border rounded-lg focus:outline-none transition"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-2">Phone *</label>
+              <label htmlFor="res-phone" className="block text-sm font-medium text-text-primary mb-2">Phone *</label>
               <input
+                id="res-phone"
                 type="tel"
+                aria-required="true"
                 value={formData.phone}
                 onChange={(e) => setFormData({...formData, phone: e.target.value})}
                 className="form-input w-full px-4 py-2 border border-border rounded-lg focus:outline-none transition"
@@ -108,8 +106,9 @@ export default function ReservationSection() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">Email</label>
+            <label htmlFor="res-email" className="block text-sm font-medium text-text-primary mb-2">Email</label>
             <input
+              id="res-email"
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({...formData, email: e.target.value})}
@@ -119,18 +118,22 @@ export default function ReservationSection() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-2">Date *</label>
+              <label htmlFor="res-date" className="block text-sm font-medium text-text-primary mb-2">Date *</label>
               <input
+                id="res-date"
                 type="date"
+                aria-required="true"
                 value={formData.reservation_date}
                 onChange={(e) => setFormData({...formData, reservation_date: e.target.value})}
                 className="form-input w-full px-4 py-2 border border-border rounded-lg focus:outline-none transition"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-2">Time *</label>
+              <label htmlFor="res-time" className="block text-sm font-medium text-text-primary mb-2">Time *</label>
               <input
+                id="res-time"
                 type="time"
+                aria-required="true"
                 value={formData.reservation_time}
                 onChange={(e) => setFormData({...formData, reservation_time: e.target.value})}
                 className="form-input w-full px-4 py-2 border border-border rounded-lg focus:outline-none transition"
@@ -139,10 +142,12 @@ export default function ReservationSection() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">Number of Guests *</label>
+            <label htmlFor="res-guests" className="block text-sm font-medium text-text-primary mb-2">Number of Guests *</label>
             <input
+              id="res-guests"
               type="number"
               min="1"
+              aria-required="true"
               value={formData.number_of_guests}
               onChange={(e) => setFormData({...formData, number_of_guests: parseInt(e.target.value) || 1})}
               className="form-input w-full px-4 py-2 border border-border rounded-lg focus:outline-none transition"
@@ -150,8 +155,9 @@ export default function ReservationSection() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">Special Requests</label>
+            <label htmlFor="res-requests" className="block text-sm font-medium text-text-primary mb-2">Special Requests</label>
             <textarea
+              id="res-requests"
               value={formData.special_requests}
               onChange={(e) => setFormData({...formData, special_requests: e.target.value})}
               rows="3"
