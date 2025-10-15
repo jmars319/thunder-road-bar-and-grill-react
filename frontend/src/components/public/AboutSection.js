@@ -72,40 +72,47 @@ export default function AboutSection() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-4xl font-heading font-bold text-center mb-6">About Us</h2>
         <div className="bg-surface rounded-lg shadow-lg p-8">
-          <h3 className="text-2xl font-heading font-semibold mb-4 text-text-primary">{about?.header}</h3>
-          <p className="text-text-secondary mb-4">{about?.paragraph}</p>
-          {(() => {
-            // Determine the embed src. Priority:
-            // 1) about.map_embed_url if it looks like a URL (starts with http)
-            // 2) about.map_embed_url if it's a plain address string -> build embed URL
-            // 3) siteSettings.address -> build embed URL
-            const raw = about?.map_embed_url;
-            let embedSrc = null;
-            if (raw) {
-              const trimmed = String(raw).trim();
-              if (/^https?:\/\//i.test(trimmed)) {
-                embedSrc = trimmed;
-              } else {
-                // Treat as plain address
-                embedSrc = buildMapsEmbedUrlFromAddress(trimmed);
-              }
-            } else if (siteSettings?.address) {
-              embedSrc = buildMapsEmbedUrlFromAddress(siteSettings.address);
-            }
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+            <div className="md:col-span-2">
+              <h3 className="text-2xl font-heading font-semibold mb-4 text-text-primary">{about?.header}</h3>
+              <p className="text-text-secondary mb-4">{about?.paragraph}</p>
+            </div>
 
-            if (!embedSrc) return null;
+            <div className="md:col-span-1">
+              {(() => {
+                // Determine the embed src. Priority:
+                // 1) about.map_embed_url if it looks like a URL (starts with http)
+                // 2) about.map_embed_url if it's a plain address string -> build embed URL
+                // 3) siteSettings.address -> build embed URL
+                const raw = about?.map_embed_url;
+                let embedSrc = null;
+                if (raw) {
+                  const trimmed = String(raw).trim();
+                  if (/^https?:\/\//i.test(trimmed)) {
+                    embedSrc = trimmed;
+                  } else {
+                    // Treat as plain address
+                    embedSrc = buildMapsEmbedUrlFromAddress(trimmed);
+                  }
+                } else if (siteSettings?.address) {
+                  embedSrc = buildMapsEmbedUrlFromAddress(siteSettings.address);
+                }
 
-            return (
-              <div className="mt-4">
-                <iframe
-                  src={embedSrc}
-                  title="Location"
-                  className="w-full h-64 border-0 rounded"
-                  allowFullScreen
-                />
-              </div>
-            );
-          })()}
+                if (!embedSrc) return null;
+
+                return (
+                  <div className="mt-0 md:mt-0">
+                    <iframe
+                      src={embedSrc}
+                      title="Location"
+                      className="w-full h-64 md:h-full border-0 rounded"
+                      allowFullScreen
+                    />
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
         </div>
       </div>
     </div>
