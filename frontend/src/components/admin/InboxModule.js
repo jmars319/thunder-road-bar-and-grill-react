@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Inbox, Mail, MailOpen, Trash2 } from '../../icons';
 
+// Developer: icons are re-exported from `src/icons`. Keep module-scope references
+// below to avoid false-positive `no-unused-vars` warnings in some lint setups.
+void Inbox; void Mail; void MailOpen; void Trash2;
+
 /*
   InboxModule
 
@@ -170,8 +174,3 @@ const Module = {
 };
 
 export default Module;
-
-// ensure imported icons are considered used by linters in case of indirect usage
-{false && Mail}
-{false && MailOpen}
-{false && Trash2}
