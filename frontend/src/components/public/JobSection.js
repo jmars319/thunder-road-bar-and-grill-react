@@ -43,6 +43,33 @@ export default function JobSection() {
     setMessage(null);
   }
 
+  function handleFileChange(e) {
+    const file = e.target.files?.[0] || null;
+    // Pre-upload validation: size + type
+    if (file) {
+      if (file.size > MAX_FILE_BYTES) {
+        setFieldErrors((errs) => ({ ...errs, resume: 'Resume must be 3 MB or smaller' }));
+        setResumeFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+        return;
+      }
+      if (ALLOWED_TYPES.indexOf(file.type) === -1) {
+        setFieldErrors((errs) => ({ ...errs, resume: 'Resume must be PDF or Word document' }));
+        setResumeFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+        return;
+      }
+    }
+
+    // valid
+    setFieldErrors((errs) => {
+      const next = { ...errs };
+      delete next.resume;
+      return next;
+    });
+    setResumeFile(file);
+  }
+
   // Upload using XMLHttpRequest to provide progress feedback
   function uploadResume(file) {
     if (!file) return Promise.resolve(null);
@@ -253,13 +280,13 @@ export default function JobSection() {
           <label className="flex flex-col">
             <span className="text-sm mb-1">Resume (optional)</span>
             <div className="flex items-center gap-3">
-              <input ref={fileInputRef} type="file" accept="application/pdf,.doc,.docx" onChange={(e) => setResumeFile(e.target.files?.[0] || null)} aria-describedby="resume-help" />
+              <input ref={fileInputRef} type="file" accept="application/pdf,.doc,.docx" onChange={handleFileChange} aria-describedby="resume-help" />
               <div className="text-sm text-muted" id="resume-help">PDF or Word — max 3 MB</div>
             </div>
             {resumeFile && (
-              <div className="mt-2 text-sm">
-                Selected: {resumeFile.name} · {(resumeFile.size / 1024).toFixed(0)} KB
-              </div>
+                <div className="mt-2 text-sm">
+                  Selected: {resumeFile.name} · {(resumeFile.size / 1024).toFixed(0)} KB
+                </div>
             )}
             {uploadProgress > 0 && uploadProgress < 100 && (
               <div className="w-full bg-surface-warm h-2 rounded mt-2 overflow-hidden">
@@ -273,8 +300,19 @@ export default function JobSection() {
             )}
           </label>
 
-          {error && <div className="text-sm text-red-600">{error}</div>}
-          {message && <div className="text-sm text-green-600">{message}</div>}
+          {error && (
+            <div className="bg-error/10 border border-error rounded-lg p-3 mb-2 flex items-center gap-3">
+              <p className="text-error">{error}</p>
+            </div>
+          )}
+
+          {message && (
+            <div aria-live="polite" className="transform transition-all duration-300">
+              <div className="bg-success/10 border border-success rounded-lg p-3 mb-2 flex items-center gap-3" style={{ animation: 'job-success 400ms ease-out' }}>
+                <p className="text-success">{message}</p>
+              </div>
+            </div>
+          )}
 
           {fields && Array.isArray(fields) && (
             <div className="mt-4 bg-surface p-3 rounded">
@@ -295,7 +333,7 @@ export default function JobSection() {
           )}
 
           <div className="flex items-center justify-end">
-            <button type="submit" className="btn btn-primary" disabled={submitting}>
+            <button type="submit" className="w-full bg-primary text-text-inverse py-3 px-6 rounded-lg hover:bg-primary-dark transition font-bold text-lg shadow-lg" disabled={submitting}>
               {submitting ? 'Submitting…' : 'Submit application'}
             </button>
           </div>
