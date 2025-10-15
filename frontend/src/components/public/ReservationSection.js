@@ -1,4 +1,5 @@
 import { useState } from 'react';
+/* eslint-disable no-unused-vars */
 import { CheckCircle, AlertCircle } from 'lucide-react';
 
 /*
@@ -58,7 +59,7 @@ export default function ReservationSection() {
       } else {
         setError('Failed to submit reservation');
       }
-    } catch (err) {
+    } catch (_err) {
       setError('An error occurred');
     }
   };

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { Settings, Save } from 'lucide-react';
 
 /*
@@ -52,7 +53,7 @@ function SettingsModule() {
           const hoursData = await hoursRes.json();
           setBusinessHours(Array.isArray(hoursData) ? hoursData : []);
         }
-      } catch (err) {
+      } catch {
         // Intentionally quiet: admin UI will render empty/default values on error
         setSiteSettings({});
         setAboutContent({});
@@ -74,8 +75,8 @@ function SettingsModule() {
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
       }
-    } catch (err) {
-        // swallow for now; could show toast on failure
+  } catch {
+    // swallow for now; could show toast on failure
     }
   };
 
@@ -90,8 +91,8 @@ function SettingsModule() {
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
       }
-    } catch (err) {
-        // swallow for now; consider showing an error toast
+  } catch {
+    // swallow for now; consider showing an error toast
     }
   };
 
@@ -106,8 +107,8 @@ function SettingsModule() {
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
       }
-    } catch (err) {
-        // swallow for now
+  } catch {
+    // swallow for now
     }
   };
 

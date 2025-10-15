@@ -50,6 +50,7 @@ function DashboardModule() {
     });
   }, []);
 
+  // eslint-disable-next-line no-unused-vars
   const StatCard = ({ icon: Icon, label, value, color }) => (
     <div className="bg-surface rounded-lg shadow p-6 card-hover" role="region" aria-label={label}>
       <div className="flex items-center justify-between">

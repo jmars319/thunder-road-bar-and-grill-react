@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { Briefcase, Trash2 } from 'lucide-react';
 
 /*

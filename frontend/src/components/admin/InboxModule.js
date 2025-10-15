@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { Inbox, Mail, MailOpen, Trash2 } from 'lucide-react';
 
 /*

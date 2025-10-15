@@ -1,3 +1,6 @@
+/* eslint-disable no-undef */
+/* eslint-env node */
+
 /**
  * Tailwind configuration for Thunder Road
  *

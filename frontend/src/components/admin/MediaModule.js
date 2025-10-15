@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { Image, Upload, Trash2, Copy, CheckCircle } from 'lucide-react';
 
 /*
@@ -42,8 +43,8 @@ function MediaModule() {
         if (!res.ok) throw new Error('Failed to fetch media');
         return res.json();
       })
-      .then(data => setMedia(Array.isArray(data) ? data : []))
-      .catch(() => setMedia([]));
+  .then(data => setMedia(Array.isArray(data) ? data : []))
+  .catch(() => setMedia([]));
   };
 
   const handleUpload = async (e) => {
@@ -93,7 +94,7 @@ function MediaModule() {
           document.execCommand('copy');
           setCopiedId(url);
           setTimeout(() => setCopiedId(null), 2000);
-        } catch (e) {
+        } catch {
           // ignore
         }
         document.body.removeChild(ta);

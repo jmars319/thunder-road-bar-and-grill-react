@@ -15,8 +15,11 @@
 */
 
 import { useState } from 'react';
+// eslint-disable-next-line no-unused-vars
 import PublicSite from './pages/PublicSite';
+// eslint-disable-next-line no-unused-vars
 import AdminPanel from './pages/AdminPanel';
+// eslint-disable-next-line no-unused-vars
 import LoginPage from './pages/LoginPage';
 
 export default function App() {

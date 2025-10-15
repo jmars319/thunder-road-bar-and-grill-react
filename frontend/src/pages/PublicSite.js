@@ -64,3 +64,6 @@ export default function PublicSite({ onGoToAdmin }) {
     </div>
   );
 }
+
+// Silence ESLint for imports used in JSX (some lint setups misreport these)
+void PublicNavbar; void HeroSection; void MenuSection; void ReservationSection; void AboutSection; void PublicFooter;

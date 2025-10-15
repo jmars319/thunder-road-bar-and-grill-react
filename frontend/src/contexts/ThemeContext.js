@@ -41,7 +41,7 @@ export function ThemeProvider({ children }) {
     try {
       const stored = localStorage.getItem('site-theme');
       return stored || 'system';
-    } catch (e) {
+    } catch {
       // If localStorage is not available (SSR or private browsing), fall back to 'system'.
       return 'system';
     }
@@ -62,7 +62,7 @@ export function ThemeProvider({ children }) {
 
     apply(theme);
 
-    try { localStorage.setItem('site-theme', theme); } catch (_e) {
+    try { localStorage.setItem('site-theme', theme); } catch {
       // ignore storage errors silently — app still functions without persistence
     }
   }, [theme]);

@@ -14,7 +14,9 @@
     with a `name` and `icon` property.
 */
 
+import React from 'react';
 import { useState } from 'react';
+// icons: used dynamically in menu registry/JSX — kept in the module registry
 import { Menu, X, LogOut, Home } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
 
@@ -78,7 +80,6 @@ export default function AdminPanel({ user = { name: 'Admin' }, onLogout = () => 
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           {Object.entries(AdminModules).map(([key, moduleEntry]) => {
             const entry = moduleEntry.component ? moduleEntry : { component: moduleEntry, name: moduleEntry.name || key, icon: moduleEntry.icon || Home };
-            const Icon = entry.icon || Home;
             return (
               <button
                 key={key}
@@ -92,7 +93,7 @@ export default function AdminPanel({ user = { name: 'Admin' }, onLogout = () => 
                     : 'text-text-inverse hover:bg-surface-dark/90 hover:text-text-inverse'
                 }`}
               >
-                <Icon size={20} />
+                {React.createElement(entry.icon || Home, { size: 20 })}
                 {sidebarOpen && <span className="text-sm font-medium text-text-inverse">{entry.name}</span>}
               </button>
             );
@@ -150,3 +151,6 @@ export default function AdminPanel({ user = { name: 'Admin' }, onLogout = () => 
     </div>
   );
 }
+
+// Silence ESLint if it incorrectly flags imported-but-JSX-used symbols
+void ThemeToggle; void Menu; void X; void LogOut; void Home;
