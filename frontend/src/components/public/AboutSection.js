@@ -13,7 +13,8 @@
     conservative.
 */
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { icons } from '../../icons';
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
@@ -152,22 +153,24 @@ export default function AboutSection() {
                       />
                     </div>
 
-                    <div className="mt-4 flex flex-col gap-2">
+                    <div className="mt-4 flex gap-2">
                       <a
                         href={destinationUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full inline-block bg-primary text-text-inverse text-center py-2 rounded-lg hover:bg-primary-dark transition font-semibold"
+                        className="flex-1 inline-flex items-center justify-center gap-2 bg-primary text-text-inverse py-2 rounded-lg hover:bg-primary-dark transition font-semibold"
                       >
-                        Go To
+                        {React.createElement(icons.MapPin, { size: 18, className: 'inline-block' })}
+                        <span>Go To</span>
                       </a>
                       <a
                         href={directionsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full inline-block bg-surface-warm text-text-primary text-center py-2 rounded-lg hover:bg-surface hover:text-text-primary transition font-semibold"
+                        className="flex-1 inline-flex items-center justify-center gap-2 bg-surface-warm text-text-primary py-2 rounded-lg hover:bg-surface hover:text-text-primary transition font-semibold"
                       >
-                        Get Directions
+                        {React.createElement(icons.Navigation, { size: 18, className: 'inline-block' })}
+                        <span>Get Directions</span>
                       </a>
                     </div>
                   </div>
