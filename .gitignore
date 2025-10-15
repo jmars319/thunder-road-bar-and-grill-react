@@ -1,63 +1,30 @@
+# Root .gitignore for Thunder Road project
+
+# Ignore copilot and styling instruction docs (keep them local/private)
+copilot-instructions/
+styling-instructions/
+
 # Node
 node_modules/
-.pnp/
-.pnp.js
+
+# Build outputs
+/build
+
+# OS
+.DS_Store
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 
-# Vite / build
-dist/
-.build/
-.env
-.env.*
+# Editor
 .vscode/
-.DS_Store
 
-# Logs
-logs
-*.log
-npm-debug.log*
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# IDE
-.idea/
-.vscode/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-
-# Lockfiles
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-
-# Temporary files
-.cache/
-*.tmp
-
-# Composer/PHP vendor (if PHP repo gets copied into this branch)
-vendor/
-composer.lock
-
-# Common PHP
-storage/
-.env.php
-
-# Uploads (optional: keep if you want images versioned)
-# uploads/
-
-# Misc
-coverage/
-coverage-final.json
-
-# build artifacts
-*.tgz
-
-# local node_modules in subfolders
-**/node_modules
+# Ignore backend uploads (backend/.gitignore already allows uploads/.gitkeep)
+backend/uploads/
