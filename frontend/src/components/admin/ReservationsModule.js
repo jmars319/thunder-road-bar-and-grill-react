@@ -16,7 +16,7 @@ import { Calendar, CheckCircle, XCircle, Clock } from 'lucide-react';
   - Consider server-side pagination if the reservations list grows large.
 */
 
-const API_BASE = 'http://localhost:5001/api';
+const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 function ReservationsModule() {
   const [reservations, setReservations] = useState([]);

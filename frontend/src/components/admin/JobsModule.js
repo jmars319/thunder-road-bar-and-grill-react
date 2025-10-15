@@ -19,7 +19,7 @@ import { Briefcase, Trash2 } from 'lucide-react';
     For an improved UX consider optimistic updates or per-item loading states.
 */
 
-const API_BASE = 'http://localhost:5001/api';
+const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 function JobsModule() {
   const [applications, setApplications] = useState([]);
@@ -164,13 +164,13 @@ function JobsModule() {
                 <div>
                   <label className="block text-sm font-medium text-text-primary mb-2">Resume</label>
                   <a
-                    href={selectedApp.resume_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    View Resume
-                  </a>
+                      href={selectedApp.resume_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-text-primary hover:underline"
+                    >
+                      View Resume
+                    </a>
                 </div>
               )}
             </div>

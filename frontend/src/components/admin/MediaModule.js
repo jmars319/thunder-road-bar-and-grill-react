@@ -21,7 +21,7 @@ import { Image, Upload, Trash2, Copy, CheckCircle } from 'lucide-react';
     a full re-fetch if performance becomes a concern.
 */
 
-const API_BASE = 'http://localhost:5001/api';
+const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 function MediaModule() {
   const [media, setMedia] = useState([]);
@@ -125,7 +125,7 @@ function MediaModule() {
             <div className="aspect-square bg-surface-warm flex items-center justify-center">
               {item.file_type?.startsWith('image/') ? (
                 <img
-                  src={`http://localhost:5001${item.file_url}`}
+                  src={`${API_BASE.replace(/\/api$/, '')}${item.file_url}`}
                   alt={item.title}
                   className="w-full h-full object-cover"
                 />
@@ -139,7 +139,7 @@ function MediaModule() {
               <div className="flex gap-2 mt-3">
                 <button
                   onClick={() => copyUrl(item.file_url)}
-                  className="flex-1 bg-surface-warm text-primary py-1 px-2 rounded text-xs hover:bg-surface transition flex items-center justify-center gap-1"
+                  className="flex-1 bg-surface-warm text-text-primary py-1 px-2 rounded text-xs hover:bg-surface transition flex items-center justify-center gap-1"
                 >
                   {copiedId === item.file_url ? (
                     <>

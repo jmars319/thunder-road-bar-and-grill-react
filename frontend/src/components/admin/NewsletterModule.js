@@ -15,7 +15,7 @@ import { Mail, Trash2, Download } from 'lucide-react';
   - For very large lists consider server-side pagination or an export endpoint.
 */
 
-const API_BASE = 'http://localhost:5001/api';
+const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 function NewsletterModule() {
   const [subscribers, setSubscribers] = useState([]);
