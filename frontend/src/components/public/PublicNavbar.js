@@ -109,6 +109,9 @@ export default function PublicNavbar({ onGoToAdmin }) {
                 {link.label}
               </a>
             ))}
+            {/* DEV: Admin button and nav links use semantic design tokens (bg-primary, text-text-inverse,
+                hover:bg-primary-dark, text-text-primary, etc.). Adjust tokens in
+                `frontend/src/custom-styles.css` rather than changing utility classes here. */}
             <button
               type="button"
               onClick={onGoToAdmin}
