@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
-// eslint-disable-next-line no-unused-vars
 import { Mail, Trash2, Download } from '../../icons';
+
+// Developer notes:
+// - Newsletter admin UI uses tokenized classes for surfaces and text. Update
+//   `frontend/src/custom-styles.css` to change the site's color tokens.
+// - Icons are re-exported from `src/icons`; keep module-scope refs to avoid
+//   false-positive `no-unused-vars` in some lint setups.
+void Mail; void Trash2; void Download;
 
 /*
   NewsletterModule
