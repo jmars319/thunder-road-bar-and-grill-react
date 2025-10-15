@@ -88,11 +88,13 @@ function MenuModule() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center">
   <h2 className="text-2xl font-bold text-text-inverse">Menu Management</h2>
         <button
+          type="button"
           onClick={() => setEditingCategory({ name: '', description: '', display_order: 0 })}
           className="bg-primary text-text-inverse px-4 py-2 rounded-lg hover:bg-primary-dark flex items-center gap-2"
+          aria-label="Add menu category"
         >
           <Plus size={18} />
           Add Category
@@ -127,12 +129,14 @@ function MenuModule() {
               </div>
               <div className="flex gap-2">
                 <button
+                  type="button"
                   onClick={saveCategory}
                   className="flex-1 bg-primary text-text-inverse py-2 rounded-lg hover:bg-primary-dark"
                 >
                   Save
                 </button>
                 <button
+                  type="button"
                   onClick={() => setEditingCategory(null)}
                   className="flex-1 bg-surface-warm text-text-secondary py-2 rounded-lg hover:bg-surface"
                 >
@@ -182,12 +186,14 @@ function MenuModule() {
               </div>
               <div className="flex gap-2">
                 <button
+                  type="button"
                   onClick={saveItem}
                   className="flex-1 bg-primary text-text-inverse py-2 rounded-lg hover:bg-primary-dark"
                 >
                   Save
                 </button>
                 <button
+                  type="button"
                   onClick={() => setEditingItem(null)}
                   className="flex-1 bg-surface-warm text-text-secondary py-2 rounded-lg hover:bg-surface"
                 >
@@ -203,10 +209,13 @@ function MenuModule() {
       <div className="space-y-4">
         {categories.map(category => (
           <div key={category.id} className="bg-surface rounded-lg shadow">
-            <div className="flex items-center justify-between p-4 border-b border-divider">
+              <div className="flex items-center justify-between p-4 border-b border-divider">
               <button
+                type="button"
                 onClick={() => setExpandedCategory(expandedCategory === category.id ? null : category.id)}
                 className="flex-1 flex items-center gap-3 text-left"
+                aria-expanded={expandedCategory === category.id}
+                aria-controls={`category-items-${category.id}`}
               >
                 <div>
                   {expandedCategory === category.id ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
@@ -218,20 +227,26 @@ function MenuModule() {
               </button>
                 <div className="flex gap-2">
                 <button
+                  type="button"
                   onClick={() => setEditingItem({ category_id: category.id, name: '', description: '', price: 0 })}
                   className="text-primary hover:bg-surface-warm p-2 rounded"
+                  aria-label={`Add item to ${category.name}`}
                 >
                   <Plus size={18} />
                 </button>
                 <button
+                  type="button"
                   onClick={() => setEditingCategory(category)}
                   className="text-text-inverse hover:bg-surface-warm p-2 rounded"
+                  aria-label={`Edit category ${category.name}`}
                 >
                   <Edit size={18} />
                 </button>
                 <button
+                  type="button"
                   onClick={() => deleteCategory(category.id)}
                   className="text-error hover:bg-surface-warm p-2 rounded"
+                  aria-label={`Delete category ${category.name}`}
                 >
                   <Trash2 size={18} />
                 </button>
@@ -239,7 +254,7 @@ function MenuModule() {
             </div>
 
             {expandedCategory === category.id && (
-              <div className="p-4">
+              <div id={`category-items-${category.id}`} className="p-4" role="region" aria-label={`${category.name} items`}>
                 {category.items && category.items.length > 0 ? (
                   <div className="space-y-2">
                     {category.items.map(item => (
@@ -251,14 +266,18 @@ function MenuModule() {
                         </div>
                         <div className="flex gap-2">
                           <button
+                            type="button"
                             onClick={() => setEditingItem(item)}
                             className="text-text-secondary hover:bg-surface p-2 rounded"
+                            aria-label={`Edit item ${item.name}`}
                           >
                             <Edit size={16} />
                           </button>
                           <button
+                            type="button"
                             onClick={() => deleteItem(item.id)}
                             className="text-error hover:bg-surface p-2 rounded"
+                            aria-label={`Delete item ${item.name}`}
                           >
                             <Trash2 size={16} />
                           </button>
