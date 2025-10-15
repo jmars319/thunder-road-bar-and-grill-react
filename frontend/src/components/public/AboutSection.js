@@ -18,6 +18,9 @@ import React, { useEffect, useState } from 'react';
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 export default function AboutSection() {
+  // NOTE: This component uses `bg-surface` and `bg-surface-warm` tokens for
+  // panels and page background. Edit tokens in `custom-styles.css` for global
+  // changes (preferred) rather than in-component literal utilities.
   const [about, setAbout] = useState(null);
 
   useEffect(() => {

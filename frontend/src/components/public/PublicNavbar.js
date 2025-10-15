@@ -20,6 +20,8 @@ import ThemeToggle from '../ThemeToggle';
     the URL is not an SVG, it falls back to a normal <img> element.
   - Inline SVG content is injected as raw HTML; only use this with trusted
     sources. If your admin allows arbitrary uploads, sanitize SVGs server-side.
+  - Styling: uses design token classes (e.g., bg-primary, bg-surface, text-text-*)
+    and runtime theme variables. Prefer editing tokens in `custom-styles.css`.
 */
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';

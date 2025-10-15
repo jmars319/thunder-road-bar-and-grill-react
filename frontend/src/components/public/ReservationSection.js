@@ -16,6 +16,9 @@ import { CheckCircle, AlertCircle } from 'lucide-react';
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 export default function ReservationSection() {
+  // NOTE: UI feedback uses tokenized classes (e.g., bg-success/10, text-success,
+  // bg-error/10). When adjusting colors, update tokens in `custom-styles.css`
+  // rather than inline utilities to preserve runtime theming.
   const [formData, setFormData] = useState({
     name: '',
     email: '',

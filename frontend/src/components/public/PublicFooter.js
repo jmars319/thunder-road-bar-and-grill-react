@@ -15,6 +15,9 @@ import React, { useEffect, useState } from 'react';
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 export default function PublicFooter() {
+  // NOTE: Footer uses token classes (`bg-surface`, `text-text-inverse`,
+  // `text-text-muted`) so it responds to runtime theme changes. Prefer token
+  // updates in `custom-styles.css` when refining color styles.
   const [columns, setColumns] = useState([]);
 
   useEffect(() => {
