@@ -14,7 +14,7 @@
     with a `name` and `icon` property.
 */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Menu, X, LogOut, Home } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
 
@@ -48,10 +48,16 @@ export default function AdminPanel({ user = { name: 'Admin' }, onLogout = () => 
 
   // Resolve the current module component from the registry. The registry maps a
   // key to an object { component, name, icon } so new modules can be added by
-  // updating the AdminModules object above. Modules should be pure components
-  // that render their own data fetching and state.
+  // updating the AdminModules object above. Modules may export either a raw
+  // React component or a small Module object { component, name, icon } —
+  // normalize both shapes here so we always render a callable component.
   const registryEntry = AdminModules[activeModule];
-  const CurrentModule = registryEntry ? (registryEntry.component || registryEntry) : null;
+  let CurrentModule = null;
+  if (registryEntry) {
+    // registryEntry.component can itself be a Module object (with .component).
+    const candidate = registryEntry.component || registryEntry;
+    CurrentModule = candidate && candidate.component ? candidate.component : candidate;
+  }
 
   return (
     <div className="min-h-screen bg-admin-pageBg flex">

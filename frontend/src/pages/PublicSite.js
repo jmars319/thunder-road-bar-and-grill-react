@@ -12,7 +12,7 @@
   - Consider lazy-loading heavy sections if the page becomes large.
 */
 
-import React from 'react';
+// Using automatic JSX runtime; explicit React import not required
 import PublicNavbar from '../components/public/PublicNavbar';
 import HeroSection from '../components/public/HeroSection';
 import MenuSection from '../components/public/MenuSection';

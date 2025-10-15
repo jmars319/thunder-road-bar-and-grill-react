@@ -14,7 +14,7 @@
     handle their own data fetching and side-effects.
 */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PublicSite from './pages/PublicSite';
 import AdminPanel from './pages/AdminPanel';
 import LoginPage from './pages/LoginPage';

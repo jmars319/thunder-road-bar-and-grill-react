@@ -12,6 +12,9 @@
     make it idempotent and side-effect-free where possible.
 */
 
+// Import React here so ESLint/react rules that expect React in scope for JSX
+// (depending on parser/config) are satisfied. CRA's automatic runtime works
+// without this, but some lint setups still expect the symbol to exist.
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
@@ -24,7 +27,7 @@ import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-      <ThemeProvider>
+    <ThemeProvider>
       <ToastProvider>
         <App />
       </ToastProvider>

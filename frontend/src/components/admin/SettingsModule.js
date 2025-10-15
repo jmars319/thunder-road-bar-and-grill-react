@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Settings, Save } from 'lucide-react';
 
 /*
@@ -75,7 +75,7 @@ function SettingsModule() {
         setTimeout(() => setSaved(false), 2000);
       }
     } catch (err) {
-      // swallow for now; could show toast on failure
+        // swallow for now; could show toast on failure
     }
   };
 
@@ -91,7 +91,7 @@ function SettingsModule() {
         setTimeout(() => setSaved(false), 2000);
       }
     } catch (err) {
-      // swallow for now; consider showing an error toast
+        // swallow for now; consider showing an error toast
     }
   };
 
@@ -107,7 +107,7 @@ function SettingsModule() {
         setTimeout(() => setSaved(false), 2000);
       }
     } catch (err) {
-      // swallow for now
+        // swallow for now
     }
   };
 

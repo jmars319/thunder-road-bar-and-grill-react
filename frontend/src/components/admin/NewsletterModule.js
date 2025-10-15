@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Mail, Trash2, Download } from 'lucide-react';
 
 /*
@@ -43,12 +43,11 @@ function NewsletterModule() {
         if (!res.ok) throw new Error('Delete failed');
         return res.json();
       })
-      .then(() => fetchSubscribers())
-      .catch((err) => {
+  .then(() => fetchSubscribers())
+      .catch((_err) => {
         // Intentionally quiet in UI, but log to console for debugging in dev.
         // Replace with toast/notification in future iterations.
-         
-        console.error('Failed to remove subscriber', err);
+        console.error('Failed to remove subscriber', _err);
       });
   };
 
@@ -74,9 +73,8 @@ function NewsletterModule() {
       a.download = 'newsletter-subscribers.csv';
       a.click();
       window.URL.revokeObjectURL(url);
-    } catch (err) {
-       
-      console.error('Failed to export subscribers', err);
+    } catch (_err) {
+      console.error('Failed to export subscribers', _err);
     }
   };
 

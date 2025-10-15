@@ -12,7 +12,7 @@
     updating Tailwind tokens rather than component markup.
 */
 
-import React from 'react';
+// Using automatic JSX runtime; explicit React import not required
 
 export default function Button({ children, className = '', variant = 'primary', type = 'button', ...props }) {
   const base = 'px-4 py-2 rounded-lg font-bold transition shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40';

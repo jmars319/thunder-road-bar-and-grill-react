@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 /*
   Purpose:
@@ -63,7 +63,7 @@ export default function LoginPage({ onLogin = () => {}, onBack = () => {} }) {
         // Prefer server-provided message when available.
         setError(data?.message || 'Invalid credentials');
       }
-    } catch (err) {
+  } catch {
       // Network or unexpected runtime error
       setError('Login failed. Please try again.');
       // For debugging locally you may want to console.error(err)

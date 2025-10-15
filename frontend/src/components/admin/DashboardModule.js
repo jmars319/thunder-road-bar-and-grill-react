@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { LayoutDashboard, Users, Calendar, Briefcase, TrendingUp } from 'lucide-react';
 
 /*

@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 
 /*
   ThemeContext
@@ -62,7 +62,7 @@ export function ThemeProvider({ children }) {
 
     apply(theme);
 
-    try { localStorage.setItem('site-theme', theme); } catch (e) {
+    try { localStorage.setItem('site-theme', theme); } catch (_e) {
       // ignore storage errors silently — app still functions without persistence
     }
   }, [theme]);

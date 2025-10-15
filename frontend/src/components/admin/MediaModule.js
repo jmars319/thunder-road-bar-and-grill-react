@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Image, Upload, Trash2, Copy, CheckCircle } from 'lucide-react';
 
 /*
@@ -62,7 +62,7 @@ function MediaModule() {
         body: formData
       });
       fetchMedia();
-    } catch (err) {
+  } catch {
       // Keep UX simple: use alert for now. Could be replaced with Toasts.
       alert('Upload failed');
     } finally {
@@ -98,7 +98,7 @@ function MediaModule() {
         }
         document.body.removeChild(ta);
       }
-    } catch (e) {
+  } catch {
       // Clipboard API may be unavailable; silently ignore for now.
     }
   };
