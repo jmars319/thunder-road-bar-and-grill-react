@@ -134,7 +134,7 @@ function InboxModule() {
             </div>
           </div>
         ) : (
-          <div className="flex items-center justify-center h-full p-12 text-center text-text-inverse">
+          <div className="flex items-center justify-center h-full p-12 text-center text-text-secondary">
             <div>
               <Inbox size={48} className="mx-auto mb-4" />
               <p>Select a message to view</p>

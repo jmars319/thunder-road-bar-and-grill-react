@@ -52,8 +52,8 @@ function ReservationsModule() {
   case 'pending': return 'bg-warning text-text-inverse';
       case 'confirmed': return 'bg-success text-text-inverse';
       case 'cancelled': return 'bg-error text-text-inverse';
-      case 'completed': return 'bg-surface text-text-inverse';
-      default: return 'bg-surface text-text-inverse';
+      case 'completed': return 'bg-surface text-text-primary';
+      default: return 'bg-surface text-text-primary';
     }
   };
 
@@ -107,7 +107,7 @@ function ReservationsModule() {
                   </td>
                   <td className="px-6 py-4 text-sm text-text-secondary">{res.number_of_guests}</td>
                   <td className="px-6 py-4">
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(res.status)}`}>
+                    <span aria-label={`status: ${res.status}`} className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(res.status)}`}>
                       {res.status}
                     </span>
                   </td>

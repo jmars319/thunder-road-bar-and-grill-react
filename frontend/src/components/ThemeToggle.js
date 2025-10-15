@@ -55,14 +55,15 @@ export default function ThemeToggle({ inline = false, className = '' }) {
   }, [theme]);
 
   const base = inline
-    ? 'bg-transparent text-text-primary px-2 py-1 rounded hover:bg-surface-warm transition text-sm'
-    : 'fixed bottom-6 right-6 z-50 bg-surface border border-border text-text-primary px-3 py-2 rounded-full shadow-lg hover:opacity-90 transition';
+    ? 'bg-transparent text-text-primary px-2 py-1 rounded hover:bg-surface-warm transition text-sm focus:outline-none focus:ring-2 focus:ring-primary/30'
+    : 'fixed bottom-6 right-6 z-50 bg-surface border border-border text-text-primary px-3 py-2 rounded-full shadow-lg hover:opacity-90 transition focus:outline-none focus:ring-2 focus:ring-primary/30';
 
   return (
     <button
       aria-label="Toggle theme"
       title={`Theme: ${labelFor(theme)} (click to change)`}
       onClick={cycle}
+      aria-pressed={theme === 'dark'}
       className={`${base} ${className}`}
     >
       <span className={`inline-flex items-center justify-center ${anim ? 'theme-toggle-anim' : ''}`}>

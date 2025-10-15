@@ -47,14 +47,14 @@ function DashboardModule() {
   }, []);
 
   const StatCard = ({ icon: Icon, label, value, color }) => (
-    <div className="bg-surface rounded-lg shadow p-6 card-hover">
+    <div className="bg-surface rounded-lg shadow p-6 card-hover" role="group" aria-label={label}>
       <div className="flex items-center justify-between">
         <div>
           <p className="text-text-primary text-sm">{label}</p>
           <p className="text-3xl font-bold mt-2 text-text-primary">{value}</p>
         </div>
         <div className={`w-12 h-12 rounded-lg ${color} flex items-center justify-center`}>
-          <Icon size={24} className="text-text-inverse" />
+          <Icon size={24} className="text-text-inverse" aria-hidden="true" />
         </div>
       </div>
     </div>
