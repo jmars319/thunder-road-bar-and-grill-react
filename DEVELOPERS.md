@@ -274,3 +274,6 @@ These small changes standardize the runtime `API_BASE` usage and swap a few
 literal/backdrop classes for token-aware helpers (`modal-backdrop`,
 `text-text-inverse`, etc.).
 
+
+  Note: the `styling-instructions/` folder is intentionally local-only and is listed in `.gitignore`; it was removed from the remote to keep private guidance off the public repo.
+
