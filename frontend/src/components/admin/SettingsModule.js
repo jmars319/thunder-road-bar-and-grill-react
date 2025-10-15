@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
-// eslint-disable-next-line no-unused-vars
 import { Settings, Save } from '../../icons';
+
+// Developer notes:
+// - Settings admin UI uses semantic tokens (bg-surface, bg-success, text-text-inverse,
+//   text-text-primary). Edit `frontend/src/custom-styles.css` to adjust the token palette.
+// - Icons are centralized under `src/icons`. Keep a module-scope reference to avoid
+//   false-positive lint warnings in some environments.
+void Settings; void Save;
 
 /*
   SettingsModule
