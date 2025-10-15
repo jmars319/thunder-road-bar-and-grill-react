@@ -1,10 +1,35 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
+/*
+  ToastContext
+
+  Purpose:
+  - Lightweight global notification system for the app (toasts).
+  - Supports simple usage: add a message with an optional type and duration.
+
+  Public API (value provided to consumers):
+  - toasts: Array of active toast objects
+  - add(message, options): Adds a toast and returns its id
+  - remove(id): Removes a toast by id
+
+  Toast options (supported):
+  - type: 'info' | 'success' | 'warning' | 'error' (affects appearance)
+  - duration: milliseconds to auto-dismiss (defaults to 4000)
+  - persistent: boolean (when true, toast is not auto-dismissed)
+
+  Notes for maintainers:
+  - The visual styling of toasts is intentionally simple (Tailwind + design tokens).
+  - Keep any additional visual complexity in a single place (this file) so callers
+    can continue to use the same add(...) API.
+*/
+
 const ToastContext = createContext(null);
 
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
 
+  // Add a toast. We generate a small unique id using timestamp + random suffix.
+  // `options` accepts type/duration/persistent as documented above.
   const add = useCallback((message, options = {}) => {
     const id = Date.now() + Math.random().toString(36).slice(2, 8);
     // normalize type
@@ -16,8 +41,11 @@ export function ToastProvider({ children }) {
     return id;
   }, []);
 
+  // Remove a toast synchronously by id.
   const remove = useCallback((id) => setToasts(t => t.filter(x => x.id !== id)), []);
 
+  // Render a small icon depending on toast type. Keep these inline svgs minimal
+  // so they are easy to change or replace with a shared Icon component later.
   const renderIcon = (type) => {
     if (type === 'success') return (
       <svg className="w-5 h-5 text-success flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -38,6 +66,8 @@ export function ToastProvider({ children }) {
     );
   };
 
+  // Map toast type to container classes. Keep this single source of truth to
+  // make visual updates easier.
   const containerFor = (type) => {
     if (type === 'success') return 'bg-success/10 border border-success text-success rounded-lg shadow-lg p-3 px-4';
     if (type === 'error') return 'bg-error/10 border border-error text-error rounded-lg shadow-lg p-3 px-4';

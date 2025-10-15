@@ -1,6 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { LayoutDashboard, Users, Calendar, Briefcase, TrendingUp } from 'lucide-react';
 
+/*
+  DashboardModule
+
+  Purpose:
+  - Small administrative overview that aggregates counts from several API
+    endpoints (reservations, jobs, subscribers, messages) and displays them.
+
+  Developer notes:
+  - This component fetches multiple endpoints in parallel using Promise.all.
+    Each fetch has a .catch that returns an empty array so the dashboard remains
+    usable even if one endpoint fails. Consider adding per-card loading states
+    for better perceived performance.
+  - The mapping of statuses (e.g., reservation.status === 'pending') is coupled
+    to the backend. If status values change, update the filters here.
+*/
+
 const API_BASE = 'http://localhost:5001/api';
 
 function DashboardModule() {
@@ -13,17 +29,20 @@ function DashboardModule() {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${API_BASE}/reservations`).then(r => r.json()),
-      fetch(`${API_BASE}/jobs`).then(r => r.json()),
-      fetch(`${API_BASE}/newsletter/subscribers`).then(r => r.json()),
-      fetch(`${API_BASE}/contact/messages`).then(r => r.json())
+      fetch(`${API_BASE}/reservations`).then(r => r.ok ? r.json() : []).catch(() => []),
+      fetch(`${API_BASE}/jobs`).then(r => r.ok ? r.json() : []).catch(() => []),
+      fetch(`${API_BASE}/newsletter/subscribers`).then(r => r.ok ? r.json() : []).catch(() => []),
+      fetch(`${API_BASE}/contact/messages`).then(r => r.ok ? r.json() : []).catch(() => [])
     ]).then(([reservations, jobs, subscribers, messages]) => {
       setStats({
-        reservations: reservations.filter(r => r.status === 'pending').length,
-        jobs: jobs.filter(j => j.status === 'new').length,
-        subscribers: subscribers.filter(s => s.is_active).length,
-        messages: messages.filter(m => !m.is_read).length
+        reservations: Array.isArray(reservations) ? reservations.filter(r => r.status === 'pending').length : 0,
+        jobs: Array.isArray(jobs) ? jobs.filter(j => j.status === 'new').length : 0,
+        subscribers: Array.isArray(subscribers) ? subscribers.filter(s => s.is_active).length : 0,
+        messages: Array.isArray(messages) ? messages.filter(m => !m.is_read).length : 0
       });
+    }).catch(() => {
+      // Keep stats at defaults in case of an unexpected failure.
+      setStats({ reservations: 0, jobs: 0, subscribers: 0, messages: 0 });
     });
   }, []);
 

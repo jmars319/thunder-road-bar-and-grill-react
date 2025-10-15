@@ -1,6 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { Inbox, Mail, MailOpen, Trash2 } from 'lucide-react';
 
+/*
+  InboxModule
+
+  Purpose:
+  - Simple admin inbox for viewing contact messages. Supports marking messages as read
+    and deleting messages.
+
+  API expectations:
+  - GET  /api/contact/messages
+      -> [ { id, name, email, subject, message, submitted_at, is_read, phone? }, ... ]
+  - PUT  /api/contact/messages/:id  { is_read: true }
+  - DELETE /api/contact/messages/:id
+
+  Component contract / usage notes:
+  - This is a presentational/admin utility component. The admin routing/authorization
+    lives elsewhere and this component assumes it's only rendered for authorized users.
+  - All network calls are best-effort. Failures will be quietly caught and the UI
+    will render empty/default values. For production consider surface errors via a
+    toast or banner so the admin knows an operation failed.
+
+  Edge cases handled here:
+  - Protects against non-array GET responses (falls back to an empty list).
+  - Marks a message as read only when opening an unread message.
+  - Defensive date rendering when submitted_at is missing or invalid.
+*/
+
 const API_BASE = 'http://localhost:5001/api';
 
 function InboxModule() {
@@ -12,17 +38,26 @@ function InboxModule() {
   }, []);
 
   const fetchMessages = () => {
+    // Prefer a minimal check for OK responses and gracefully handle unexpected shapes
     fetch(`${API_BASE}/contact/messages`)
-      .then(res => res.json())
-      .then(data => setMessages(data));
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch messages');
+        return res.json();
+      })
+      .then(data => setMessages(Array.isArray(data) ? data : []))
+      .catch(() => setMessages([]));
   };
 
   const markAsRead = (id) => {
+    // Only send the update; if it fails keep the UI consistent by refetching.
     fetch(`${API_BASE}/contact/messages/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ is_read: true })
-    }).then(() => fetchMessages());
+    }).then(res => {
+      if (res.ok) fetchMessages();
+      else fetchMessages();
+    }).catch(() => fetchMessages());
   };
 
   const deleteMessage = (id) => {
@@ -31,7 +66,7 @@ function InboxModule() {
         .then(() => {
           fetchMessages();
           setSelectedMessage(null);
-        });
+        }).catch(() => {});
     }
   };
 
@@ -42,11 +77,12 @@ function InboxModule() {
           <h3 className="font-bold text-lg text-text-primary">Messages</h3>
         </div>
         <div className="divide-y max-h-[600px] overflow-y-auto">
-          {messages.map(msg => (
+          {(Array.isArray(messages) ? messages : []).map(msg => (
             <button
               key={msg.id}
               onClick={() => {
                 setSelectedMessage(msg);
+                // Mark as read on open only if currently unread
                 if (!msg.is_read) markAsRead(msg.id);
               }}
               className={`w-full p-4 text-left hover:bg-surface-warm transition ${
@@ -61,7 +97,7 @@ function InboxModule() {
                   </p>
                   <p className="text-sm text-text-secondary truncate">{msg.subject}</p>
                   <p className="text-xs text-text-secondary mt-1">
-                    {new Date(msg.submitted_at).toLocaleDateString()}
+                    {msg.submitted_at ? new Date(msg.submitted_at).toLocaleDateString() : ''}
                   </p>
                 </div>
               </div>
@@ -83,7 +119,7 @@ function InboxModule() {
                   <p className="text-sm text-text-secondary">Phone: {selectedMessage.phone}</p>
                 )}
                 <p className="text-xs text-text-secondary mt-2">
-                  {new Date(selectedMessage.submitted_at).toLocaleString()}
+                  {selectedMessage.submitted_at ? new Date(selectedMessage.submitted_at).toLocaleString() : ''}
                 </p>
               </div>
               <button

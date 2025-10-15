@@ -1,6 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Briefcase, Trash2 } from 'lucide-react';
 
+/*
+  JobsModule
+
+  Purpose:
+  - Admin interface for reviewing job applications. Allows status updates and deletion.
+
+  API expectations:
+  - GET    /api/jobs -> [ { id, name, email, position, submitted_at, status, ... }, ... ]
+  - PUT    /api/jobs/:id { status }
+  - DELETE /api/jobs/:id
+
+  Developer notes:
+  - Status-to-color mapping is defined in getStatusColor. If new statuses are added
+    server-side, update the mapping here for consistent UI.
+  - The component performs best-effort network calls and refetches after updates.
+    For an improved UX consider optimistic updates or per-item loading states.
+*/
+
 const API_BASE = 'http://localhost:5001/api';
 
 function JobsModule() {
@@ -13,8 +31,12 @@ function JobsModule() {
 
   const fetchApplications = () => {
     fetch(`${API_BASE}/jobs`)
-      .then(res => res.json())
-      .then(data => setApplications(data));
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch applications');
+        return res.json();
+      })
+      .then(data => setApplications(Array.isArray(data) ? data : []))
+      .catch(() => setApplications([]));
   };
 
   const updateStatus = (id, status) => {
@@ -22,7 +44,10 @@ function JobsModule() {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status })
-    }).then(() => fetchApplications());
+    }).then(res => {
+      if (res.ok) fetchApplications();
+      else fetchApplications();
+    }).catch(() => fetchApplications());
   };
 
   const deleteApplication = (id) => {
@@ -31,7 +56,7 @@ function JobsModule() {
         .then(() => {
           fetchApplications();
           setSelectedApp(null);
-        });
+        }).catch(() => {});
     }
   };
 
@@ -66,7 +91,7 @@ function JobsModule() {
                   <p className="font-medium text-text-primary">{app.name}</p>
                   <p className="text-sm text-text-secondary">{app.position}</p>
                   <p className="text-xs text-text-secondary mt-1">
-                    {new Date(app.submitted_at).toLocaleDateString()}
+                    {app.submitted_at ? new Date(app.submitted_at).toLocaleDateString() : ''}
                   </p>
                 </div>
                 <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(app.status)}`}>
@@ -90,7 +115,7 @@ function JobsModule() {
                 <p className="text-sm text-text-secondary">Email: {selectedApp.email}</p>
                 {selectedApp.phone && <p className="text-sm text-text-secondary">Phone: {selectedApp.phone}</p>}
                 <p className="text-xs text-text-secondary mt-2">
-                  {new Date(selectedApp.submitted_at).toLocaleString()}
+                  {selectedApp.submitted_at ? new Date(selectedApp.submitted_at).toLocaleString() : ''}
                 </p>
               </div>
               <button

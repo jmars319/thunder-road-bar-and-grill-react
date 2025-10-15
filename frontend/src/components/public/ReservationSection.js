@@ -1,6 +1,24 @@
 import React, { useState } from 'react';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 
+/*
+  ReservationSection
+
+  Purpose:
+  - Provide a simple reservation form that posts to the backend API.
+
+  Expected API:
+  - POST /api/reservations with body {
+      name, email, phone, reservation_date, reservation_time, number_of_guests, special_requests
+    }
+
+  Notes and validation guidance:
+  - This component contains minimal client-side validation. For a production app
+    you should validate required fields and the date/time values before submission.
+  - The UI shows simple success and error banners. Consider replacing these with
+    the app's Toast system for consistent UX.
+*/
+
 const API_BASE = 'http://localhost:5001/api';
 
 export default function ReservationSection() {
@@ -19,10 +37,13 @@ export default function ReservationSection() {
   const handleSubmit = async () => {
     setError('');
     try {
+      // Ensure number_of_guests is a number before sending
+      const payload = { ...formData, number_of_guests: Number(formData.number_of_guests) || 1 };
+
       const response = await fetch(`${API_BASE}/reservations`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       });
 
       if (response.ok) {
@@ -123,7 +144,7 @@ export default function ReservationSection() {
               type="number"
               min="1"
               value={formData.number_of_guests}
-              onChange={(e) => setFormData({...formData, number_of_guests: parseInt(e.target.value)})}
+              onChange={(e) => setFormData({...formData, number_of_guests: parseInt(e.target.value) || 1})}
               className="form-input w-full px-4 py-2 border border-border rounded-lg focus:outline-none transition"
             />
           </div>

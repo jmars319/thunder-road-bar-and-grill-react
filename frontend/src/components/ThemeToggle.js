@@ -2,6 +2,25 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Sun, Moon, Monitor } from 'lucide-react';
 import { ThemeContext } from '../contexts/ThemeContext';
 
+/*
+  ThemeToggle
+
+  Purpose:
+  - A small, reusable button to cycle between theme modes: system -> dark -> light.
+  - Placed in the UI as either an inline control (useful in headers) or as a floating
+    action button (default), controlled by the `inline` prop.
+
+  Props:
+  - inline: boolean — when true, render a compact inline version instead of the floating button
+  - className: string — additional classes to apply (appended to base classes)
+
+  Behavior notes:
+  - Clicking cycles the theme in the order: system -> dark -> light -> system.
+  - The component triggers a short, reduced-motion-aware visual pulse when the theme
+    changes to provide feedback. If the user prefers reduced motion, the animation is skipped.
+  - Keep the icon set minimal here to make it easy to swap for a design system icon later.
+*/
+
 const labelFor = (t) => {
   if (t === 'system') return 'System';
   if (t === 'dark') return 'Dark';
@@ -18,6 +37,8 @@ export default function ThemeToggle({ inline = false, className = '' }) {
   const { theme, setTheme } = useContext(ThemeContext);
   const [anim, setAnim] = useState(false);
 
+  // Cycle through theme modes when activated. Keep the mapping explicit so
+  // adding more modes in the future is straightforward.
   const cycle = () => {
     if (theme === 'system') setTheme('dark');
     else if (theme === 'dark') setTheme('light');

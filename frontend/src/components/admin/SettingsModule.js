@@ -1,6 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Settings, Save } from 'lucide-react';
 
+/*
+  SettingsModule
+
+  Purpose:
+  - Admin area to manage global site settings, the About content, and business hours.
+
+  API expectations:
+  - GET /api/site-settings -> { ... }
+  - PUT /api/site-settings
+  - GET /api/about -> { header, paragraph, map_embed_url }
+  - PUT /api/about
+  - GET /api/business-hours -> [ { id, day_of_week, opening_time, closing_time, is_closed }, ... ]
+  - PUT /api/business-hours/:id
+
+  Notes:
+  - All network calls are performed with minimal optimistic UX. Errors are caught and silently ignored
+    to keep the admin UI responsive; consider surfacing errors to the user via toasts for a better UX.
+*/
+
 const API_BASE = 'http://localhost:5001/api';
 
 function SettingsModule() {
@@ -10,42 +29,86 @@ function SettingsModule() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    fetch(`${API_BASE}/site-settings`).then(r => r.json()).then(data => setSiteSettings(data));
-    fetch(`${API_BASE}/about`).then(r => r.json()).then(data => setAboutContent(data));
-    fetch(`${API_BASE}/business-hours`).then(r => r.json()).then(data => setBusinessHours(data));
+    // Load all settings in a single async function with error handling
+    const loadAll = async () => {
+      try {
+        const [siteRes, aboutRes, hoursRes] = await Promise.all([
+          fetch(`${API_BASE}/site-settings`),
+          fetch(`${API_BASE}/about`),
+          fetch(`${API_BASE}/business-hours`)
+        ]);
+
+        if (siteRes.ok) {
+          const siteData = await siteRes.json();
+          setSiteSettings(siteData || {});
+        }
+
+        if (aboutRes.ok) {
+          const aboutData = await aboutRes.json();
+          setAboutContent(aboutData || {});
+        }
+
+        if (hoursRes.ok) {
+          const hoursData = await hoursRes.json();
+          setBusinessHours(Array.isArray(hoursData) ? hoursData : []);
+        }
+      } catch (err) {
+        // Intentionally quiet: admin UI will render empty/default values on error
+        setSiteSettings({});
+        setAboutContent({});
+        setBusinessHours([]);
+      }
+    };
+
+    loadAll();
   }, []);
 
-  const saveSiteSettings = () => {
-    fetch(`${API_BASE}/site-settings`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(siteSettings)
-    }).then(() => {
-      setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
-    });
+  const saveSiteSettings = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/site-settings`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(siteSettings)
+      });
+      if (res.ok) {
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+      }
+    } catch (err) {
+      // swallow for now; could show toast on failure
+    }
   };
 
-  const saveAboutContent = () => {
-    fetch(`${API_BASE}/about`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(aboutContent)
-    }).then(() => {
-      setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
-    });
+  const saveAboutContent = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/about`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(aboutContent)
+      });
+      if (res.ok) {
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+      }
+    } catch (err) {
+      // swallow for now; consider showing an error toast
+    }
   };
 
-  const saveBusinessHours = (id, data) => {
-    fetch(`${API_BASE}/business-hours/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    }).then(() => {
-      setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
-    });
+  const saveBusinessHours = async (id, data) => {
+    try {
+      const res = await fetch(`${API_BASE}/business-hours/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) {
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+      }
+    } catch (err) {
+      // swallow for now
+    }
   };
 
   return (

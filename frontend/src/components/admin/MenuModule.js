@@ -9,6 +9,26 @@ function MenuModule() {
   const [editingCategory, setEditingCategory] = useState(null);
   const [editingItem, setEditingItem] = useState(null);
 
+    /*
+      MenuModule
+
+      Purpose:
+      - Admin UI to manage menu categories and items. Supports CRUD operations
+        for categories and menu items via the backend API.
+
+      Expected API endpoints:
+      - GET /api/menu -> categories with items
+      - POST/PUT /api/menu/categories and /api/menu/categories/:id
+      - DELETE /api/menu/categories/:id
+      - POST/PUT /api/menu/items and /api/menu/items/:id
+      - DELETE /api/menu/items/:id
+
+      Notes:
+      - The component uses simple modal editors for categories and items. Validation
+        is minimal; consider adding required-field checks before saving.
+      - Prices are handled as numbers (parseFloat) when editing — guard against NaN where necessary.
+    */
+
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -16,7 +36,8 @@ function MenuModule() {
   const fetchCategories = () => {
     fetch(`${API_BASE}/menu`)
       .then(res => res.json())
-      .then(data => setCategories(data));
+        .then(data => setCategories(Array.isArray(data) ? data : []))
+        .catch(() => setCategories([]));
   };
 
   const saveCategory = () => {
@@ -226,7 +247,7 @@ function MenuModule() {
                         <div className="flex-1">
                           <p className="font-medium text-text-primary">{item.name}</p>
                           <p className="text-sm text-text-secondary">{item.description}</p>
-                          <p className="text-lg font-heading text-primary mt-1">${item.price.toFixed(2)}</p>
+                            <p className="text-lg font-heading text-primary mt-1">{typeof item.price === 'number' ? `$${item.price.toFixed(2)}` : '—'}</p>
                         </div>
                         <div className="flex gap-2">
                           <button

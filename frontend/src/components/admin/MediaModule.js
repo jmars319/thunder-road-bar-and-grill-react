@@ -1,6 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { Image, Upload, Trash2, Copy, CheckCircle } from 'lucide-react';
 
+/*
+  MediaModule
+
+  Purpose:
+  - Simple media manager for uploading images and copying/deleting existing media.
+
+  API expectations:
+  - GET  /api/media -> [ { id, title, file_name, file_url, file_type }, ... ]
+  - POST /api/media/upload (multipart/form-data)
+  - DELETE /api/media/:id
+
+  Developer notes:
+  - Uploads use a FormData multipart POST. The backend should return the new media
+    list through GET /api/media; this component re-fetches after a successful upload.
+  - Copying a URL uses the Clipboard API; it may be unavailable in insecure contexts.
+    The code uses try/catch around navigator.clipboard to avoid runtime errors.
+  - Consider returning the created media item from the upload endpoint to avoid
+    a full re-fetch if performance becomes a concern.
+*/
+
 const API_BASE = 'http://localhost:5001/api';
 
 function MediaModule() {
@@ -14,8 +34,12 @@ function MediaModule() {
 
   const fetchMedia = () => {
     fetch(`${API_BASE}/media`)
-      .then(res => res.json())
-      .then(data => setMedia(data));
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch media');
+        return res.json();
+      })
+      .then(data => setMedia(Array.isArray(data) ? data : []))
+      .catch(() => setMedia([]));
   };
 
   const handleUpload = async (e) => {
@@ -35,6 +59,7 @@ function MediaModule() {
       });
       fetchMedia();
     } catch (err) {
+      // Keep UX simple: use alert for now. Could be replaced with Toasts.
       alert('Upload failed');
     } finally {
       setUploading(false);
@@ -44,14 +69,34 @@ function MediaModule() {
   const deleteMedia = (id) => {
     if (window.confirm('Delete this media file?')) {
       fetch(`${API_BASE}/media/${id}`, { method: 'DELETE' })
-        .then(() => fetchMedia());
+        .then(() => fetchMedia()).catch(() => {});
     }
   };
 
   const copyUrl = (url) => {
-    navigator.clipboard.writeText(`http://localhost:5001${url}`);
-    setCopiedId(url);
-    setTimeout(() => setCopiedId(null), 2000);
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(`http://localhost:5001${url}`);
+        setCopiedId(url);
+        setTimeout(() => setCopiedId(null), 2000);
+      } else {
+        // Fallback: create a temporary textarea (rare, but more robust)
+        const ta = document.createElement('textarea');
+        ta.value = `http://localhost:5001${url}`;
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          setCopiedId(url);
+          setTimeout(() => setCopiedId(null), 2000);
+        } catch (e) {
+          // ignore
+        }
+        document.body.removeChild(ta);
+      }
+    } catch (e) {
+      // Clipboard API may be unavailable; silently ignore for now.
+    }
   };
 
   return (

@@ -11,14 +11,44 @@ import ReservationSection from '../components/public/ReservationSection';
 import AboutSection from '../components/public/AboutSection';
 import PublicFooter from '../components/public/PublicFooter';
 
+/*
+  PublicSite
+
+  Purpose:
+  - Top-level composition for the public-facing website. This page stitches
+    together smaller presentational components (Navbar, Hero, Menu, Reservation,
+    About, Footer).
+
+  Props:
+  - onGoToAdmin: optional function passed to the navbar to open the admin login
+    or navigate to the admin panel. Kept intentionally generic so different
+    apps can wire routing or modal behaviour.
+
+  Data flow / performance notes:
+  - Each child component is responsible for its own data fetching. This keeps
+    `PublicSite` simple, but may cause duplicate network requests if multiple
+    children fetch the same resource. If performance becomes a concern, introduce
+    a lightweight data layer or lift shared fetching to this page and pass
+    props to children.
+  - Consider lazy-loading heavy sections (MenuSection, AboutSection) with
+    React.lazy + Suspense or intersection-observer-based loading for faster
+    first paint on mobile devices.
+
+  Accessibility:
+  - Page-level layout relies on children to expose accessible landmarks (nav,
+    main, footer). Keep that contract when refactoring children.
+*/
+
 export default function PublicSite({ onGoToAdmin }) {
   return (
     <div className="min-h-screen bg-background">
       <PublicNavbar onGoToAdmin={onGoToAdmin} />
-      <HeroSection />
-      <MenuSection />
-      <ReservationSection />
-      <AboutSection />
+      <main>
+        <HeroSection />
+        <MenuSection />
+        <ReservationSection />
+        <AboutSection />
+      </main>
       <PublicFooter />
     </div>
   );

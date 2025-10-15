@@ -1,5 +1,21 @@
 import React, { useEffect, useState } from 'react';
 
+/*
+  AboutSection
+
+  Purpose:
+  - Display the 'About Us' content retrieved from the backend. Keeps copy
+    editable in the CMS instead of hardcoding it in the frontend.
+
+  Expected API:
+  - GET /api/about -> { header?: string, paragraph?: string, map_embed_url?: string }
+
+  Notes:
+  - The component tolerates missing fields by rendering nothing for absent values.
+  - If richer HTML or markup is needed from the CMS, sanitize or render via a
+    trusted renderer here rather than trusting raw HTML in templates.
+*/
+
 const API_BASE = 'http://localhost:5001/api';
 
 export default function AboutSection() {
@@ -8,7 +24,8 @@ export default function AboutSection() {
   useEffect(() => {
     fetch(`${API_BASE}/about`)
       .then(res => res.json())
-      .then(data => setAbout(data));
+      .then(data => setAbout(data))
+      .catch(() => setAbout(null));
   }, []);
 
   return (

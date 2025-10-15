@@ -1,6 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, CheckCircle, XCircle, Clock } from 'lucide-react';
 
+/*
+  ReservationsModule
+
+  Purpose:
+  - Admin interface for reviewing and updating reservation statuses.
+
+  API expectations:
+  - GET /api/reservations -> [ { id, name, phone, email, reservation_date, reservation_time, number_of_guests, status, special_requests }, ... ]
+  - PUT /api/reservations/:id { status }
+
+  Notes:
+  - Deletion is intentionally omitted. Use status updates to manage lifecycle.
+  - Consider server-side pagination if the reservations list grows large.
+*/
+
 const API_BASE = 'http://localhost:5001/api';
 
 function ReservationsModule() {
@@ -14,7 +29,8 @@ function ReservationsModule() {
   const fetchReservations = () => {
     fetch(`${API_BASE}/reservations`)
       .then(res => res.json())
-      .then(data => setReservations(data));
+      .then(data => setReservations(Array.isArray(data) ? data : []))
+      .catch(() => setReservations([]));
   };
 
   const updateStatus = (id, status) => {
@@ -22,7 +38,7 @@ function ReservationsModule() {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status })
-    }).then(() => fetchReservations());
+    }).then(() => fetchReservations()).catch(() => {});
   };
 
   // deleteReservation is intentionally omitted — use status updates to manage reservations
@@ -86,7 +102,7 @@ function ReservationsModule() {
                     {res.email && <div className="text-sm text-text-secondary">{res.email}</div>}
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm text-text-secondary">{new Date(res.reservation_date).toLocaleDateString()}</div>
+                    <div className="text-sm text-text-secondary">{res.reservation_date ? new Date(res.reservation_date).toLocaleDateString() : ''}</div>
                     <div className="text-sm text-text-secondary">{res.reservation_time}</div>
                   </td>
                   <td className="px-6 py-4 text-sm text-text-secondary">{res.number_of_guests}</td>
