@@ -134,7 +134,7 @@ export default function AdminPanel({ user = { name: 'Admin' }, onLogout = () => 
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-text-inverse font-bold">
                 {(user?.name || 'A').charAt(0).toUpperCase()}
               </div>
-              <ThemeToggle inline className="ml-4" />
+              {React.createElement(ThemeToggle, { inline: true, className: 'ml-4' })}
             </div>
           </div>
         </div>
@@ -155,8 +155,4 @@ export default function AdminPanel({ user = { name: 'Admin' }, onLogout = () => 
 // Icons are referenced via the `icons` map above so linters and tools pick up
 // the usage. No module-scope no-ops are necessary here.
 
-// Some editor/lint setups may still report `ThemeToggle` or `icons` as unused
-// when they are only used in JSX or via member-expressions like `icons.Home`.
-// Keep a tiny used-symbol object to silence those false-positives.
-const __usedAdmin = { icons, ThemeToggle };
-void __usedAdmin;
+// `icons` and `ThemeToggle` are referenced in the module above where needed.

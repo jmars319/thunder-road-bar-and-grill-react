@@ -54,11 +54,10 @@ const StatCard = (props) => {
 };
 
 // StatCard is used in JSX below; no module-scope no-op is required.
-// Some linters/editors don't detect JSX usage of locally-declared components.
-// Keep a tiny used-symbol reference so those tools stop reporting false
-// positives.
-const __usedStatCard = { StatCard };
-void __usedStatCard;
+// StatCard is used below in JSX; ensure it's referenced in JS as well so
+// linters that don't follow JSX usage don't report it as unused.
+const _statCardRef = StatCard;
+void _statCardRef;
 
 function DashboardModule() {
   const [stats, setStats] = useState({

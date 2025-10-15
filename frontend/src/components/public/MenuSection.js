@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { icons } from '../../icons';
 
 /*
@@ -56,9 +56,9 @@ export default function MenuSection() {
                 </div>
                 <div className="flex items-center gap-4">
                   {expandedCategory === category.id ? (
-                    <icons.ChevronUp className="text-primary" size={24} />
+                    React.createElement(icons.ChevronUp, { className: 'text-primary', size: 24 })
                   ) : (
-                    <icons.ChevronDown className="text-text-muted" size={24} />
+                    React.createElement(icons.ChevronDown, { className: 'text-text-muted', size: 24 })
                   )}
                 </div>
               </button>

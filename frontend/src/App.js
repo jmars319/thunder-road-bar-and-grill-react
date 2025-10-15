@@ -22,12 +22,15 @@ import AdminPanel from './pages/AdminPanel';
  
 import LoginPage from './pages/LoginPage';
 
-// Some editor/lint setups don't follow JSX usages in the automatic runtime.
-// Keep a tiny used-symbol object so those tools don't report false positives.
-const __usedApp = { PublicSite, AdminPanel, LoginPage };
-void __usedApp;
+// References to the routes are used inside the App function; keep a local
+// registry to make usage explicit for linters that don't follow JSX.
 
 export default function App() {
+  // Local registry to ensure imports are used in JS by linters that don't
+  // follow JSX usage. This is a minimal in-function reference and has no
+  // runtime impact.
+  const _routes = { PublicSite, AdminPanel, LoginPage };
+  void _routes;
   const [showAdmin, setShowAdmin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);

@@ -25,18 +25,15 @@ import ThemeProvider from './contexts/ThemeContext';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-// Group references to avoid false-positive `no-unused-vars` in some lint setups
-// that don't follow JSX usages in automatic runtime environments.
-const __usedRoot = { React, App, ThemeProvider, ToastProvider };
-void __usedRoot;
+// React and providers are used directly in the render call above.
 root.render(
-  <React.StrictMode>
-    <ThemeProvider>
-      <ToastProvider>
-        <App />
-      </ToastProvider>
-    </ThemeProvider>
-  </React.StrictMode>
+  React.createElement(React.StrictMode, null,
+    React.createElement(ThemeProvider, null,
+      React.createElement(ToastProvider, null,
+        React.createElement(App, null)
+      )
+    )
+  )
 );
 
 // If you want to start measuring performance in your app, pass a function

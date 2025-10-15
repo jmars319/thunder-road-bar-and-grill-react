@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { icons } from '../../icons';
 
 /*
@@ -25,6 +25,7 @@ import { icons } from '../../icons';
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 export default function ReservationSection() {
+
   // NOTE: UI feedback uses tokenized classes (e.g., bg-success/10, text-success,
   // bg-error/10). When adjusting colors, update tokens in `custom-styles.css`
   // rather than inline utilities to preserve runtime theming.
@@ -79,14 +80,14 @@ export default function ReservationSection() {
 
         {submitted && (
           <div className="bg-success/10 border border-success rounded-lg p-4 mb-6 flex items-center gap-3">
-            <icons.CheckCircle size={20} className="text-success" />
+            {React.createElement(icons.CheckCircle, { size: 20, className: 'text-success' })}
             <p className="text-success">Reservation submitted! We'll contact you to confirm.</p>
           </div>
         )}
 
         {error && (
           <div className="bg-error/10 border border-error rounded-lg p-4 mb-6 flex items-center gap-3">
-            <icons.AlertCircle size={20} className="text-error" />
+            {React.createElement(icons.AlertCircle, { size: 20, className: 'text-error' })}
             <p className="text-error">{error}</p>
           </div>
         )}
@@ -191,8 +192,5 @@ export default function ReservationSection() {
   );
 }
 
-// Some editor/linter setups may not detect JSX usage of member expressions
-// like <icons.CheckCircle />. Keep a small used-symbol reference to satisfy
-// those tools without changing runtime behavior.
-const __usedResIcons = { icons };
-void __usedResIcons;
+// Member-expression JSX like <icons.CheckCircle /> should be detected by
+// modern tooling; keeping the code minimal here.

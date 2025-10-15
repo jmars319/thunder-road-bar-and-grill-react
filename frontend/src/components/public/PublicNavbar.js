@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { icons } from '../../icons';
 import ThemeToggle from '../ThemeToggle';
@@ -120,7 +120,7 @@ export default function PublicNavbar({ onGoToAdmin }) {
             >
               Admin
             </button>
-            <ThemeToggle inline className="ml-2" />
+            {React.createElement(ThemeToggle, { inline: true, className: 'ml-2' })}
             {/* ensure ThemeToggle symbol is considered used by linters */}
             {/* ensure ThemeToggle symbol is considered used by some linters */}
             {/* (no-op handled at module scope) */}
@@ -135,7 +135,7 @@ export default function PublicNavbar({ onGoToAdmin }) {
             aria-controls="mobile-menu"
             aria-label="Toggle navigation menu"
           >
-            {mobileMenuOpen ? <icons.X size={24} /> : <icons.Menu size={24} />}
+            {mobileMenuOpen ? React.createElement(icons.X, { size: 24 }) : React.createElement(icons.Menu, { size: 24 })}
           </button>
         </div>
 
