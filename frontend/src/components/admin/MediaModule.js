@@ -33,13 +33,14 @@ function MediaModule() {
   const [copiedId, setCopiedId] = useState(null);
   const [sections, setSections] = useState({ logos: true, hero: true, gallery: true, all: false });
   const [siteSettings, setSiteSettings] = useState(null);
-  const [selectedHeroIds, setSelectedHeroIds] = useState([]);
+  // selectedHeroes holds ordered hero slide objects: { id, file_url, title, alt_text }
+  const [selectedHeroes, setSelectedHeroes] = useState([]);
 
   useEffect(() => {
     fetchMedia();
     fetch(`${API_BASE}/site-settings`).then(r => r.ok ? r.json() : {}).then(s => {
       setSiteSettings(s || {});
-      if (Array.isArray(s?.hero_images)) setSelectedHeroIds(s.hero_images.map(h => h.id).filter(Boolean));
+      if (Array.isArray(s?.hero_images) && s.hero_images.length) setSelectedHeroes(s.hero_images);
     }).catch(() => {});
   }, []);
 
@@ -83,18 +84,37 @@ function MediaModule() {
   };
 
   const toggleHeroSelection = (id) => {
-    setSelectedHeroIds(s => s.includes(id) ? s.filter(x => x !== id) : [...s, id]);
+    setSelectedHeroes(s => {
+      const exists = s.find(x => x.id === id);
+      if (exists) return s.filter(x => x.id !== id);
+      // find media item to add
+      const m = media.find(x => x.id === id);
+      if (!m) return s;
+      return [...s, { id: m.id, file_url: m.file_url, title: m.title, alt_text: '' }];
+    });
+  };
+
+  const moveHero = (idx, dir) => {
+    setSelectedHeroes(s => {
+      const next = [...s];
+      const swap = idx + dir;
+      if (swap < 0 || swap >= next.length) return s;
+      const tmp = next[swap];
+      next[swap] = next[idx];
+      next[idx] = tmp;
+      return next;
+    });
+  };
+
+  const setHeroAlt = (id, alt) => {
+    setSelectedHeroes(s => s.map(x => x.id === id ? { ...x, alt_text: alt } : x));
   };
 
   const saveHeroImages = async () => {
-    // build hero_images array from selected ids
-    const items = media.filter(m => selectedHeroIds.includes(m.id)).map(m => ({ id: m.id, file_url: m.file_url, title: m.title }));
-    const payload = { ...(siteSettings || {}), hero_images: items };
+    const payload = { ...(siteSettings || {}), hero_images: selectedHeroes };
     try {
       const res = await fetch(`${API_BASE}/site-settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (!res.ok) throw new Error('Failed to save');
-      const data = await res.json();
-      // refresh settings
       setSiteSettings(payload);
       alert('Hero images saved');
     } catch (err) {
@@ -195,7 +215,7 @@ function MediaModule() {
                 <div key={item.id} className="bg-surface rounded overflow-hidden relative">
                   <img src={`${API_BASE.replace(/\/api$/, '')}${item.file_url}`} alt={item.title} className="w-full h-24 object-cover" />
                   <label className="absolute top-2 left-2 bg-white/80 rounded p-1 text-xs">
-                    <input type="checkbox" checked={selectedHeroIds.includes(item.id)} onChange={() => toggleHeroSelection(item.id)} />
+                    <input type="checkbox" checked={selectedHeroes.some(h => h.id === item.id)} onChange={() => toggleHeroSelection(item.id)} />
                   </label>
                   <div className="p-2 text-xs flex justify-between items-center">
                     <span className="truncate">{item.title}</span>
@@ -207,8 +227,27 @@ function MediaModule() {
                 </div>
               ))}
             </div>
-            <div className="mt-3 flex justify-end">
-              <button type="button" onClick={saveHeroImages} className="bg-primary text-text-inverse px-3 py-2 rounded">Save hero images</button>
+            <div className="mt-3">
+              <h4 className="text-sm font-medium mb-2">Selected slides (drag to reorder or use arrows)</h4>
+              {selectedHeroes.length === 0 && <p className="text-sm text-text-secondary">No slides selected.</p>}
+              <div className="space-y-2">
+                {selectedHeroes.map((h, i) => (
+                  <div key={h.id} className="flex items-center gap-3 bg-surface p-2 rounded">
+                    <img src={`${API_BASE.replace(/\/api$/, '')}${h.file_url}`} alt={h.title} className="w-16 h-10 object-cover rounded" />
+                    <div className="flex-1 text-xs">
+                      <div className="font-medium">{h.title}</div>
+                      <input type="text" value={h.alt_text || ''} onChange={(e) => setHeroAlt(h.id, e.target.value)} placeholder="Alt text (for accessibility)" className="w-full form-input mt-1" />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <button type="button" onClick={() => moveHero(i, -1)} className="px-2 py-1 bg-surface-warm rounded">↑</button>
+                      <button type="button" onClick={() => moveHero(i, 1)} className="px-2 py-1 bg-surface-warm rounded">↓</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3 flex justify-end">
+                <button type="button" onClick={saveHeroImages} className="bg-primary text-text-inverse px-3 py-2 rounded">Save hero images</button>
+              </div>
             </div>
           </div>
         )}
