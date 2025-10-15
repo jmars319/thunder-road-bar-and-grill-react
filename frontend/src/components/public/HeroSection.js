@@ -17,6 +17,9 @@ export default function HeroSection() {
   // NOTE: This component uses the `.hero-gradient` helper which references
   // CSS tokens (see `frontend/src/custom-styles.css`). Prefer token edits
   // over changing literal color classes here so runtime theming remains intact.
+  // DEV: Buttons and gradients intentionally use semantic tokens (bg-primary,
+  // bg-surface, hero-gradient). Update tokens in `custom-styles.css` to change
+  // colors globally rather than modifying component utilities.
   return (
   <div className="hero-gradient text-text-inverse py-32 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
