@@ -18,6 +18,7 @@ import HeroSection from '../components/public/HeroSection';
 import MenuSection from '../components/public/MenuSection';
 import ReservationSection from '../components/public/ReservationSection';
 import AboutSection from '../components/public/AboutSection';
+import JobSection from '../components/public/JobSection';
 import PublicFooter from '../components/public/PublicFooter';
 
 /*
@@ -50,7 +51,7 @@ import PublicFooter from '../components/public/PublicFooter';
 
 export default function PublicSite({ onGoToAdmin }) {
   // Local registry reference to ensure linters detect symbol usage.
-  const _refs = { PublicNavbar, HeroSection, MenuSection, ReservationSection, AboutSection, PublicFooter };
+  const _refs = { PublicNavbar, HeroSection, MenuSection, ReservationSection, JobSection, AboutSection, PublicFooter };
   void _refs;
 
   return (
@@ -61,8 +62,9 @@ export default function PublicSite({ onGoToAdmin }) {
       <main id="site-main" role="main">
         <HeroSection />
         <MenuSection />
-        <ReservationSection />
-        <AboutSection />
+  <ReservationSection />
+  <JobSection />
+  <AboutSection />
       </main>
       <PublicFooter />
     </div>
@@ -72,5 +74,5 @@ export default function PublicSite({ onGoToAdmin }) {
 // Group component references so linters that don't follow JSX usage will still
 // see these symbols as used. This is a minimal, file-local pattern and can be
 // removed when editor tooling is consistent across developer setups.
-const __usedComponents = { PublicNavbar, HeroSection, MenuSection, ReservationSection, AboutSection, PublicFooter };
+const __usedComponents = { PublicNavbar, HeroSection, MenuSection, ReservationSection, JobSection, AboutSection, PublicFooter };
 void __usedComponents;
