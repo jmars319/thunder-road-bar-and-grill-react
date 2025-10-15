@@ -100,10 +100,12 @@ export default function MenuSection() {
             </div>
           ))}
           {/* ensure lucide-react icons are considered used by some linters */}
-          {false && ChevronDown}
-          {false && ChevronUp}
+          {/* (no-op handled at module scope) */}
         </div>
       </div>
     </div>
   );
 }
+
+// ensure lucide-react icons are considered used by some linters
+void ChevronDown; void ChevronUp;

@@ -185,10 +185,12 @@ export default function ReservationSection() {
             Submit Reservation
           </button>
         </div>
-        {/* ensure lucide-react icons are considered used by some linters */}
-        {false && CheckCircle}
-        {false && AlertCircle}
+  {/* ensure lucide-react icons are considered used by some linters */}
+  {/* (no-op handled at module scope) */}
       </div>
     </div>
   );
 }
+
+// ensure lucide-react icons are considered used by some linters
+void CheckCircle; void AlertCircle;

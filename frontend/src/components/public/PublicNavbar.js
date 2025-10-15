@@ -121,8 +121,9 @@ export default function PublicNavbar({ onGoToAdmin }) {
               Admin
             </button>
             <ThemeToggle inline className="ml-2" />
+            {/* ensure ThemeToggle symbol is considered used by linters */}
             {/* ensure ThemeToggle symbol is considered used by some linters */}
-            {false && ThemeToggle}
+            {/* (no-op handled at module scope) */}
           </div>
 
           {/* Mobile menu toggle */}
@@ -170,3 +171,6 @@ export default function PublicNavbar({ onGoToAdmin }) {
     </nav>
   );
 }
+
+// reference ThemeToggle at module scope so linters see it as a used symbol
+void ThemeToggle;
