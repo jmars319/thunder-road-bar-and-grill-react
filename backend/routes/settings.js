@@ -1,6 +1,33 @@
 const express = require('express');
 const router = express.Router();
 
+/*
+  Settings routes
+
+  Purpose:
+  - Serve site-wide configuration, navigation, business hours, 'about' page
+    content and footer columns. These endpoints are used by the public site
+    to render content and by the admin UI to edit site data.
+
+  Public endpoints in this file (prefixed by /api when mounted):
+  - GET  /site-settings        -> { business_name, tagline, logo_url, phone, email, address }
+  - PUT  /site-settings        -> body: { business_name, tagline, logo_url, phone, email, address }
+  - GET  /navigation          -> [{ id, label, url, display_order }]
+  - GET  /business-hours      -> [{ id, opening_time, closing_time, is_closed }]
+  - PUT  /business-hours/:id  -> body: { opening_time, closing_time, is_closed }
+  - GET  /about               -> { header, paragraph, phone, email, address, map_embed_url }
+  - PUT  /about               -> body: { header, paragraph, phone, email, address, map_embed_url }
+  - GET  /footer-columns      -> [{ id, column_title, links: [{ id, label, url }] }]
+
+  Notes:
+  - These routes perform direct SQL queries and return raw rows. In an
+    admin context, ensure these routes are protected with authentication
+    and authorization middleware.
+  - For input validation and stricter error handling, adopt a schema
+    validator (express-validator or Joi) and normalize date/time formats
+    for business hours.
+*/
+
 // Get site settings
 router.get('/site-settings', (req, res) => {
   req.db.query('SELECT * FROM site_settings WHERE id = 1', (err, results) => {

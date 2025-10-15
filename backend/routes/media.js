@@ -1,6 +1,24 @@
 const express = require('express');
 const router = express.Router();
 
+/*
+  Media routes
+
+  Endpoints:
+  - GET /api/media
+  - POST /api/media/upload (multipart/form-data field: 'file')
+  - DELETE /api/media/:id
+
+  Notes:
+  - Upload handling is delegated to the `upload` instance configured in
+  server.js and exposed via `app.set('upload', upload)`.
+  - The upload handler performs MIME type checks and size limits. This
+    route expects a `file` field in the multipart body and metadata (title,
+    alt_text, category) in the body.
+  - After inserting metadata into `media_library`, the route returns a
+    `file_url` which the frontend can use to display the asset.
+*/
+
 // Get all media
 router.get('/media', (req, res) => {
   req.db.query(
@@ -16,6 +34,8 @@ router.get('/media', (req, res) => {
 router.post('/media/upload', (req, res) => {
   const upload = req.app.get('upload');
 
+  // We call the multer middleware directly so we can access req.file and
+  // handle errors uniformly within this route.
   upload.single('file')(req, res, (err) => {
     if (err) {
       const status = err.status || 500;
