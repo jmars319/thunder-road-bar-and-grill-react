@@ -40,6 +40,7 @@ Outstanding items / recommendations
 Summary
 -------
 All planned admin module accessibility edits were applied, tests and linters for JS/CSS completed with no outstanding errors, and documentation files (`DEVELOPERS.md`, `VERIFICATION_REPORT.md`) were added to summarize changes and next steps.
+
 # Verification Report — Tailwind tokenization and documentation sweep
 
 Date: 2025-10-15
@@ -96,4 +97,19 @@ Next steps
 3. If you'd like, I can generate an `API_REFERENCE.md` from backend route headers next, or start annotating backend files in small batches (5–7 files per batch).
 
 Signed-off-by: automated verification script
+
+
+Housekeeping note
+-----------------
+On 2025-10-15 the `styling-instructions/` folder was intentionally removed from the remote and stopped being tracked to keep private guidance local. Commands used:
+
+```bash
+git rm -r --cached styling-instructions
+git commit -m "chore: stop tracking styling-instructions (keep locally, ignore)"
+git push origin main
+```
+
+Commit: 8c2c0eb (chore: stop tracking styling-instructions (keep locally, ignore))
+
+Local copies remain in your working tree; the folder is listed in `.gitignore` so Git will not re-add it.
 
