@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { UtensilsCrossed, Plus, Edit, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 
-const API_BASE = 'http://localhost:5001/api';
+const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 function MenuModule() {
   const [categories, setCategories] = useState([]);
@@ -101,7 +101,7 @@ function MenuModule() {
 
       {/* Category Editor Modal */}
       {editingCategory && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="modal-backdrop flex items-center justify-center z-50">
                 <div className="bg-surface rounded-lg p-6 max-w-md w-full">
             <h3 className="text-xl font-bold mb-4 text-text-primary">
               {editingCategory.id ? 'Edit' : 'Add'} Category
@@ -146,7 +146,7 @@ function MenuModule() {
 
       {/* Item Editor Modal */}
       {editingItem && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="modal-backdrop flex items-center justify-center z-50">
                 <div className="bg-surface rounded-lg p-6 max-w-md w-full">
             <h3 className="text-xl font-bold mb-4 text-text-primary">
               {editingItem.id ? 'Edit' : 'Add'} Menu Item
@@ -267,7 +267,7 @@ function MenuModule() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-center text-text-inverse py-4">No items in this category</p>
+                  <p className="text-center text-text-secondary py-4">No items in this category</p>
                 )}
               </div>
             )}

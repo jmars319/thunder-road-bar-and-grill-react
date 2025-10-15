@@ -16,8 +16,8 @@ import React, { useState } from 'react';
     screen reader announcements.
 */
 
-// TODO: replace with process.env.REACT_APP_API_BASE or a config module
-const API_BASE = 'http://localhost:5001/api';
+// Use environment-driven API base so deployments can override without code changes
+const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 /**
  * Props:

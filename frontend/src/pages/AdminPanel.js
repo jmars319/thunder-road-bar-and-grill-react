@@ -118,7 +118,7 @@ export default function AdminPanel({ user = { name: 'Admin' }, onLogout = () => 
               <span className="text-sm text-text-inverse">
                 Welcome, <strong>{user?.name || 'Admin'}</strong>
               </span>
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-bold">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-text-inverse font-bold">
                 {(user?.name || 'A').charAt(0).toUpperCase()}
               </div>
               <ThemeToggle inline className="ml-4" />

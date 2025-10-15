@@ -20,7 +20,7 @@ import { Settings, Save } from 'lucide-react';
     to keep the admin UI responsive; consider surfacing errors to the user via toasts for a better UX.
 */
 
-const API_BASE = 'http://localhost:5001/api';
+const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 function SettingsModule() {
   const [siteSettings, setSiteSettings] = useState({});
