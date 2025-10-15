@@ -109,3 +109,94 @@ If you want, I can:
   classes (I will do this file-by-file and run tests after batches).
 - Create small visual QA steps or snapshot tests for critical admin pages.
 
+Consolidated backend reference (quick)
+------------------------------------
+This is a short, actionable summary of server endpoints and shapes. Always
+confirm exact inputs/outputs by checking the route files in `backend/routes` —
+these are kept intentionally small and documented at the top of each file.
+
+Auth & sessions
+- POST /api/login  — { email, password } -> 200 { user, token } | 401
+- POST /api/logout — clears server-side session/cookie (if used)
+
+Menu & content
+- GET /api/menu — returns array of menu items/categories
+- GET /api/about — page content for About section
+- GET /api/footer-columns — array of footer column objects
+
+Newsletter & subscribers
+- GET /api/newsletter/subscribers — array of subscriber objects
+- DELETE /api/newsletter/subscribers/:id — removes subscriber
+
+Media and uploads
+- GET /api/media — list media entries (url, type, id)
+- POST /api/upload — multipart/form-data, file field `file`. Server uses
+  multer with a 5MB limit and MIME filtering. Returns saved media metadata.
+
+Reservations & business hours
+- POST /api/reservations — reservation payload (name, partySize, time,
+  contact) -> 200 success or 400 validation errors
+- GET /api/business-hours — returns weekly business-hours object
+
+Jobs, contact, settings
+- POST /api/jobs (contact form / job application flow, may include file)
+- POST /api/contact — contact form submission
+- GET/POST/PUT /api/settings — site settings; check `backend/routes/settings.js`
+
+Runtime & environment notes
+---------------------------
+- Backend: the server attaches a DB connection and the upload middleware to
+  requests (check `server.js` for how `req.db` and `app.get('upload')` are
+  configured). Avoid assuming ORM behavior — queries use `mysql2`.
+- Frontend: default API base is `http://localhost:5001/api`. Prefer reading
+  from `process.env.REACT_APP_API_BASE` or `public/config.json` for deploys.
+
+Developer checklist (final pass)
+--------------------------------
+1. Sweep the frontend for literal Tailwind color usages and replace with
+   token classes (e.g. `bg-primary`, `text-muted`). Keep changes small and
+   test after each batch (5–10 files).
+2. Confirm every `backend/routes/*.js` file contains a short top-level
+   header describing endpoints and payload shapes.
+3. Add (or update) small snapshot tests for critical admin modules
+   (DashboardModule, InboxModule, JobsModule) before changing layout tokens.
+4. Ensure `REACT_APP_API_BASE` is set for CI and production builds.
+
+How to run locally (concise)
+----------------------------
+- Start the backend:
+
+```bash
+cd backend
+npm install
+npm start
+```
+
+- Start the frontend (dev server):
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+- Run frontend tests (single CI-style run):
+
+```bash
+cd frontend
+npm test -- --watchAll=false
+```
+
+Where to next (I can do these if you want)
+----------------------------------------
+- Finish the repo sweep and add any remaining `Purpose:` headers (I can run
+  one more pass and mark modified files).  
+- Generate a condensed `API_REFERENCE.md` from the headers in
+  `backend/routes/` (machine-assistable — I can extract and assemble it).
+- Convert inline Tailwind color literals to tokens in a safe, staged PR.
+
+---
+
+Completed: Update this file with the consolidated backend summary and run
+steps.
+
