@@ -46,6 +46,23 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Logo: make inline SVG logos inherit the current design token color
+   - Inline SVGs placed inside elements with class .logo-badge will use
+     the --text-primary token by default. External images (<img>) won't
+     inherit this; serve SVGs inline if you want them recolorable. */
+.logo-badge svg {
+  color: var(--text-primary);
+  width: auto;
+  height: 2.25rem; /* default height matching navbar spacing; adjust as needed */
+  display: inline-block;
+}
+
+.logo-badge img {
+  height: 2.25rem;
+  width: auto;
+  display: inline-block;
+}
+
 /* Dark Mode Variables */
 @media (prefers-color-scheme: dark) {
   :root {
