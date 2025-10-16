@@ -32,6 +32,7 @@ export default function PublicNavbar({ onGoToAdmin }) {
   const [logoSvg, setLogoSvg] = useState(null);
   const [navLinks, setNavLinks] = useState([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
     // Load site-level settings (logo, name, tagline). Keep errors silent for now.
@@ -71,6 +72,21 @@ export default function PublicNavbar({ onGoToAdmin }) {
       // swallow any errors to avoid breaking the nav
     }
   }
+
+  // Show a floating "Back to top" button when the user scrolls down the page
+  useEffect(() => {
+    const onScroll = () => {
+      try {
+        setShowBackToTop(window.scrollY > 300);
+      } catch (e) {
+        // ignore
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   // If the logo_url is an SVG file, fetch the content and render inline so it
   // inherits currentColor (recolorable). This is a best-effort fetch and will
@@ -141,25 +157,34 @@ export default function PublicNavbar({ onGoToAdmin }) {
           <div className="hidden md:flex items-center gap-8">
             {/**
              * Small mapping: treat an incoming 'Contact' navigation item as the
-             * public-facing careers link. This keeps the admin-driven navigation
-             * flexible while making the public nav point to the JobSection on the
-             * page (id="#jobs"). Admins can still update navigation in the DB.
+             * public-facing careers link and map 'About' to the About section.
+             * Also, filter out any 'Home' link so we don't render a duplicate.
              */}
-            {navLinks.map(link => {
-              const isContactLink = (link.url && link.url.toLowerCase() === '#contact') || (link.label && link.label.toLowerCase().includes('contact'));
-              const renderLabel = isContactLink ? 'Careers' : link.label;
-              const renderUrl = isContactLink ? '#jobs' : link.url;
-              return (
-                <a
-                  key={link.id}
-                  href={renderUrl}
-                  onClick={(e) => handleNavClick(e, renderUrl)}
-                  className="text-text-secondary hover:text-text-primary font-medium transition"
-                >
-                  {renderLabel}
-                </a>
-              );
-            })}
+            {navLinks
+              .filter((link) => {
+                const label = String(link.label || '').trim().toLowerCase();
+                const url = String(link.url || '').trim();
+                if (label === 'home') return false;
+                if (url === '/' || url === '/home' || url === '#home') return false;
+                return true;
+              })
+              .map((link) => {
+                const lowLabel = String(link.label || '').toLowerCase();
+                const isContactLink = (link.url && String(link.url).toLowerCase() === '#contact') || lowLabel.includes('contact');
+                const isAboutLink = lowLabel.includes('about') || (link.url && String(link.url).toLowerCase().includes('#about'));
+                const renderLabel = isContactLink ? 'Careers' : link.label;
+                const renderUrl = isContactLink ? '#jobs' : isAboutLink ? '#about' : link.url;
+                return (
+                  <a
+                    key={link.id}
+                    href={renderUrl}
+                    onClick={(e) => handleNavClick(e, renderUrl)}
+                    className="text-text-secondary hover:text-text-primary font-medium transition"
+                  >
+                    {renderLabel}
+                  </a>
+                );
+              })}
             {/* DEV: Admin button and nav links use semantic design tokens (bg-primary, text-text-inverse,
                 hover:bg-primary-dark, text-text-primary, etc.). Adjust tokens in
                 `frontend/src/custom-styles.css` rather than changing utility classes here. */}
@@ -222,6 +247,17 @@ export default function PublicNavbar({ onGoToAdmin }) {
               </button>
             </div>
           </div>
+        )}
+        {/* Back to top floating button */}
+        {showBackToTop && (
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            aria-label="Back to top"
+            className="fixed right-4 bottom-8 z-50 bg-primary text-text-inverse p-3 rounded-full shadow-lg hover:bg-primary-dark"
+          >
+            {React.createElement(icons.ArrowUp, { size: 18 })}
+          </button>
         )}
       </div>
     </nav>
