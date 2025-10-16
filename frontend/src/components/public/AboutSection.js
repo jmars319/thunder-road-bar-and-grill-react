@@ -69,7 +69,7 @@ export default function AboutSection() {
   }, []);
 
   return (
-  <div className="py-16 bg-surface-warm">
+  <div id="about" className="py-16 bg-surface-warm">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-4xl font-heading font-bold text-center mb-6">About Us</h2>
         <div className="bg-surface rounded-lg shadow-lg p-8">
