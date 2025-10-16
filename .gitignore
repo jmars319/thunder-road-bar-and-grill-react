@@ -31,3 +31,6 @@ backend/uploads/
 
 # Local stylelint config - keep it untracked
 frontend/.stylelintrc.json
+
+# Ignore temporary editor copies
+*.NEW
