@@ -264,7 +264,7 @@ export default function PublicNavbar({ onGoToAdmin }) {
             type="button"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             aria-label="Back to top"
-            className="fixed right-4 bottom-8 z-50 bg-primary text-text-inverse p-3 rounded-full shadow-lg hover:bg-primary-dark"
+            className="fixed right-6 bottom-6 z-50 bg-primary text-text-inverse p-3 rounded-full shadow-lg hover:bg-primary-dark transition-transform duration-200 transform-gpu"
           >
             {React.createElement(icons.ChevronUp, { size: 18 })}
           </button>
