@@ -72,3 +72,24 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Social preview & PWA assets
+
+This project includes a set of social preview images and a large PWA icon used by the web manifest. They live in `frontend/public/` and are intended to be small, fast-loading images used by social platforms and when the site is installed as a PWA.
+
+Files:
+- `og-image-1200x630-with-badge.jpg` — primary Open Graph / Twitter large image (1200×630) with logo badge overlay. Used in `index.html` meta tags and JSON-LD.
+- `og-600x315.jpg` — medium-sized social preview (600×315) used where smaller previews are preferred.
+- `og-1024x1024.png` — square high-resolution icon used in the `manifest.json` for installed icons.
+- `og-1200x1200.jpg` — optional splash / high-res image.
+
+How to replace the image:
+1. Place your new image in `frontend/public/` (recommended size 1200×630 for OG, 1024×1024 for manifest icon).
+2. If you want a logo badge, upload the logo to `backend/uploads/` and use the admin Media module to select/capture it.
+3. Update `frontend/public/index.html` `og:image` and `twitter:image` meta tags (they use `%PUBLIC_URL%/filename`).
+4. Rebuild with `npm run build` and redeploy.
+
+Notes:
+- For production, ensure the manifest icons and OG images are served from your production origin. `%PUBLIC_URL%` will resolve correctly at build time.
+- I converted the 1024×1024 icon to PNG for broader compatibility; if you prefer JPG for smaller size, we can switch back.
+
