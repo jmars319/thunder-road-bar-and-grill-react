@@ -256,7 +256,7 @@ export default function PublicNavbar({ onGoToAdmin }) {
             aria-label="Back to top"
             className="fixed right-4 bottom-8 z-50 bg-primary text-text-inverse p-3 rounded-full shadow-lg hover:bg-primary-dark"
           >
-            {React.createElement(icons.ArrowUp, { size: 18 })}
+            {React.createElement(icons.ChevronUp, { size: 18 })}
           </button>
         )}
       </div>
