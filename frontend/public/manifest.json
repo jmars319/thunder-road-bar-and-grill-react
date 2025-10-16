@@ -30,9 +30,9 @@
   "background_color": "#fff7f2",
   "splash_screens": [
     {
-      "src": "og-1200x1200.jpg",
+      "src": "og-1200x1200.png",
       "sizes": "1200x1200",
-      "type": "image/jpeg"
+      "type": "image/png"
     }
   ]
 }
