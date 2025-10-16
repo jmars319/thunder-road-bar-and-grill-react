@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 import { icons } from '../../icons';
 import ThemeToggle from '../ThemeToggle';
@@ -258,8 +259,10 @@ export default function PublicNavbar({ onGoToAdmin }) {
             </div>
           </div>
         )}
-        {/* Back to top floating button */}
-        {showBackToTop && (
+        {/* Back to top floating button — rendered into document.body via portal so
+            position:fixed is always relative to the viewport and not affected
+            by transformed/filtered ancestors (backdrop-filter creates a containing block in some browsers). */}
+        {showBackToTop && typeof document !== 'undefined' && createPortal(
           <button
             type="button"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -267,7 +270,8 @@ export default function PublicNavbar({ onGoToAdmin }) {
             className="fixed right-6 bottom-6 z-50 bg-primary text-text-inverse p-3 rounded-full shadow-lg hover:bg-primary-dark transition-transform duration-200 transform-gpu"
           >
             {React.createElement(icons.ChevronUp, { size: 18 })}
-          </button>
+          </button>,
+          document.body
         )}
       </div>
     </nav>
