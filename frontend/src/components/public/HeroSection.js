@@ -15,18 +15,42 @@
 
 import { useEffect, useState, useRef } from 'react';
 
+const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
+
 // New HeroSection: supports a simple slideshow driven by site settings (hero_images).
 export default function HeroSection() {
+  // images: array of { src, alt }
   const [images, setImages] = useState([]);
   const idxRef = useRef(0);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    fetch('/api/site-settings').then(r => r.ok ? r.json() : {}).then(s => {
-      if (Array.isArray(s?.hero_images) && s.hero_images.length) {
-        setImages(s.hero_images.map(h => h.file_url));
+  fetch(`${API_BASE}/site-settings`).then(r => r.ok ? r.json() : {}).then(async s => {
+        if (Array.isArray(s?.hero_images) && s.hero_images.length) {
+        const origin = API_BASE.replace(/\/api$/, '');
+        setImages(s.hero_images.map(h => {
+          const src = h?.file_url || '';
+          const abs = /^https?:\/\//i.test(src) ? src : origin + src;
+          return { src: abs, alt: (h?.alt_text || h?.title || '') };
+        }));
+        return;
       }
-    }).catch(() => {});
+
+      // Fallback: if site settings don't include hero images, fetch recent hero-category media
+      try {
+        const mres = await fetch(`${API_BASE}/media`);
+        if (!mres.ok) return;
+        const list = await mres.json();
+        const heroes = Array.isArray(list) ? list.filter(x => x.category === 'hero') : [];
+        if (heroes.length) {
+          const origin = API_BASE.replace(/\/api$/, '');
+          const imgs = heroes.map(h => ({ src: origin + (h.file_url || ''), alt: (h.alt_text || h.title || '') }));
+          setImages(imgs);
+        }
+      } catch (e) {
+        // ignore fallback failure
+      }
+  }).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -40,17 +64,29 @@ export default function HeroSection() {
 
   return (
     <div className="hero-gradient text-text-inverse py-32 relative overflow-hidden">
-      {/* background slideshow */}
-      {images.length > 0 && (
-        <div className="absolute inset-0 -z-10">
-          {images.map((src, i) => (
-            <div key={i} className={`absolute inset-0 transition-opacity duration-1000 ${i === index ? 'opacity-100' : 'opacity-0'}`} style={{ backgroundImage: `url(${src})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
-          ))}
-          <div className="absolute inset-0 overlay-gradient" aria-hidden="true" />
-        </div>
-      )}
+      {/* background slideshow: always render container so z-index layering is consistent */}
+  <div className="absolute inset-0 z-0" aria-hidden={images.length === 0}>
+        {images.length > 0 && (
+          <>
+            {images.map((img, i) => (
+              <div
+                key={i}
+                className={`absolute inset-0 transition-opacity duration-1000 ${i === index ? 'opacity-100' : 'opacity-0'}`}
+                style={{ backgroundImage: `url(${img.src})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+              />
+            ))}
+          </>
+        )}
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+  {/* overlay gradient must sit above images but below content */}
+  <div className="absolute inset-0 z-10 overlay-gradient" aria-hidden="true" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-20">
+        {/* Accessibility: render an offscreen image with active slide alt text for screen readers */}
+        {images[index] && (
+          <img src={images[index].src} alt={images[index].alt || ''} className="sr-only" />
+        )}
         <h1 className="hero-title text-5xl md:text-6xl font-heading font-extrabold mb-6">
           Welcome to Thunder Road
         </h1>

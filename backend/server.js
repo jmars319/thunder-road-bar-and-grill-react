@@ -58,29 +58,32 @@ app.use((req, res, next) => {
   next();
 });
 
-// MySQL Connection
-// Note: mysql2 createConnection is fine for small apps. For larger workloads
-// prefer a pooled connection (createPool) and proper connection lifecycle
-// handling.
-const db = mysql.createConnection({
+// MySQL Connection - use a pool for better concurrency and resiliency
+// Note: pool.query uses the same API as connection.query. For transaction
+// support prefer pool.getConnection() and connection.beginTransaction().
+const dbPool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME || 'thunder_road'
+  database: process.env.DB_NAME || 'thunder_road',
+  waitForConnections: true,
+  connectionLimit: parseInt(process.env.DB_CONN_LIMIT || '10', 10),
+  queueLimit: 0
 });
 
-db.connect(err => {
+dbPool.getConnection((err, conn) => {
   if (err) {
     console.error('Database connection failed:', err);
-    return;
+  } else {
+    conn.release();
+    console.log('\u2705 Connected to MySQL database (pool)');
   }
-  console.log('\u2705 Connected to MySQL database');
 });
 
-// Make db available to routes via req.db. This is a simple pattern used in
-// small apps; in larger codebases consider a centralized data layer instead.
+// Make the pool available to routes via req.db for compatibility with
+// existing code that calls req.db.query(sql, params, cb).
 app.use((req, res, next) => {
-  req.db = db;
+  req.db = dbPool;
   next();
 });
 

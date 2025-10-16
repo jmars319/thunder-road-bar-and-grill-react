@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 /*
   Purpose:
@@ -29,6 +29,25 @@ export default function LoginPage({ onLogin = () => {}, onBack = () => {} }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [siteSettings, setSiteSettings] = useState(null);
+  const [logoSvg, setLogoSvg] = useState(null);
+
+  useEffect(() => {
+    fetch(`${API_BASE}/site-settings`).then(r => r.ok ? r.json() : {}).then(s => setSiteSettings(s || {})).catch(() => {});
+    const handler = (e) => setSiteSettings(e?.detail || {});
+    window.addEventListener('siteSettingsUpdated', handler);
+    return () => window.removeEventListener('siteSettingsUpdated', handler);
+  }, []);
+
+  useEffect(() => {
+    if (!siteSettings?.logo_url) return;
+    const url = siteSettings.logo_url;
+    if (typeof url === 'string' && url.toLowerCase().endsWith('.svg')) {
+      fetch(url).then(r => (r.ok ? r.text() : Promise.reject())).then(t => setLogoSvg(t)).catch(() => setLogoSvg(null));
+    } else {
+      setLogoSvg(null);
+    }
+  }, [siteSettings]);
 
   // Primary submit handler. Keeps error/loading state local and defensive about
   // response shapes. We always check `response.ok` before parsing JSON because
@@ -87,7 +106,17 @@ export default function LoginPage({ onLogin = () => {}, onBack = () => {} }) {
         <div className="bg-surface rounded-lg shadow-2xl p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="inline-block w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-lg mb-4" aria-hidden="true"></div>
+            {siteSettings?.logo_url ? (
+              <div className="inline-block mb-4 logo-badge">
+                {logoSvg ? (
+                  <span role="img" aria-label={siteSettings.business_name || 'Site logo'} dangerouslySetInnerHTML={{ __html: logoSvg }} className="h-12 w-12 inline-block" />
+                ) : (
+                  <img src={siteSettings.logo_url} alt={siteSettings.business_name || 'Site logo'} className="inline-block h-12 w-12" />
+                )}
+              </div>
+            ) : (
+              <div className="inline-block w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-lg mb-4" aria-hidden="true"></div>
+            )}
             <h1 className="text-2xl font-bold text-text-primary">Thunder Road Admin</h1>
             <p className="text-text-secondary text-sm mt-2">Sign in to manage your site</p>
           </div>

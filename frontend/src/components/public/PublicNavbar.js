@@ -88,6 +88,21 @@ export default function PublicNavbar({ onGoToAdmin }) {
     }
   }, [siteSettings]);
 
+  // Listen for siteSettingsUpdated events so the navbar updates instantly
+  // when an admin changes the logo or other settings in the MediaModule.
+  useEffect(() => {
+    const handler = (e) => {
+      try {
+        const payload = e?.detail || {};
+        setSiteSettings(payload);
+      } catch (err) {
+        // ignore
+      }
+    };
+    window.addEventListener('siteSettingsUpdated', handler);
+    return () => window.removeEventListener('siteSettingsUpdated', handler);
+  }, []);
+
   return (
     <nav className="bg-surface shadow-md header-sticky top-0 z-50 backdrop-blur-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

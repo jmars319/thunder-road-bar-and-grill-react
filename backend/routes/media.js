@@ -19,14 +19,35 @@ const express = require('express');
 const router = express.Router();
 
 // Get all media
+// GET /api/media?category=gallery - optional category filter
 router.get('/media', (req, res) => {
-  req.db.query(
-    'SELECT * FROM media_library ORDER BY uploaded_at DESC',
-    (err, results) => {
+  const category = req.query.category;
+  // pagination params
+  const limit = Math.min(parseInt(req.query.limit || '48', 10), 200);
+  const offset = Math.max(parseInt(req.query.offset || '0', 10), 0);
+
+  const params = [];
+  let where = '';
+  if (category) {
+    where = ' WHERE category = ?';
+    params.push(category);
+  }
+
+  const sql = `SELECT * FROM media_library${where} ORDER BY uploaded_at DESC LIMIT ? OFFSET ?`;
+  params.push(limit, offset);
+
+  // Also return total count for client-side pagination
+  const countSql = `SELECT COUNT(*) as total FROM media_library${where}`;
+
+  req.db.query(countSql, category ? [category] : [], (cErr, cRes) => {
+    if (cErr) return res.status(500).json({ error: cErr.message });
+    const total = Array.isArray(cRes) && cRes[0] ? cRes[0].total : 0;
+    req.db.query(sql, params, (err, results) => {
       if (err) return res.status(500).json({ error: err.message });
+      res.setHeader('X-Total-Count', String(total));
       res.json(results);
-    }
-  );
+    });
+  });
 });
 
 // Upload media

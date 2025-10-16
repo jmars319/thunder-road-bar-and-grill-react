@@ -31,7 +31,18 @@ export default function MenuSection() {
   useEffect(() => {
     fetch(`${API_BASE}/menu`)
       .then(res => res.json())
-      .then(data => setCategories(Array.isArray(data) ? data : []))
+      .then(data => {
+        const list = Array.isArray(data) ? data : [];
+        // normalize gallery_image_url fields to absolute URLs when necessary
+        const normalized = list.map(cat => {
+          const copy = { ...cat };
+          if (copy.gallery_image_url && copy.gallery_image_url.startsWith('/')) {
+            copy.gallery_image_url = `${API_BASE.replace(/\/api$/, '')}${copy.gallery_image_url}`;
+          }
+          return copy;
+        });
+        setCategories(normalized);
+      })
       .catch(() => setCategories([]));
   }, []);
 
@@ -63,10 +74,11 @@ export default function MenuSection() {
                 </div>
               </button>
 
-                {category.image_url && (
+                {/* Category banner: prefer gallery_image_url, fall back to image_url */}
+                {(category.gallery_image_url || category.image_url) && (
                 <div className="relative">
                   <img
-                    src={category.image_url}
+                    src={category.gallery_image_url || category.image_url}
                     alt={category.name}
                     className="w-full h-40 object-cover"
                   />

@@ -108,7 +108,7 @@ export default function AboutSection() {
                   if (/\/maps\/embed/i.test(embedSrc)) {
                     destinationUrl = embedSrc.replace('/embed?', '/?');
                   } else if (/\boutput=embed\b/i.test(embedSrc)) {
-                    destinationUrl = embedSrc.replace(/\&?output=embed/i, '');
+                    destinationUrl = embedSrc.replace(/&?output=embed/i, '');
                   }
                 } catch (e) {
                   // fallback to embedSrc

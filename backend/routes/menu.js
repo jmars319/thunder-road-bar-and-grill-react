@@ -36,13 +36,28 @@ const router = express.Router();
 */
 
 // Get all menu categories with items
+// Simple in-memory cache for public menu
+const menuCache = { payload: null, expiresAt: 0 };
+const MENU_CACHE_TTL_MS = 5000; // 5 seconds
+
+function invalidateMenuCache() {
+  menuCache.payload = null;
+  menuCache.expiresAt = 0;
+}
+
 router.get('/menu', (req, res) => {
+  // Serve from cache when available
+  if (menuCache.payload && Date.now() < menuCache.expiresAt) {
+    return res.json(menuCache.payload);
+  }
   const query = `
     SELECT 
       c.id as category_id,
       c.name as category_name,
       c.description as category_description,
       c.image_url as category_image,
+      c.gallery_image_id as category_gallery_image_id,
+      ml.file_url as category_gallery_image,
       c.display_order as category_order,
       i.id as item_id,
       i.name as item_name,
@@ -52,6 +67,7 @@ router.get('/menu', (req, res) => {
       i.display_order as item_order
     FROM menu_categories c
     LEFT JOIN menu_items i ON c.id = i.category_id
+    LEFT JOIN media_library ml ON c.gallery_image_id = ml.id
     WHERE c.is_active = 1 AND (i.is_available = 1 OR i.id IS NULL)
     ORDER BY c.display_order, i.display_order
   `;
@@ -70,6 +86,7 @@ router.get('/menu', (req, res) => {
           name: row.category_name,
           description: row.category_description,
           image_url: row.category_image,
+          gallery_image_url: row.category_gallery_image || null,
           display_order: row.category_order,
           items: []
         };
@@ -87,13 +104,17 @@ router.get('/menu', (req, res) => {
       }
     });
 
-    res.json(Object.values(categories));
+    const out = Object.values(categories);
+    // Store serialized payload in cache
+    menuCache.payload = out;
+    menuCache.expiresAt = Date.now() + MENU_CACHE_TTL_MS;
+    res.json(out);
   });
 });
 
 // Get all categories (admin)
 router.get('/menu/categories', (req, res) => {
-  req.db.query('SELECT * FROM menu_categories ORDER BY display_order', (err, results) => {
+  req.db.query('SELECT id, name, description, image_url, gallery_image_id, gallery_image_url, display_order, is_active FROM menu_categories ORDER BY display_order', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
@@ -114,12 +135,14 @@ router.get('/menu/categories/:categoryId/items', (req, res) => {
 
 // Create category
 router.post('/menu/categories', (req, res) => {
-  const { name, description, image_url, display_order } = req.body;
+  const { name, description, image_url, gallery_image_id, display_order } = req.body;
+  const is_active = typeof req.body.is_active !== 'undefined' && req.body.is_active !== null ? req.body.is_active : 1;
   req.db.query(
-    'INSERT INTO menu_categories (name, description, image_url, display_order) VALUES (?, ?, ?, ?)',
-    [name, description, image_url, display_order || 0],
+    'INSERT INTO menu_categories (name, description, image_url, gallery_image_id, display_order, is_active) VALUES (?, ?, ?, ?, ?, ?)',
+    [name, description, image_url, gallery_image_id || null, display_order || 0, is_active],
     (err, result) => {
       if (err) return res.status(500).json({ error: err.message });
+      invalidateMenuCache();
       res.json({ id: result.insertId, message: 'Category created' });
     }
   );
@@ -128,12 +151,14 @@ router.post('/menu/categories', (req, res) => {
 // Update category
 router.put('/menu/categories/:id', (req, res) => {
   const { id } = req.params;
-  const { name, description, image_url, display_order, is_active } = req.body;
+  const { name, description, image_url, gallery_image_id, display_order } = req.body;
+  const is_active = typeof req.body.is_active !== 'undefined' && req.body.is_active !== null ? req.body.is_active : 1;
   req.db.query(
-    'UPDATE menu_categories SET name = ?, description = ?, image_url = ?, display_order = ?, is_active = ? WHERE id = ?',
-    [name, description, image_url, display_order, is_active, id],
+    'UPDATE menu_categories SET name = ?, description = ?, image_url = ?, gallery_image_id = ?, display_order = ?, is_active = ? WHERE id = ?',
+    [name, description, image_url, gallery_image_id || null, display_order, is_active, id],
     (err) => {
       if (err) return res.status(500).json({ error: err.message });
+      invalidateMenuCache();
       res.json({ message: 'Category updated' });
     }
   );
@@ -144,6 +169,7 @@ router.delete('/menu/categories/:id', (req, res) => {
   const { id } = req.params;
   req.db.query('DELETE FROM menu_categories WHERE id = ?', [id], (err) => {
     if (err) return res.status(500).json({ error: err.message });
+    invalidateMenuCache();
     res.json({ message: 'Category deleted' });
   });
 });
@@ -156,6 +182,7 @@ router.post('/menu/items', (req, res) => {
     [category_id, name, description, price, image_url, display_order || 0],
     (err, result) => {
       if (err) return res.status(500).json({ error: err.message });
+      invalidateMenuCache();
       res.json({ id: result.insertId, message: 'Item created' });
     }
   );
@@ -170,6 +197,7 @@ router.put('/menu/items/:id', (req, res) => {
     [name, description, price, image_url, display_order, is_available, id],
     (err) => {
       if (err) return res.status(500).json({ error: err.message });
+      invalidateMenuCache();
       res.json({ message: 'Item updated' });
     }
   );
@@ -180,6 +208,7 @@ router.delete('/menu/items/:id', (req, res) => {
   const { id } = req.params;
   req.db.query('DELETE FROM menu_items WHERE id = ?', [id], (err) => {
     if (err) return res.status(500).json({ error: err.message });
+    invalidateMenuCache();
     res.json({ message: 'Item deleted' });
   });
 });

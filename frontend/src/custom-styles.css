@@ -44,6 +44,11 @@
   /* Transitions */
   --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Logo badge tokens (light neutral background that adapts to dark mode) */
+  /* Branded off-white used for logo badge in all themes */
+  --logo-badge-bg: #fff7f2; /* branded off-white */
+  --logo-badge-border: rgba(16,24,40,0.06);
+  --logo-badge-shadow: 0 6px 20px rgba(16,24,40,0.08);
 }
 
 /* Logo: make inline SVG logos inherit the current design token color
@@ -86,6 +91,14 @@
 
     --border-color: #1f2a37;
     --divider-color: #14202b;
+    /* Subtle dark-mode adaptation: translucent branded off-white and
+       lighter border; reduce shadow for a cleaner look on dark surfaces */
+    /* brighten the dark-mode badge slightly (~15%) */
+    /* Increase visibility in dark mode: brighter but still translucent */
+    /* Make dark-mode badge more visible: brighter but still translucent */
+    --logo-badge-bg: rgba(255,255,255,0.30);
+    --logo-badge-border: rgba(255,255,255,0.16);
+    --logo-badge-shadow: 0 4px 12px rgba(255,255,255,0.04);
   }
 }
 
@@ -109,6 +122,9 @@
 
   --border-color: #1f2a37;
   --divider-color: #14202b;
+  --logo-badge-bg: rgba(255,255,255,0.30);
+  --logo-badge-border: rgba(255,255,255,0.16);
+  --logo-badge-shadow: 0 4px 12px rgba(255,255,255,0.04);
 }
 
 :root[data-theme='light'] {
@@ -372,9 +388,9 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: center;
   padding: 6px 10px;
   border-radius: 9999px;
-  /* Use surface token so the badge follows theming */
-  background: var(--surface-color);
-  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
+  background: var(--logo-badge-bg);
+  border: 1px solid var(--logo-badge-border);
+  box-shadow: var(--logo-badge-shadow);
 }
 
 /* Sticky Header */

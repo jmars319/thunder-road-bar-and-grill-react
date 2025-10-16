@@ -1,6 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { icons } from '../../icons';
 import Toast from '../ui/Toast';
+import usePaginatedResource from '../../hooks/usePaginatedResource';
+import Spinner from '../ui/Spinner';
+// ensure imports are recognized by some linters when used only in JSX
+const __usedSpinner = Spinner;
+void __usedSpinner;
 
 /* DEV:
    - Admin menu editor uses semantic tokens (bg-primary, bg-surface-warm,
@@ -21,6 +26,13 @@ function MenuModule() {
   const [uploadError, setUploadError] = useState(null);
   const uploadXhr = useRef(null);
   const [editingItem, setEditingItem] = useState(null);
+  const [showMediaPicker, setShowMediaPicker] = useState(false);
+  const MEDIA_LIMIT_MENU = 24;
+
+  // paginated gallery media hook (infinite scroll sentinel provided by hook)
+  const { items: pagedMedia, loading: pagedLoading, total: pagedTotal, sentinelRef, fetchPage, reset } = usePaginatedResource(`${API_BASE}/media?category=gallery`, { limit: MEDIA_LIMIT_MENU });
+  const [selectedMediaId, setSelectedMediaId] = useState(null);
+  const [toast, setToast] = useState(null);
 
     /*
       MenuModule
@@ -46,6 +58,14 @@ function MenuModule() {
     fetchCategories();
   }, []);
 
+  const apiOrigin = API_BASE.replace(/\/api$/, '');
+  const normalizeUrl = (u) => {
+    if (!u) return '';
+    if (u.startsWith('http://') || u.startsWith('https://')) return u;
+    if (u.startsWith('/')) return `${apiOrigin}${u}`;
+    return `${apiOrigin}/${u}`;
+  };
+
   const fetchCategories = () => {
     fetch(`${API_BASE}/menu`)
       .then(res => res.json())
@@ -56,8 +76,9 @@ function MenuModule() {
   const saveCategory = () => {
     // client-side validation: name required
     if (!editingCategory.name || !editingCategory.name.trim()) {
-      setUploadError(null);
-      return alert('Category name is required');
+    setUploadError(null);
+    try { window.dispatchEvent(new window.CustomEvent('snackbar', { detail: 'Category name is required' })); } catch (e) {}
+    return;
     }
     const method = editingCategory.id ? 'PUT' : 'POST';
     const url = editingCategory.id 
@@ -71,6 +92,11 @@ function MenuModule() {
     }).then(() => {
       fetchCategories();
       setEditingCategory(null);
+      setToast({ type: 'success', message: 'Category saved' });
+      setTimeout(() => setToast(null), 3000);
+    }).catch(() => {
+      setToast({ type: 'error', message: 'Failed to save category' });
+      setTimeout(() => setToast(null), 3000);
     });
   };
 
@@ -170,7 +196,7 @@ function MenuModule() {
   <h2 className="text-2xl font-bold text-text-inverse">Menu Management</h2>
         <button
           type="button"
-          onClick={() => setEditingCategory({ name: '', description: '', display_order: 0 })}
+    onClick={() => setEditingCategory({ name: '', description: '', display_order: 0, is_active: 1 })}
           className="bg-primary text-text-inverse px-4 py-2 rounded-lg hover:bg-primary-dark flex items-center gap-2"
           aria-label="Add menu category"
         >
@@ -204,6 +230,12 @@ function MenuModule() {
                   className="w-full form-input"
                   rows="3"
                 />
+              </div>
+              <div>
+                <label className="inline-flex items-center gap-2">
+                  <input type="checkbox" checked={!!editingCategory.is_active} onChange={(e) => setEditingCategory(c => ({ ...c, is_active: e.target.checked ? 1 : 0 }))} />
+                  <span className="text-sm text-text-primary">Active</span>
+                </label>
               </div>
               <div>
                   <label className="block text-sm font-medium text-text-primary mb-1">Image URL (optional)</label>
@@ -243,11 +275,55 @@ function MenuModule() {
                 {uploadError && <Toast type="error" onClose={() => setUploadError(null)}>{uploadError}</Toast>}
                 {editingCategory.image_url && (
                   <div className="mt-2">
-                    <img src={editingCategory.image_url} alt="preview" className="h-24 rounded object-cover" />
+                    <img loading="lazy" src={editingCategory.image_url} alt="preview" className="h-24 rounded object-cover" />
                     {uploading && <div className="w-full bg-surface-warm h-2 rounded mt-2 overflow-hidden"><div className="bg-accent h-2" style={{ width: `${uploadProgress}%` }} /></div>}
                     {uploading && <div className="mt-2"><button type="button" onClick={cancelUpload} className="btn btn-ghost btn-sm">Cancel</button></div>}
                   </div>
                 )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-1">Gallery image (optional)</label>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    value={editingCategory.gallery_image_url || ''}
+                    onChange={(e) => setEditingCategory({...editingCategory, gallery_image_url: e.target.value})}
+                    placeholder="https://.../image.jpg"
+                    className="w-full form-input"
+                    disabled={uploading}
+                  />
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      // open picker and fetch first page
+                      const cur = editingCategory.gallery_image_url;
+                      setSelectedMediaId(null);
+                      setShowMediaPicker(true);
+                      try {
+                        reset();
+                        await fetchPage(0, false);
+                        if (cur) {
+                          const match = (pagedMedia || []).find(m => normalizeUrl(m.file_url) === normalizeUrl(cur) || m.file_url === cur);
+                          if (match) setSelectedMediaId(match.id);
+                        }
+                      } catch (e) {
+                        // ignore
+                      }
+                    }}
+                    className="px-3 py-2 rounded text-sm bg-surface"
+                  >
+                    Choose from Media
+                  </button>
+                  {editingCategory.gallery_image_url && (
+                    <button type="button" onClick={() => setEditingCategory(c => ({ ...c, gallery_image_url: '', gallery_image_id: null }))} className="px-3 py-2 rounded text-sm bg-surface">Remove</button>
+                  )}
+                </div>
+                {editingCategory.gallery_image_url && (
+                  <div className="mt-2">
+                    <img loading="lazy" src={normalizeUrl(editingCategory.gallery_image_url)} alt="gallery preview" className="h-24 rounded object-cover" />
+                  </div>
+                )}
+                {/* media errors are handled by the paginated hook when needed */}
               </div>
               <div className="flex gap-2">
                   <button
@@ -268,6 +344,66 @@ function MenuModule() {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Media Picker Modal */}
+      {showMediaPicker && (
+        <div className="modal-backdrop flex items-center justify-center z-50">
+          <div className="bg-surface rounded-lg p-4 max-w-3xl w-full">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold">Choose media</h3>
+              <div className="flex items-center gap-2">
+                <button type="button" onClick={() => setShowMediaPicker(false)} className="px-3 py-1 rounded">Cancel</button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const media = (pagedMedia || []).find(m => String(m.id) === String(selectedMediaId));
+                    if (media) setEditingCategory(c => ({ ...c, gallery_image_url: media.file_url, gallery_image_id: media.id }));
+                    setShowMediaPicker(false);
+                  }}
+                  className="px-3 py-1 rounded bg-primary text-text-inverse"
+                >
+                  Select
+                </button>
+              </div>
+            </div>
+            <div>
+                <div className="mb-3">
+                <button type="button" onClick={() => {
+                  // reset and fetch first page
+                  reset();
+                  fetchPage(0, false).catch(() => {});
+                }} className="px-3 py-1 rounded bg-surface">Refresh</button>
+              </div>
+                  {pagedLoading ? (
+                  <div className="flex items-center gap-2"><Spinner size={18} /><span>Loading…</span></div>
+                ) : (
+                  <>
+                  <div className="grid grid-cols-4 gap-3">
+                    {pagedMedia.map(m => (
+                      <button key={m.id} type="button" onClick={() => setSelectedMediaId(m.id)} className={`border rounded overflow-hidden p-0 ${String(selectedMediaId) === String(m.id) ? 'ring-2 ring-primary' : ''}`}>
+                        <img loading="lazy" src={normalizeUrl(m.file_url)} alt={m.title || ''} className="w-full h-24 object-cover" />
+                      </button>
+                    ))}
+                  </div>
+                  {pagedTotal !== null && pagedTotal > pagedMedia.length && (
+                    <div className="mt-3 text-center">
+                      <div ref={sentinelRef} aria-hidden="true" className="h-6" />
+                      <div className="text-xs text-text-secondary mt-2">Loading more as you scroll…</div>
+                    </div>
+                  )}
+                  </>
+                )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast */}
+      {toast && (
+        <div className="fixed top-6 right-6 z-50">
+          <Toast type={toast.type} onClose={() => setToast(null)}>{toast.message}</Toast>
         </div>
       )}
 
@@ -343,9 +479,14 @@ function MenuModule() {
                 <div>
                   {expandedCategory === category.id ? <icons.ChevronUp size={20} /> : <icons.ChevronDown size={20} />}
                 </div>
-                <div>
-                  <h3 className="font-bold text-lg text-text-primary">{category.name}</h3>
-                  <p className="text-sm text-text-secondary">{category.description}</p>
+                <div className="flex items-center gap-3">
+                  {category.gallery_image_url && (
+                    <img loading="lazy" src={normalizeUrl(category.gallery_image_url)} alt="thumb" className="w-12 h-8 object-cover rounded" />
+                  )}
+                  <div>
+                    <h3 className="font-bold text-lg text-text-primary">{category.name}</h3>
+                    <p className="text-sm text-text-secondary">{category.description}</p>
+                  </div>
                 </div>
               </button>
                 <div className="flex gap-2">
@@ -359,7 +500,7 @@ function MenuModule() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setEditingCategory(category)}
+                  onClick={() => setEditingCategory({ ...category, is_active: category.is_active == null ? 1 : category.is_active })}
                   className="text-text-inverse hover:bg-surface-warm p-2 rounded"
                   aria-label={`Edit category ${category.name}`}
                 >
@@ -427,5 +568,11 @@ const Module = {
 };
 
 export default Module;
+
+// Icons and auxiliary UI components are referenced here so linters pick up usage
+// for imports that are only used inside JSX expressions in some editor/tooling
+// setups which otherwise report false-positive `no-unused-vars` errors.
+const __usedMenuSymbols = { icons, Toast };
+void __usedMenuSymbols;
 
 // Icons are referenced through the centralized `icons` map so linters pick up usage.
