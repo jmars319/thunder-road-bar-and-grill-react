@@ -219,21 +219,31 @@ export default function PublicNavbar({ onGoToAdmin }) {
         {mobileMenuOpen && (
           <div id="mobile-menu" className="md:hidden pb-4 border-t">
             <div className="flex flex-col gap-4 pt-4">
-              {navLinks.map(link => {
-                const isContactLink = (link.url && link.url.toLowerCase() === '#contact') || (link.label && link.label.toLowerCase().includes('contact'));
-                const renderLabel = isContactLink ? 'Careers' : link.label;
-                const renderUrl = isContactLink ? '#jobs' : link.url;
-                return (
-                  <a
-                    key={link.id}
-                    href={renderUrl}
-                    className="text-text-primary hover:text-primary font-medium transition-colors px-4 py-2 hover:bg-surface-warm rounded"
-                    onClick={(e) => handleNavClick(e, renderUrl)}
-                  >
-                    {renderLabel}
-                  </a>
-                );
-              })}
+              {navLinks
+                .filter((link) => {
+                  const label = String(link.label || '').trim().toLowerCase();
+                  const url = String(link.url || '').trim();
+                  if (label === 'home') return false;
+                  if (url === '/' || url === '/home' || url === '#home') return false;
+                  return true;
+                })
+                .map((link) => {
+                  const lowLabel = String(link.label || '').toLowerCase();
+                  const isContactLink = (link.url && String(link.url).toLowerCase() === '#contact') || lowLabel.includes('contact');
+                  const isAboutLink = lowLabel.includes('about') || (link.url && String(link.url).toLowerCase().includes('#about'));
+                  const renderLabel = isContactLink ? 'Careers' : link.label;
+                  const renderUrl = isContactLink ? '#jobs' : isAboutLink ? '#about' : link.url;
+                  return (
+                    <a
+                      key={link.id}
+                      href={renderUrl}
+                      className="text-text-primary hover:text-primary font-medium transition-colors px-4 py-2 hover:bg-surface-warm rounded"
+                      onClick={(e) => handleNavClick(e, renderUrl)}
+                    >
+                      {renderLabel}
+                    </a>
+                  );
+                })}
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
