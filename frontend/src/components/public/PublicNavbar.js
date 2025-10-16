@@ -267,8 +267,11 @@ export default function PublicNavbar({ onGoToAdmin }) {
             type="button"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             aria-label="Back to top"
-            className="fixed right-6 bottom-6 z-50 bg-primary text-text-inverse p-3 rounded-full shadow-lg hover:bg-primary-dark transition-transform duration-200 transform-gpu"
+            aria-describedby="back-to-top-desc"
+            title="Back to top"
+            className="fixed right-6 bottom-6 z-50 bg-primary text-text-inverse p-3 rounded-full shadow-lg hover:bg-primary-dark transition-transform duration-200 transform-gpu focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
           >
+            <span id="back-to-top-desc" className="sr-only">Scroll to top of page</span>
             {React.createElement(icons.ChevronUp, { size: 18 })}
           </button>,
           document.body
