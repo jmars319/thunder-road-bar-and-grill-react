@@ -1,3 +1,10 @@
+## Notes about repository layout and generated assets
+
+- Public social and PWA images are committed into `frontend/public/og/` and `frontend/public/splash/` for a zero-build deployment. These images are large and tracked deliberately so production builds don't need to generate them.
+- A set of small helper scripts lives in `frontend/scripts/` to regenerate social images, iOS splash images and to build a multi-resolution `favicon.ico`.
+- CI includes a lightweight asset-check workflow (`.github/workflows/public-assets-check.yml`) which runs `node ./scripts/check_public_assets.js` in `frontend` to verify referenced public assets exist and that certain images match filename-encoded dimensions.
+
+If you would rather generate these images during CI or use a CDN for large assets, see `frontend/README.md` for suggested steps.
 # Thunder Road Bar and Grill
 
 Purpose:

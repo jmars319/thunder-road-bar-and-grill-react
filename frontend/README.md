@@ -93,3 +93,32 @@ Notes:
 - For production, ensure the manifest icons and OG images are served from your production origin. `%PUBLIC_URL%` will resolve correctly at build time.
 - I converted the 1024×1024 icon to PNG for broader compatibility; if you prefer JPG for smaller size, we can switch back.
 
+## Image generation scripts (frontend/scripts)
+
+The project includes small helper scripts that automate generating and validating the public images. They live in `frontend/scripts/` and are intentionally dependency-free where possible.
+
+- `generate_social_with_logo.py` — compose site hero + logo into several Open Graph / social preview sizes and write them to `frontend/public/og/`.
+- `generate_ios_splash.py` — reads the `index.html` apple splash link tags and generates matching `frontend/public/splash/apple-splash-*.png` files.
+- `generate_favicon_ico.py` — generates a multi-resolution `favicon.ico` from PNG sources in `frontend/public/`.
+- `check_public_assets.js` — lightweight Node script that verifies files referenced in `index.html` and `manifest.json` exist. It also validates image dimensions when the filename contains widthxheight (e.g. `apple-splash-2048x2732.png`). This script is what the CI workflow runs.
+
+How to run locally (Python 3 + Pillow for the generators):
+
+```bash
+# from repo root
+cd frontend
+# regenerate social images (example)
+python3 ./scripts/generate_social_with_logo.py --hero ../backend/uploads/1760554663370.jpg --logo ../backend/uploads/TRBG\ Logov2-w-badge.png
+
+# generate iOS splash images
+python3 ./scripts/generate_ios_splash.py
+
+# regenerate favicon.ico
+python3 ./scripts/generate_favicon_ico.py
+
+# run the asset checker (no npm install required)
+node ./scripts/check_public_assets.js
+```
+
+If you prefer not to keep large generated images in the repo, see the repository root README for suggested alternatives (Git LFS, CDN hosting, or CI generation).
+
