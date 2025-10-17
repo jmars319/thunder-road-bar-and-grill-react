@@ -13,7 +13,7 @@
       "type": "image/png"
     },
     {
-      "src": "og-1024x1024.png",
+      "src": "og/og-1024x1024.png",
       "sizes": "1024x1024",
       "type": "image/png"
     },
@@ -30,7 +30,7 @@
   "background_color": "#fff7f2",
   "splash_screens": [
     {
-      "src": "og-1200x1200.png",
+      "src": "og/og-1200x1200.png",
       "sizes": "1200x1200",
       "type": "image/png"
     }

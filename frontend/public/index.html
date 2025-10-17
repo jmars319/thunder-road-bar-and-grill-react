@@ -6,9 +6,9 @@
   <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/apple-touch-icon.png" />
-  <link rel="mask-icon" href="%PUBLIC_URL%/safari-pinned-tab.svg" color="#5bbad5" />
-  <meta name="msapplication-TileColor" content="#da532c" />
-  <meta name="theme-color" content="#ffffff" />
+  <link rel="mask-icon" href="%PUBLIC_URL%/safari-pinned-tab.svg" color="#dc2626" />
+  <meta name="msapplication-TileColor" content="#dc2626" />
+  <meta name="theme-color" content="#dc2626" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Primary theme color for the browser UI -->
     <meta name="theme-color" content="#ffffff" />
@@ -22,15 +22,15 @@
     <meta property="og:description" content="Thunder Road Bar & Grill in Midway, NC — great food, cold drinks, live music, and a friendly neighborhood atmosphere. View our menu, hours, and events." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="%PUBLIC_URL%/" />
-  <meta property="og:image" content="%PUBLIC_URL%/og-image-1200x630-with-badge.png" />
+  <meta property="og:image" content="%PUBLIC_URL%/og/og-1200x627.png" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Thunder Road Bar & Grill — Midway, NC" />
     <meta name="twitter:description" content="Great food, cold drinks, live music, and a friendly neighborhood atmosphere. View our menu and make reservations." />
-  <meta name="twitter:image" content="%PUBLIC_URL%/og-image-1200x630-with-badge.png" />
+  <meta name="twitter:image" content="%PUBLIC_URL%/og/og-1200x627.png" />
 
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/apple-touch-icon.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -50,14 +50,96 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "LocalBusiness",
+      "@type": "Restaurant",
       "name": "Thunder Road Bar & Grill",
-  "image": ["%PUBLIC_URL%/og-image-1200x630-with-badge.png"],
+      "image": ["%PUBLIC_URL%/og/og-image-1200x630-with-badge.png"],
       "@id": "%PUBLIC_URL%/",
       "url": "%PUBLIC_URL%/",
-      "description": "Thunder Road Bar & Grill in Midway, NC — great food, cold drinks, live music, and a friendly neighborhood atmosphere. View our menu, hours, and events."
+      "telephone": "(336) 764-0890",
+      "priceRange": "$10-$20",
+      "description": "Thunder Road Bar & Grill in Midway, NC — great food, cold drinks, live music, and a friendly neighborhood atmosphere. View our menu, hours, and events.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "11141 Old U.S. Hwy 52 #1",
+        "addressLocality": "Winston-Salem",
+        "addressRegion": "NC",
+        "postalCode": "27107",
+        "addressCountry": "US"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Wednesday",
+          "opens": "11:00",
+          "closes": "21:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Thursday",
+          "opens": "11:00",
+          "closes": "22:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Friday",
+          "opens": "11:00",
+          "closes": "22:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Saturday",
+          "opens": "11:00",
+          "closes": "22:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Sunday",
+          "opens": "00:00",
+          "closes": "00:00",
+          "closed": true
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Monday",
+          "opens": "00:00",
+          "closes": "00:00",
+          "closed": true
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Tuesday",
+          "opens": "11:00",
+          "closes": "21:00"
+        }
+      ],
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 35.969306564719375,
+        "longitude": -80.22430481349366
+      }
     }
     </script>
+  <!-- iOS PWA meta for better install / splash behavior -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <!-- Device-specific iOS startup images (sized for common iPhones/iPads) -->
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/apple-splash-2048x2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/apple-splash-1668x2224.png" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/apple-splash-1536x2048.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/apple-splash-1242x2688.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/apple-splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/apple-splash-828x1792.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/apple-splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/apple-splash-640x1136.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" />
+  <!-- Landscape startup images -->
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/apple-splash-landscape-2732x2048.png" media="(device-width: 1024px) and (device-height: 1366px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/apple-splash-landscape-2224x1668.png" media="(device-width: 834px) and (device-height: 1112px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/apple-splash-landscape-2048x1536.png" media="(device-width: 768px) and (device-height: 1024px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/apple-splash-landscape-2688x1242.png" media="(device-width: 414px) and (device-height: 896px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/apple-splash-landscape-2436x1125.png" media="(device-width: 375px) and (device-height: 812px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/apple-splash-landscape-1792x828.png" media="(device-width: 414px) and (device-height: 896px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/apple-splash-landscape-1334x750.png" media="(device-width: 375px) and (device-height: 667px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/apple-splash-landscape-1136x640.png" media="(device-width: 320px) and (device-height: 568px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)" />
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
