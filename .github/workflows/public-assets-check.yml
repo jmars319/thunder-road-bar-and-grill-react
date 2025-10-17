@@ -1,0 +1,25 @@
+name: public-assets-check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  public-assets-check:
+    runs-on: ubuntu-latest
+    name: Validate public asset references
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Run public assets check (no install)
+        working-directory: frontend
+        run: |
+          node ./scripts/check_public_assets.js
