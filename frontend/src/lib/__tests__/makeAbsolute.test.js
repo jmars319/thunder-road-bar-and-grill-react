@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import makeAbsolute from '../makeAbsolute';
+const makeAbsolute = require('../makeAbsolute');
 
 const OLD_API = process.env.REACT_APP_API_BASE;
 process.env.REACT_APP_API_BASE = 'http://localhost:5001/api';
