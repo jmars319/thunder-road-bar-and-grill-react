@@ -44,8 +44,18 @@ router.get('/media', (req, res) => {
     const total = Array.isArray(cRes) && cRes[0] ? cRes[0].total : 0;
     req.db.query(sql, params, (err, results) => {
       if (err) return res.status(500).json({ error: err.message });
+      // Normalize file_url values to always start with a leading slash. Some
+      // older DB rows may have been stored without the leading slash which
+      // causes inconsistencies on the client. Keep the DB untouched here,
+      // but ensure responses always return the normalized form.
+      const normalized = results.map((r) => {
+        if (r && r.file_url && typeof r.file_url === 'string' && !r.file_url.startsWith('/')) {
+          return Object.assign({}, r, { file_url: '/' + r.file_url });
+        }
+        return r;
+      });
       res.setHeader('X-Total-Count', String(total));
-      res.json(results);
+      res.json(normalized);
     });
   });
 });
@@ -66,18 +76,20 @@ router.post('/media/upload', (req, res) => {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    const { filename, originalname, mimetype, size } = req.file;
-    const file_url = `/uploads/${filename}`;
-    const { title, alt_text, category } = req.body;
+  const { filename, originalname, mimetype, size } = req.file;
+  const file_url = `/uploads/${filename}`;
+  // Ensure stored file_url has a leading slash before inserting into DB.
+  const storedFileUrl = file_url.startsWith('/') ? file_url : '/' + file_url;
+  const { title, alt_text, category } = req.body;
 
     req.db.query(
       'INSERT INTO media_library (file_url, file_name, file_type, file_size, title, alt_text, category) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [file_url, originalname, mimetype, size, title, alt_text, category],
+      [storedFileUrl, originalname, mimetype, size, title, alt_text, category],
       (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json({
           id: result.insertId,
-          file_url,
+          file_url: storedFileUrl,
           message: 'File uploaded successfully'
         });
       }

@@ -12,16 +12,7 @@ void __usedSpinner;
 void __usedMediaCardSkeleton;
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
-
-// helper: ensure we always build a correct absolute URL regardless of whether
-// `file_url` stored in the DB has a leading slash (some rows may vary).
-function makeAbsolute(fileUrl) {
-  if (!fileUrl) return '';
-  // if the fileUrl is already absolute, return as-is
-  if (/^https?:\/\//i.test(fileUrl)) return fileUrl;
-  const base = API_BASE.replace(/\/api$/, '');
-  return base + (fileUrl.startsWith('/') ? fileUrl : '/' + fileUrl);
-}
+import makeAbsolute from '../../lib/makeAbsolute';
 
 /*
   MediaModule
