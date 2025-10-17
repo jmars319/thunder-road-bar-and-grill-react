@@ -13,6 +13,14 @@ void __usedMediaCardSkeleton;
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
+// helper: ensure we always build a correct absolute URL regardless of whether
+// `file_url` stored in the DB has a leading slash (some rows may vary).
+function makeAbsolute(fileUrl) {
+  if (!fileUrl) return '';
+  const base = API_BASE.replace(/\/api$/, '');
+  return base + (fileUrl.startsWith('/') ? fileUrl : '/' + fileUrl);
+}
+
 /*
   MediaModule
 
@@ -64,7 +72,7 @@ function AllUploadsGridComponent({ mediaLimit = 48, copyUrl, deleteMedia, openGa
             <div key={item.id} className="bg-surface rounded-lg shadow overflow-hidden card-hover">
               <div className="aspect-square bg-surface-warm flex items-center justify-center">
                 {item.file_type?.startsWith('image/') ? (
-                  <img src={`${API_BASE.replace(/\/api$/, '')}${item.file_url}`} alt={item.title} className="w-full h-full object-cover" />
+                  <img src={makeAbsolute(item.file_url)} alt={item.title} className="w-full h-full object-cover" />
                 ) : (
                   <icons.Image size={48} className="text-primary" />
                 )}
@@ -334,14 +342,15 @@ function MediaModule() {
 
   const copyUrl = (url) => {
     try {
+      const absolute = makeAbsolute(url);
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(`http://localhost:5001${url}`);
+        navigator.clipboard.writeText(absolute);
         setCopiedId(url);
         setTimeout(() => setCopiedId(null), 2000);
       } else {
         // Fallback: create a temporary textarea (rare, but more robust)
         const ta = document.createElement('textarea');
-        ta.value = `http://localhost:5001${url}`;
+  ta.value = absolute;
         document.body.appendChild(ta);
         ta.select();
         try {
@@ -434,7 +443,7 @@ function MediaModule() {
               ) : (
                 logoItems.map(item => (
                   <div key={item.id} className="bg-surface rounded overflow-hidden">
-                    <img loading="lazy" src={`${API_BASE.replace(/\/api$/, '')}${item.file_url}`} alt={item.title} className="w-full h-24 object-cover" />
+                    <img loading="lazy" src={makeAbsolute(item.file_url)} alt={item.title} className="w-full h-24 object-cover" />
                     <div className="p-2 text-xs flex justify-between items-center">
                       <span className="truncate">{item.title}</span>
                       <div className="flex gap-2">
@@ -479,7 +488,7 @@ function MediaModule() {
               ) : (
                 heroItems.map(item => (
                   <div key={item.id} className="bg-surface rounded overflow-hidden relative">
-                    <img loading="lazy" src={`${API_BASE.replace(/\/api$/, '')}${item.file_url}`} alt={item.title} className="w-full h-24 object-cover" />
+                    <img loading="lazy" src={makeAbsolute(item.file_url)} alt={item.title} className="w-full h-24 object-cover" />
                     <label className="absolute top-2 left-2 bg-white/80 rounded p-1 text-xs">
                       <input type="checkbox" checked={selectedHeroes.some(h => h.id === item.id)} onChange={() => toggleHeroSelection(item.id)} />
                     </label>
@@ -506,7 +515,7 @@ function MediaModule() {
               <div className="space-y-2">
                 {selectedHeroes.map((h, i) => (
                   <div key={h.id} className="flex items-center gap-3 bg-surface p-2 rounded">
-                    <img loading="lazy" src={`${API_BASE.replace(/\/api$/, '')}${h.file_url}`} alt={h.title} className="w-16 h-10 object-cover rounded" />
+                    <img loading="lazy" src={makeAbsolute(h.file_url)} alt={h.title} className="w-16 h-10 object-cover rounded" />
                     <div className="flex-1 text-xs">
                       <div className="font-medium">{h.title}</div>
                       <input type="text" value={h.alt_text || ''} onChange={(e) => setHeroAlt(h.id, e.target.value)} placeholder="Alt text (for accessibility)" className="w-full form-input mt-1" />
@@ -548,7 +557,7 @@ function MediaModule() {
               ) : (
                 galleryItems.map(item => (
                   <div key={item.id} className="bg-surface rounded overflow-hidden">
-                    <img loading="lazy" src={`${API_BASE.replace(/\/api$/, '')}${item.file_url}`} alt={item.title} className="w-full h-24 object-cover" />
+                    <img loading="lazy" src={makeAbsolute(item.file_url)} alt={item.title} className="w-full h-24 object-cover" />
                     <div className="p-2 text-xs flex justify-between items-center">
                       <span className="truncate">{item.title}</span>
                       <div className="flex gap-2">
