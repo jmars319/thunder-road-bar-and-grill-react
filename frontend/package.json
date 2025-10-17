@@ -13,11 +13,16 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
+  "devDependencies": {
+    "jest": "^29.6.1"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-  "lint": "eslint \"src/**/*.{js,jsx}\"",
-  "lint:fix": "eslint \"src/**/*.{js,jsx}\" --fix",
+    "lint": "eslint \"src/**/*.{js,jsx}\"",
+    "lint:fix": "eslint \"src/**/*.{js,jsx}\" --fix",
+    "check:public-assets": "node ./scripts/check_public_assets.js",
+    "test:ci": "jest --config=jest.config.cjs --runInBand",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
