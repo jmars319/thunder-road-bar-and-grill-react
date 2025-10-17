@@ -1,4 +1,5 @@
-/* eslint-env jest */
+/* eslint-env jest,node */
+/* eslint-disable no-undef */
 const makeAbsolute = require('../makeAbsolute');
 
 const OLD_API = process.env.REACT_APP_API_BASE;
