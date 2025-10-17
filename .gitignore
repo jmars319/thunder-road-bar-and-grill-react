@@ -34,3 +34,6 @@ frontend/.stylelintrc.json
 
 # Ignore temporary editor copies
 *.NEW
+
+# ignore backup files
+*.backup
