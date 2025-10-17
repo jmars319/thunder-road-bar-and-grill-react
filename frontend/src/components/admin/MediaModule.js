@@ -17,6 +17,8 @@ const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 // `file_url` stored in the DB has a leading slash (some rows may vary).
 function makeAbsolute(fileUrl) {
   if (!fileUrl) return '';
+  // if the fileUrl is already absolute, return as-is
+  if (/^https?:\/\//i.test(fileUrl)) return fileUrl;
   const base = API_BASE.replace(/\/api$/, '');
   return base + (fileUrl.startsWith('/') ? fileUrl : '/' + fileUrl);
 }
@@ -168,6 +170,12 @@ function MediaModule() {
       setSiteSettings(s || {});
       if (Array.isArray(s?.hero_images) && s.hero_images.length) setSelectedHeroes(s.hero_images);
     }).catch(() => {});
+    // Ensure paginated category lists fetch their first page on mount so the
+    // Logos and Gallery grids are populated. We call these independently so
+    // they can paginate separately via their sentinels.
+    try { fetchLogoPage(0, false).catch(() => {}); } catch (e) {}
+    try { fetchHeroPage(0, false).catch(() => {}); } catch (e) {}
+    try { fetchGalleryPage(0, false).catch(() => {}); } catch (e) {}
   }, []);
 
   const fetchMedia = (category, limit, offset) => {
