@@ -66,11 +66,26 @@ function MenuModule() {
     return `${apiOrigin}/${u}`;
   };
 
-  const fetchCategories = () => {
-    fetch(`${API_BASE}/menu`)
-      .then(res => res.json())
-        .then(data => setCategories(Array.isArray(data) ? data : []))
-        .catch(() => setCategories([]));
+  const fetchCategories = async () => {
+    try {
+      // Use admin endpoints to get full category + item data (including unavailable items)
+      const catRes = await fetch(`${API_BASE}/menu/categories`);
+      if (!catRes.ok) { setCategories([]); return; }
+      const cats = await catRes.json();
+      // For each category fetch items (admin endpoint)
+      const withItems = await Promise.all(cats.map(async (c) => {
+        try {
+          const itemsRes = await fetch(`${API_BASE}/menu/categories/${c.id}/items`);
+          const items = itemsRes.ok ? await itemsRes.json() : [];
+          return { ...c, items };
+        } catch (e) {
+          return { ...c, items: [] };
+        }
+      }));
+      setCategories(Array.isArray(withItems) ? withItems : []);
+    } catch (e) {
+      setCategories([]);
+    }
   };
 
   const saveCategory = () => {
@@ -169,15 +184,22 @@ function MenuModule() {
 
   const saveItem = () => {
     const method = editingItem.id ? 'PUT' : 'POST';
-    const url = editingItem.id 
+    const url = editingItem.id
       ? `${API_BASE}/menu/items/${editingItem.id}`
       : `${API_BASE}/menu/items`;
+
+    // Ensure is_available is explicit so backend update doesn't set it to NULL
+    const payload = { ...editingItem, is_available: typeof editingItem.is_available !== 'undefined' ? editingItem.is_available : 1 };
 
     fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(editingItem)
+      body: JSON.stringify(payload)
     }).then(() => {
+      fetchCategories();
+      setEditingItem(null);
+    }).catch(() => {
+      // still refetch to keep UI consistent
       fetchCategories();
       setEditingItem(null);
     });
