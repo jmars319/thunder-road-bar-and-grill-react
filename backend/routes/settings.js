@@ -44,6 +44,8 @@ router.get('/site-settings', (req, res) => {
     } catch (e) {
       row.hero_images = [];
     }
+    // cache short-lived public responses to reduce repeat load on the server
+    res.set('Cache-Control', 'public, max-age=300');
     res.json(row);
   });
 });
@@ -99,6 +101,7 @@ router.get('/navigation', (req, res) => {
 router.get('/business-hours', (req, res) => {
   req.db.query('SELECT * FROM business_hours ORDER BY id', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
+    res.set('Cache-Control', 'public, max-age=300');
     res.json(results);
   });
 });
@@ -180,6 +183,7 @@ router.get('/footer-columns', (req, res) => {
       }
     });
 
+    res.set('Cache-Control', 'public, max-age=300');
     res.json(Object.values(columns));
   });
 });

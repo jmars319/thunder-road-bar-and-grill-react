@@ -12,6 +12,7 @@
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
+const compression = require('compression');
 const multer = require('multer');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -41,13 +42,22 @@ const PORT = process.env.PORT || 5001;
 // Middleware
 // Restrict CORS to the frontend origin by default (set FRONTEND_URL in .env for production)
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+
+// Enable gzip/brotli compression for responses to improve network efficiency
+app.use(compression());
+
 app.use(cors({ origin: FRONTEND_URL }));
 
 // Limit JSON body size to avoid large payload abuse
 app.use(express.json({ limit: '1mb' }));
 
-// Serve uploaded files from absolute path (uploads/)
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Serve uploaded files from absolute path (uploads/). Add caching for static
+// assets (images) to reduce repeated transfer; the admin UI can invalidate
+// caches by emitting events or bumping file URLs on update.
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+  etag: true,
+  maxAge: '1h'
+}));
 
 // Basic security headers (small subset of what helmet provides)
 app.use((req, res, next) => {

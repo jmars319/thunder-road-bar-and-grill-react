@@ -69,7 +69,7 @@ router.get('/menu', (req, res) => {
     FROM menu_categories c
     LEFT JOIN menu_items i ON c.id = i.category_id
     LEFT JOIN media_library ml ON c.gallery_image_id = ml.id
-    WHERE c.is_active = 1 AND (i.is_available = 1 OR i.id IS NULL)
+    WHERE c.is_active = 1 AND (COALESCE(i.is_available, 1) = 1 OR i.id IS NULL)
     ORDER BY c.display_order, i.display_order
   `;
 
@@ -98,7 +98,7 @@ router.get('/menu', (req, res) => {
           id: row.item_id,
           name: row.item_name,
           description: row.item_description,
-          price: row.item_price,
+          price: row.item_price === null ? null : Number(row.item_price),
           image_url: row.item_image,
           display_order: row.item_order
         });
@@ -162,7 +162,7 @@ router.get('/menu/admin', adminAuth, (req, res) => {
           id: row.item_id,
           name: row.item_name,
           description: row.item_description,
-          price: row.item_price,
+          price: row.item_price === null ? null : Number(row.item_price),
           image_url: row.item_image,
           display_order: row.item_order,
           is_available: row.item_available
