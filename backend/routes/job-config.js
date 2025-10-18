@@ -36,6 +36,17 @@ router.delete('/job-positions/:id', adminAuth, (req, res) => {
   });
 });
 
+// Update a position (admin) - allow toggling is_active without removing the position
+router.put('/job-positions/:id', adminAuth, (req, res) => {
+  const { id } = req.params;
+  const { is_active } = req.body;
+  const activeVal = is_active ? 1 : 0;
+  req.db.query('UPDATE job_positions SET is_active = ? WHERE id = ?', [activeVal, id], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ message: 'Position updated' });
+  });
+});
+
 // APPLICATION FIELDS (basic CRUD - admin only intended)
 router.get('/application-fields', adminAuth, (req, res) => {
   req.db.query('SELECT * FROM application_fields ORDER BY display_order, id', (err, results) => {

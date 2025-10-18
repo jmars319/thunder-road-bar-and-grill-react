@@ -121,7 +121,28 @@ function JobsModule() {
           <div className="mt-3 flex flex-wrap gap-2">
             {positions.map(p => (
               <div key={p.id} className="px-2 py-1 bg-surface-warm rounded flex items-center gap-2">
-                <span className="text-sm">{p.name}</span>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={!!p.is_active}
+                    onChange={(e) => {
+                      // optimistic update
+                      const next = positions.map(x => x.id === p.id ? { ...x, is_active: e.target.checked } : x);
+                      setPositions(next);
+                      fetch(`${API_BASE}/job-positions/${p.id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ is_active: e.target.checked })
+                      }).then(res => {
+                        if (!res.ok) {
+                          // revert on error
+                          fetchPositions();
+                        }
+                      }).catch(() => fetchPositions());
+                    }}
+                  />
+                  <span className="text-sm">{p.name}</span>
+                </label>
                 <button type="button" onClick={() => deletePosition(p.id)} className="text-error" aria-label={`Delete position ${p.name}`}>✕</button>
               </div>
             ))}

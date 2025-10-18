@@ -142,9 +142,9 @@ export default function JobSection() {
     try {
       // Client-side validation
       const errs = {};
-      if (!form.name.trim()) errs.name = 'Please enter your full name';
-      if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = 'Please enter a valid email address';
-  if (!form.position) errs.position = 'Please select a position';
+    if (!form.name.trim()) errs.name = 'Please enter your full name';
+    if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = 'Please enter a valid email address';
+    // Do not block submission if position is not selected — allow free-text or empty submissions per product decision
       // Phone simple validation (digits, spaces, dashes, parentheses)
       if (form.phone && !/^[0-9()+\-\s]+$/.test(form.phone)) errs.phone = 'Please enter a valid phone number';
 
@@ -181,7 +181,8 @@ export default function JobSection() {
         name: form.name,
         email: form.email,
         phone: form.phone,
-        position: form.position,
+        // position may be an object or string; ensure we submit the string name
+        position: form.position && typeof form.position === 'object' ? (form.position.name || '') : (form.position || ''),
         experience: form.experience,
         cover_letter: form.cover_letter,
         resume_url
@@ -199,8 +200,10 @@ export default function JobSection() {
       }
 
   await res.json();
-      setMessage('Application submitted — thank you!');
-      setForm({ name: '', email: '', phone: '', position: positions[0], availability: '', experience: '', cover_letter: '' });
+  setMessage('Application submitted — thank you!');
+  // reset to a sensible default: first available position name or empty string
+  const defaultPos = positions && positions.length ? (positions[0].name || positions[0] || '') : '';
+  setForm({ name: '', email: '', phone: '', position: defaultPos, availability: '', experience: '', cover_letter: '' });
       setResumeFile(null);
       setUploadProgress(0);
       if (fileInputRef.current) fileInputRef.current.value = '';
