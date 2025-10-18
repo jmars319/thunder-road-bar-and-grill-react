@@ -3,6 +3,7 @@ import { icons } from '../../icons';
 import usePaginatedResource from '../../hooks/usePaginatedResource';
 import Spinner from '../ui/Spinner';
 import MediaCardSkeleton from '../ui/MediaCardSkeleton';
+import makeAbsolute from '../../lib/makeAbsolute';
 
 // Some linters may report these UI helpers as unused when components are
 // conditionally rendered; reference them here to ensure they're recognized.
@@ -12,7 +13,6 @@ void __usedSpinner;
 void __usedMediaCardSkeleton;
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
-import makeAbsolute from '../../lib/makeAbsolute';
 
 /*
   MediaModule
