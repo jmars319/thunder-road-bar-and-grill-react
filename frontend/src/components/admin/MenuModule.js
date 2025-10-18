@@ -77,12 +77,16 @@ function MenuModule() {
         try {
           const itemsRes = await fetch(`${API_BASE}/menu/categories/${c.id}/items`);
           const items = itemsRes.ok ? await itemsRes.json() : [];
-          return { ...c, items };
+          // sort items by display_order for admin parity with public listing
+          const sortedItems = Array.isArray(items) ? items.slice().sort((a,b) => (a.display_order || 0) - (b.display_order || 0)) : [];
+          return { ...c, items: sortedItems };
         } catch (e) {
           return { ...c, items: [] };
         }
       }));
-      setCategories(Array.isArray(withItems) ? withItems : []);
+      // sort categories by display_order to match public site ordering
+      const sortedCats = Array.isArray(withItems) ? withItems.slice().sort((a,b) => (a.display_order || 0) - (b.display_order || 0)) : [];
+      setCategories(sortedCats);
     } catch (e) {
       setCategories([]);
     }
