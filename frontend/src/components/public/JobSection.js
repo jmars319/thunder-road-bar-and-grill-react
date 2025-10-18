@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import Toast from '../ui/Toast';
+const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 void Toast;
 
 // Public-facing job application form (frontend-only integration)
@@ -90,7 +91,7 @@ export default function JobSection() {
       const fd = new FormData();
       fd.append('file', file);
 
-      xhr.open('POST', '/api/media/upload');
+  xhr.open('POST', `${API_BASE}/media/upload`);
 
       xhr.upload.onprogress = function (e) {
         if (e.lengthComputable) {
@@ -188,7 +189,7 @@ export default function JobSection() {
         resume_url
       };
 
-      const res = await fetch('/api/jobs', {
+  const res = await fetch(`${API_BASE}/jobs`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -218,7 +219,7 @@ export default function JobSection() {
   useEffect(() => {
     // Fetch public-facing active positions first. If that returns none,
     // fall back to the admin-facing list (older behavior) and finally a static list.
-    fetch('/api/job-positions/public')
+    fetch(`${API_BASE}/job-positions/public`)
       .then((r) => r.ok ? r.json() : [])
       .then((publicPositions) => {
         if (Array.isArray(publicPositions) && publicPositions.length) {
@@ -230,7 +231,7 @@ export default function JobSection() {
 
         // No public/open positions — fall back to admin list so we can still
         // let applicants choose known positions (or provide a free-text fallback)
-        return fetch('/api/job-positions').then((r) => r.ok ? r.json() : []);
+  return fetch(`${API_BASE}/job-positions`).then((r) => r.ok ? r.json() : []);
       })
       .then((adminPositions) => {
         if (!adminPositions) return;
@@ -250,7 +251,7 @@ export default function JobSection() {
         setForm((s) => ({ ...s, position: fallback[0] }));
       });
 
-    fetch('/api/application-fields')
+    fetch(`${API_BASE}/application-fields`)
       .then((r) => r.ok ? r.json() : [])
       .then((data) => {
         if (Array.isArray(data) && data.length) setFields(data);
