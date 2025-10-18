@@ -68,45 +68,11 @@ function MenuModule() {
 
   const fetchCategories = async () => {
     try {
-      // Use admin endpoints to get full category + item data (including unavailable items)
-      const catRes = await fetch(`${API_BASE}/menu/categories`);
-      if (!catRes.ok) { setCategories([]); return; }
-      const cats = await catRes.json();
-      // For each category fetch items (admin endpoint)
-      const withItems = await Promise.all(cats.map(async (c) => {
-        try {
-          const itemsRes = await fetch(`${API_BASE}/menu/categories/${c.id}/items`);
-          const items = itemsRes.ok ? await itemsRes.json() : [];
-          // sort items by display_order for admin parity with public listing
-          const sortedItems = Array.isArray(items) ? items.slice().sort((a,b) => (a.display_order || 0) - (b.display_order || 0)) : [];
-          return { ...c, items: sortedItems };
-        } catch (e) {
-          return { ...c, items: [] };
-        }
-      }));
-      // Try to align admin category order with the public menu order
-      try {
-        const publicRes = await fetch(`${API_BASE}/menu`);
-        if (publicRes.ok) {
-          const publicMenu = await publicRes.json();
-          const publicOrder = Array.isArray(publicMenu) ? publicMenu.map(c => c.id) : [];
-          const sortedCats = Array.isArray(withItems) ? withItems.slice().sort((a, b) => {
-            const ai = publicOrder.indexOf(a.id);
-            const bi = publicOrder.indexOf(b.id);
-            if (ai === -1 && bi === -1) return (a.display_order || 0) - (b.display_order || 0);
-            if (ai === -1) return 1; // put unknowns after known public-ordered ones
-            if (bi === -1) return -1;
-            return ai - bi;
-          }) : [];
-          setCategories(sortedCats);
-        } else {
-          const sortedCats = Array.isArray(withItems) ? withItems.slice().sort((a,b) => (a.display_order || 0) - (b.display_order || 0)) : [];
-          setCategories(sortedCats);
-        }
-      } catch (e) {
-        const sortedCats = Array.isArray(withItems) ? withItems.slice().sort((a,b) => (a.display_order || 0) - (b.display_order || 0)) : [];
-        setCategories(sortedCats);
-      }
+      const res = await fetch(`${API_BASE}/menu/admin`);
+      if (!res.ok) { setCategories([]); return; }
+      const data = await res.json();
+      // server returns categories already ordered by display_order and items ordered by display_order
+      setCategories(Array.isArray(data) ? data : []);
     } catch (e) {
       setCategories([]);
     }

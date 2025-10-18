@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const adminAuth = require('../middleware/adminAuth');
 
 /*
   Menu routes
@@ -109,6 +110,67 @@ router.get('/menu', (req, res) => {
     menuCache.payload = out;
     menuCache.expiresAt = Date.now() + MENU_CACHE_TTL_MS;
     res.json(out);
+  });
+});
+
+// Admin endpoint: return all categories (regardless of active) with nested items
+// Ordered by category display_order and item display_order. Admin-only.
+router.get('/menu/admin', adminAuth, (req, res) => {
+  const query = `
+    SELECT 
+      c.id as category_id,
+      c.name as category_name,
+      c.description as category_description,
+      c.image_url as category_image,
+      c.gallery_image_id as category_gallery_image_id,
+      ml.file_url as category_gallery_image,
+      c.display_order as category_order,
+      c.is_active as category_active,
+      i.id as item_id,
+      i.name as item_name,
+      i.description as item_description,
+      i.price as item_price,
+      i.image_url as item_image,
+      i.display_order as item_order,
+      i.is_available as item_available
+    FROM menu_categories c
+    LEFT JOIN menu_items i ON c.id = i.category_id
+    LEFT JOIN media_library ml ON c.gallery_image_id = ml.id
+    ORDER BY c.display_order, i.display_order
+  `;
+
+  req.db.query(query, (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+
+    const categories = {};
+    results.forEach(row => {
+      if (!categories[row.category_id]) {
+        categories[row.category_id] = {
+          id: row.category_id,
+          name: row.category_name,
+          description: row.category_description,
+          image_url: row.category_image,
+          gallery_image_url: row.category_gallery_image || null,
+          display_order: row.category_order,
+          is_active: row.category_active,
+          items: []
+        };
+      }
+
+      if (row.item_id) {
+        categories[row.category_id].items.push({
+          id: row.item_id,
+          name: row.item_name,
+          description: row.item_description,
+          price: row.item_price,
+          image_url: row.item_image,
+          display_order: row.item_order,
+          is_available: row.item_available
+        });
+      }
+    });
+
+    res.json(Object.values(categories));
   });
 });
 
