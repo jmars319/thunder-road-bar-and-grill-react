@@ -246,22 +246,22 @@ export default function JobSection() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <label className="flex flex-col">
               <span className="text-sm mb-1">Full name</span>
-              <input ref={el => inputRefs.current.name = el} name="name" value={form.name} onChange={handleChange} required className="input" aria-invalid={!!fieldErrors.name} aria-describedby={fieldErrors.name ? 'err-name' : undefined} />
+              <input ref={el => inputRefs.current.name = el} name="name" value={form.name} onChange={handleChange} required className="form-input" aria-invalid={!!fieldErrors.name} aria-describedby={fieldErrors.name ? 'err-name' : undefined} />
               {fieldErrors.name && <div id="err-name" className="text-sm text-red-600 mt-1">{fieldErrors.name}</div>}
             </label>
             <label className="flex flex-col">
               <span className="text-sm mb-1">Email</span>
-              <input ref={el => inputRefs.current.email = el} name="email" type="email" value={form.email} onChange={handleChange} required className="input" aria-invalid={!!fieldErrors.email} aria-describedby={fieldErrors.email ? 'err-email' : undefined} />
+              <input ref={el => inputRefs.current.email = el} name="email" type="email" value={form.email} onChange={handleChange} required className="form-input" aria-invalid={!!fieldErrors.email} aria-describedby={fieldErrors.email ? 'err-email' : undefined} />
               {fieldErrors.email && <div id="err-email" className="text-sm text-red-600 mt-1">{fieldErrors.email}</div>}
             </label>
             <label className="flex flex-col">
               <span className="text-sm mb-1">Phone</span>
-              <input ref={el => inputRefs.current.phone = el} name="phone" value={form.phone} onChange={handleChange} className="input" aria-invalid={!!fieldErrors.phone} aria-describedby={fieldErrors.phone ? 'err-phone' : undefined} />
+              <input ref={el => inputRefs.current.phone = el} name="phone" value={form.phone} onChange={handleChange} className="form-input" aria-invalid={!!fieldErrors.phone} aria-describedby={fieldErrors.phone ? 'err-phone' : undefined} />
               {fieldErrors.phone && <div id="err-phone" className="text-sm text-red-600 mt-1">{fieldErrors.phone}</div>}
             </label>
             <label className="flex flex-col">
               <span className="text-sm mb-1">Position</span>
-              <select ref={el => inputRefs.current.position = el} name="position" value={form.position} onChange={handleChange} className="input" aria-invalid={!!fieldErrors.position} aria-describedby={fieldErrors.position ? 'err-position' : undefined}>
+              <select ref={el => inputRefs.current.position = el} name="position" value={form.position} onChange={handleChange} className="form-input" aria-invalid={!!fieldErrors.position} aria-describedby={fieldErrors.position ? 'err-position' : undefined}>
                 {positions.map((p) => (
                   <option key={p} value={p}>{p}</option>
                 ))}
@@ -273,17 +273,17 @@ export default function JobSection() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <label className="flex flex-col">
               <span className="text-sm mb-1">Availability / desired start</span>
-              <input name="availability" value={form.availability} onChange={handleChange} className="input" />
+              <input name="availability" value={form.availability} onChange={handleChange} className="form-input" />
             </label>
             <label className="flex flex-col">
               <span className="text-sm mb-1">Years of experience</span>
-              <input name="experience" value={form.experience} onChange={handleChange} className="input" />
+              <input name="experience" value={form.experience} onChange={handleChange} className="form-input" />
             </label>
           </div>
 
           <label className="flex flex-col">
             <span className="text-sm mb-1">Cover letter (optional)</span>
-            <textarea name="cover_letter" value={form.cover_letter} onChange={handleChange} rows="4" className="input" />
+            <textarea name="cover_letter" value={form.cover_letter} onChange={handleChange} rows="4" className="form-input" />
           </label>
 
           <label className="flex flex-col">
@@ -319,10 +319,10 @@ export default function JobSection() {
                 <label key={f.id} className="flex flex-col mb-3">
                   <span className="text-sm mb-1">{f.field_name}{f.required ? ' *' : ''}</span>
                   {f.field_type === 'text' && (
-                    <input ref={el => inputRefs.current[f.field_name] = el} name={f.field_name} value={form[f.field_name] || ''} onChange={handleChange} className="input" aria-invalid={!!fieldErrors[f.field_name]} />
+                    <input ref={el => inputRefs.current[f.field_name] = el} name={f.field_name} value={form[f.field_name] || ''} onChange={handleChange} className="form-input" aria-invalid={!!fieldErrors[f.field_name]} />
                   )}
                   {f.field_type === 'textarea' && (
-                    <textarea ref={el => inputRefs.current[f.field_name] = el} name={f.field_name} value={form[f.field_name] || ''} onChange={handleChange} className="input" rows={3} />
+                    <textarea ref={el => inputRefs.current[f.field_name] = el} name={f.field_name} value={form[f.field_name] || ''} onChange={handleChange} className="form-input" rows={3} />
                   )}
                   {fieldErrors[f.field_name] && <div className="text-sm text-red-600 mt-1">{fieldErrors[f.field_name]}</div>}
                 </label>
