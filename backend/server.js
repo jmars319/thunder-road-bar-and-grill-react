@@ -18,7 +18,8 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+// Default to 5001 to match the frontend's default API_BASE (http://localhost:5001/api)
+const PORT = process.env.PORT || 5001;
 
 /*
   server.js - Express app bootstrap
