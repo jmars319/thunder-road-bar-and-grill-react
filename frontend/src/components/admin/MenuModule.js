@@ -68,7 +68,9 @@ function MenuModule() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch(`${API_BASE}/menu/admin`);
+      const res = await fetch(`${API_BASE}/menu/admin`, {
+        headers: { 'X-Admin-Auth': 'admin' }
+      });
       if (!res.ok) { setCategories([]); return; }
       const data = await res.json();
       // server returns categories already ordered by display_order and items ordered by display_order
