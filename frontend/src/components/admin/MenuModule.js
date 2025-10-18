@@ -84,9 +84,29 @@ function MenuModule() {
           return { ...c, items: [] };
         }
       }));
-      // sort categories by display_order to match public site ordering
-      const sortedCats = Array.isArray(withItems) ? withItems.slice().sort((a,b) => (a.display_order || 0) - (b.display_order || 0)) : [];
-      setCategories(sortedCats);
+      // Try to align admin category order with the public menu order
+      try {
+        const publicRes = await fetch(`${API_BASE}/menu`);
+        if (publicRes.ok) {
+          const publicMenu = await publicRes.json();
+          const publicOrder = Array.isArray(publicMenu) ? publicMenu.map(c => c.id) : [];
+          const sortedCats = Array.isArray(withItems) ? withItems.slice().sort((a, b) => {
+            const ai = publicOrder.indexOf(a.id);
+            const bi = publicOrder.indexOf(b.id);
+            if (ai === -1 && bi === -1) return (a.display_order || 0) - (b.display_order || 0);
+            if (ai === -1) return 1; // put unknowns after known public-ordered ones
+            if (bi === -1) return -1;
+            return ai - bi;
+          }) : [];
+          setCategories(sortedCats);
+        } else {
+          const sortedCats = Array.isArray(withItems) ? withItems.slice().sort((a,b) => (a.display_order || 0) - (b.display_order || 0)) : [];
+          setCategories(sortedCats);
+        }
+      } catch (e) {
+        const sortedCats = Array.isArray(withItems) ? withItems.slice().sort((a,b) => (a.display_order || 0) - (b.display_order || 0)) : [];
+        setCategories(sortedCats);
+      }
     } catch (e) {
       setCategories([]);
     }
