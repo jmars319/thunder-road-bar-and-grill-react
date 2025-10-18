@@ -10,6 +10,16 @@ router.get('/job-positions', adminAuth, (req, res) => {
   });
 });
 
+// Public endpoint: only return positions that are marked active/open.
+// This is intentionally unauthenticated so the public site can show which
+// positions are currently open without exposing admin controls.
+router.get('/job-positions/public', (req, res) => {
+  req.db.query('SELECT id, name, description FROM job_positions WHERE is_active = 1 ORDER BY display_order, id', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results || []);
+  });
+});
+
 router.post('/job-positions', adminAuth, (req, res) => {
   const { name, description, display_order = 0, is_active = true } = req.body;
   req.db.query('INSERT INTO job_positions (name, description, display_order, is_active) VALUES (?, ?, ?, ?)', [name, description, display_order, is_active], (err, result) => {

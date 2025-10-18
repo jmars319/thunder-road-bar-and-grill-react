@@ -213,22 +213,37 @@ export default function JobSection() {
 
   // Fetch positions and optional dynamic fields on mount
   useEffect(() => {
-    fetch('/api/job-positions')
+    // Fetch public-facing active positions first. If that returns none,
+    // fall back to the admin-facing list (older behavior) and finally a static list.
+    fetch('/api/job-positions/public')
       .then((r) => r.ok ? r.json() : [])
-      .then((data) => {
-        if (Array.isArray(data) && data.length) {
-          setPositions(data.map(p => p.name));
-          setForm((s) => ({ ...s, position: data[0]?.name || '' }));
+      .then((publicPositions) => {
+        if (Array.isArray(publicPositions) && publicPositions.length) {
+          // store array of objects so we can display name and preserve id
+          setPositions(publicPositions);
+          setForm((s) => ({ ...s, position: publicPositions[0].name }));
+          return;
+        }
+
+        // No public/open positions — fall back to admin list so we can still
+        // let applicants choose known positions (or provide a free-text fallback)
+        return fetch('/api/job-positions').then((r) => r.ok ? r.json() : []);
+      })
+      .then((adminPositions) => {
+        if (!adminPositions) return;
+        if (Array.isArray(adminPositions) && adminPositions.length) {
+          // adminPositions may be objects with is_active flags — keep objects
+          setPositions(adminPositions);
+          setForm((s) => ({ ...s, position: adminPositions[0].name }));
         } else {
-          // fallback static list and set a default position for the form so validation won't block
           const fallback = ['Server','Bartender','Line Cook','Prep Cook','Dishwasher','Host','Manager'];
-          setPositions(fallback);
+          setPositions(fallback.map((p, i) => ({ id: `f-${i}`, name: p })));
           setForm((s) => ({ ...s, position: fallback[0] }));
         }
       })
       .catch(() => {
         const fallback = ['Server','Bartender','Line Cook','Prep Cook','Dishwasher','Host','Manager'];
-        setPositions(fallback);
+        setPositions(fallback.map((p, i) => ({ id: `f-${i}`, name: p })));
         setForm((s) => ({ ...s, position: fallback[0] }));
       });
 
@@ -265,11 +280,17 @@ export default function JobSection() {
             </label>
             <label className="flex flex-col">
               <span className="text-sm mb-1">Position</span>
-              <select ref={el => inputRefs.current.position = el} name="position" value={form.position} onChange={handleChange} className="form-input" aria-invalid={!!fieldErrors.position} aria-describedby={fieldErrors.position ? 'err-position' : undefined}>
-                {positions.map((p) => (
-                  <option key={p} value={p}>{p}</option>
-                ))}
-              </select>
+              {positions && positions.length > 0 ? (
+                <select ref={el => inputRefs.current.position = el} name="position" value={form.position} onChange={handleChange} className="form-input" aria-invalid={!!fieldErrors.position} aria-describedby={fieldErrors.position ? 'err-position' : undefined}>
+                  {positions.map((p) => (
+                    // positions may be objects ({id, name}) or simple strings
+                    <option key={p.id || p} value={p.name || p}>{p.name || p}</option>
+                  ))}
+                </select>
+              ) : (
+                // If no positions are available, allow the applicant to type a position.
+                <input ref={el => inputRefs.current.position = el} name="position" value={form.position} onChange={handleChange} className="form-input" placeholder="Position (e.g. Server)" />
+              )}
               {fieldErrors.position && <div id="err-position" className="text-sm text-red-600 mt-1">{fieldErrors.position}</div>}
             </label>
           </div>
