@@ -12,7 +12,7 @@ export default function JobSection() {
     name: '',
     email: '',
     phone: '',
-    position: positions[0],
+    position: '',
     availability: '',
     experience: '',
     cover_letter: ''
@@ -220,12 +220,16 @@ export default function JobSection() {
           setPositions(data.map(p => p.name));
           setForm((s) => ({ ...s, position: data[0]?.name || '' }));
         } else {
-          // fallback static list
-          setPositions(['Server','Bartender','Line Cook','Prep Cook','Dishwasher','Host','Manager']);
+          // fallback static list and set a default position for the form so validation won't block
+          const fallback = ['Server','Bartender','Line Cook','Prep Cook','Dishwasher','Host','Manager'];
+          setPositions(fallback);
+          setForm((s) => ({ ...s, position: fallback[0] }));
         }
       })
       .catch(() => {
-        setPositions(['Server','Bartender','Line Cook','Prep Cook','Dishwasher','Host','Manager']);
+        const fallback = ['Server','Bartender','Line Cook','Prep Cook','Dishwasher','Host','Manager'];
+        setPositions(fallback);
+        setForm((s) => ({ ...s, position: fallback[0] }));
       });
 
     fetch('/api/application-fields')
