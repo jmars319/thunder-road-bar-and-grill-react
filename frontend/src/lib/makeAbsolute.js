@@ -1,8 +1,6 @@
-/* eslint-env node */
-/* global module */
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
-function makeAbsolute(fileUrl) {
+export default function makeAbsolute(fileUrl) {
   if (!fileUrl) return '';
   // already absolute
   if (/^https?:\/\//i.test(fileUrl)) return fileUrl;
@@ -10,4 +8,10 @@ function makeAbsolute(fileUrl) {
   return base + (fileUrl.startsWith('/') ? fileUrl : '/' + fileUrl);
 }
 
-module.exports = makeAbsolute;
+// CommonJS fallback for Node/Jest tests that use require()
+try {
+  // eslint-disable-next-line no-undef
+  if (typeof module !== 'undefined' && module.exports) module.exports = makeAbsolute;
+} catch (e) {
+  // ignore in browsers
+}

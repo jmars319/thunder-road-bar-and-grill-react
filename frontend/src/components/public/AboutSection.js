@@ -14,6 +14,7 @@
 */
 
 import React, { useEffect, useState } from 'react';
+import cachedFetch from '../../lib/cachedFetch';
 import { icons } from '../../icons';
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
@@ -42,23 +43,12 @@ export default function AboutSection() {
     const load = async () => {
       try {
         const [aboutRes, siteRes] = await Promise.all([
-          fetch(`${API_BASE}/about`),
-          fetch(`${API_BASE}/site-settings`)
+          fetch(`${API_BASE}/about`).then(r => r.ok ? r.json() : null).catch(() => null),
+          cachedFetch(`${API_BASE}/site-settings`).catch(() => null)
         ]);
 
-        if (aboutRes.ok) {
-          const aboutData = await aboutRes.json();
-          setAbout(aboutData || null);
-        } else {
-          setAbout(null);
-        }
-
-        if (siteRes.ok) {
-          const siteData = await siteRes.json();
-          setSiteSettings(siteData || null);
-        } else {
-          setSiteSettings(null);
-        }
+        setAbout(aboutRes || null);
+        setSiteSettings(siteRes || null);
       } catch {
         setAbout(null);
         setSiteSettings(null);

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { icons } from '../../icons';
+import cachedFetch, { clearCacheFor } from '../../lib/cachedFetch';
+import makeAbsolute from '../../lib/makeAbsolute';
 
 /*
   MenuSection
@@ -28,22 +30,63 @@ export default function MenuSection() {
   const [categories, setCategories] = useState([]);
   const [expandedCategory, setExpandedCategory] = useState(null);
 
+  // This effect is intentionally run once on mount. It uses a mounted flag to
+  // avoid updating state after unmount and performs stale-while-revalidate.
+  // We intentionally omit `categories` from the dependency array to avoid
+  // re-running during state updates.
+  // Note: intentionally run once on mount. We rely on a mounted flag and
+  // explicit event listeners for cache invalidation to refresh data. The
+  // dependency array is intentionally empty to avoid re-running during
+  // state updates.
   useEffect(() => {
-    fetch(`${API_BASE}/menu`)
-      .then(res => res.json())
-      .then(data => {
-        const list = Array.isArray(data) ? data : [];
-        // normalize gallery_image_url fields to absolute URLs when necessary
-        const normalized = list.map(cat => {
-          const copy = { ...cat };
-          if (copy.gallery_image_url && copy.gallery_image_url.startsWith('/')) {
-            copy.gallery_image_url = `${API_BASE.replace(/\/api$/, '')}${copy.gallery_image_url}`;
-          }
-          return copy;
-        });
-        setCategories(normalized);
-      })
-      .catch(() => setCategories([]));
+    let mounted = true;
+
+    // stale-while-revalidate: use cachedFetch for immediate content, then
+    // refresh in background to get up-to-date data.
+    (async () => {
+      try {
+        const cached = await cachedFetch(`${API_BASE}/menu`);
+        if (mounted && cached) {
+          const normalized = (Array.isArray(cached) ? cached : []).map(cat => ({
+            ...cat,
+            gallery_image_url: makeAbsolute(cat.gallery_image_url || cat.image_url || ''),
+          }));
+          setCategories(normalized);
+        }
+
+        // revalidate from network (bypass cachedFetch to ensure fresh copy)
+        const res = await fetch(`${API_BASE}/menu`);
+        if (!res.ok) throw new Error('Failed to fetch menu');
+        const fresh = await res.json();
+        if (mounted) {
+          const normalizedFresh = (Array.isArray(fresh) ? fresh : []).map(cat => ({
+            ...cat,
+            gallery_image_url: makeAbsolute(cat.gallery_image_url || cat.image_url || ''),
+          }));
+          setCategories(normalizedFresh);
+        }
+      } catch (e) {
+        if (mounted && !Array.isArray(categories)) setCategories([]);
+      }
+    })();
+
+    const menuHandler = () => {
+      clearCacheFor(`${API_BASE}/menu`);
+      // re-run the fetch flow by forcibly setting mounted true and re-calling
+      // the same IIFE. Simpler: reload the page's menu via a small fetch.
+      cachedFetch(`${API_BASE}/menu`).then(fresh => {
+        if (!mounted) return;
+        if (!fresh) return;
+        const normalizedFresh = (Array.isArray(fresh) ? fresh : []).map(cat => ({
+          ...cat,
+          gallery_image_url: makeAbsolute(cat.gallery_image_url || cat.image_url || ''),
+        }));
+        setCategories(normalizedFresh);
+      }).catch(() => {});
+    };
+
+    window.addEventListener('menuUpdated', menuHandler);
+    return () => { mounted = false; window.removeEventListener('menuUpdated', menuHandler); };
   }, []);
 
   return (
@@ -53,7 +96,10 @@ export default function MenuSection() {
         
         <div className="space-y-4">
           {categories.map(category => (
-            <div key={category.id} className="menu-card bg-surface rounded-lg shadow-lg overflow-hidden card-hover transition-all">
+            <div
+              key={category.id}
+              className={`menu-card bg-surface rounded-lg shadow-lg overflow-hidden card-hover transition-all ${expandedCategory === category.id ? 'expanded' : ''}`}
+            >
               <button
                 type="button"
                 onClick={() => setExpandedCategory(expandedCategory === category.id ? null : category.id)}
@@ -63,7 +109,7 @@ export default function MenuSection() {
               >
                 <div className="text-left">
                   <h3 className="text-2xl font-heading font-bold text-text-primary">{category.name}</h3>
-                  <p className="text-text-secondary text-sm mt-1">{category.description}</p>
+                  <p className="text-text-secondary text-sm mt-1 whitespace-pre-line">{category.description}</p>
                 </div>
                 <div className="flex items-center gap-4">
                   {expandedCategory === category.id ? (
@@ -76,10 +122,12 @@ export default function MenuSection() {
 
                 {/* Category banner: prefer gallery_image_url, fall back to image_url */}
                 {(category.gallery_image_url || category.image_url) && (
-                <div className="relative">
+                <div className="relative z-0">
                   <img
                     src={category.gallery_image_url || category.image_url}
                     alt={category.name}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-40 object-cover"
                   />
                   <div className="absolute inset-0 overlay-gradient"></div>
@@ -87,7 +135,7 @@ export default function MenuSection() {
               )}
 
               {expandedCategory === category.id && (
-                <div id={`menu-cat-${category.id}`} className="border-t bg-surface-warm">
+                <div id={`menu-cat-${category.id}`} className="relative z-20 border-t bg-surface-warm">
                   {Array.isArray(category.items) && category.items.length > 0 ? (
                     <div className="divide-y divide-divider">
                       {category.items.map(item => (
