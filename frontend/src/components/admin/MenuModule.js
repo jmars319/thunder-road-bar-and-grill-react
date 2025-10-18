@@ -21,6 +21,7 @@ function MenuModule() {
   const [categories, setCategories] = useState([]);
   const [expandedCategory, setExpandedCategory] = useState(null);
   const [editingCategory, setEditingCategory] = useState(null);
+  const [originalCategory, setOriginalCategory] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState(null);
@@ -92,13 +93,26 @@ function MenuModule() {
       ? `${API_BASE}/menu/categories/${editingCategory.id}`
       : `${API_BASE}/menu/categories`;
 
+  // Preserve image fields if the admin didn't modify them
+  const payload = { ...editingCategory };
+    if (originalCategory && editingCategory.id) {
+      // For image fields: prefer explicit editingCategory values; if undefined, fall back to originalCategory.
+      payload.image_url = typeof editingCategory.image_url !== 'undefined' ? editingCategory.image_url : (originalCategory.image_url || null);
+      payload.gallery_image_url = typeof editingCategory.gallery_image_url !== 'undefined' ? editingCategory.gallery_image_url : (originalCategory.gallery_image_url || null);
+      // gallery_image_id should also be preserved unless explicitly changed
+      payload.gallery_image_id = typeof editingCategory.gallery_image_id !== 'undefined' ? editingCategory.gallery_image_id : (originalCategory.gallery_image_id || null);
+    }
+
+    // clean save path (no debug helpers)
+
     fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(editingCategory)
+      body: JSON.stringify(payload)
     }).then(() => {
       fetchCategories();
       setEditingCategory(null);
+      setOriginalCategory(null);
       setToast({ type: 'success', message: 'Category saved' });
       setTimeout(() => setToast(null), 3000);
     }).catch(() => {
@@ -226,6 +240,7 @@ function MenuModule() {
             <h3 className="text-xl font-bold mb-4 text-text-primary">
               {editingCategory.id ? 'Edit' : 'Add'} Category
             </h3>
+            <p className="text-sm text-text-muted mb-3">Existing images will be preserved unless you remove or replace them.</p>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-text-primary mb-1">Name</label>
@@ -294,6 +309,8 @@ function MenuModule() {
                     {uploading && <div className="mt-2"><button type="button" onClick={cancelUpload} className="btn btn-ghost btn-sm">Cancel</button></div>}
                   </div>
                 )}
+
+                  {/* debug overlay removed */}
               </div>
               <div>
                 <label className="block text-sm font-medium text-text-primary mb-1">Gallery image (optional)</label>
@@ -514,7 +531,10 @@ function MenuModule() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setEditingCategory({ ...category, is_active: category.is_active == null ? 1 : category.is_active })}
+                  onClick={() => {
+                    setEditingCategory({ ...category, is_active: category.is_active == null ? 1 : category.is_active });
+                    setOriginalCategory(category);
+                  }}
                   className="text-text-inverse hover:bg-surface-warm p-2 rounded"
                   aria-label={`Edit category ${category.name}`}
                 >

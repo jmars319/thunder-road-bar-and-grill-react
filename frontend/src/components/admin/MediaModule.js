@@ -31,6 +31,9 @@ function AllUploadsGridComponent({ mediaLimit = 48, copyUrl, deleteMedia, openGa
 
   // load first page on mount; reset on unmount so reopening the section
   // starts fresh (clears items/offset and re-attaches sentinel)
+  // Prime paginated lists on mount and load site settings. The fetch/reset
+  // helpers are stable from the paginated hook; include them so linters don't
+  // flag missing dependencies.
   useEffect(() => {
     fetchAllPage(0, false).catch(() => {});
     return () => {
@@ -167,7 +170,7 @@ function MediaModule() {
     try { fetchLogoPage(0, false).catch(() => {}); } catch (e) {}
     try { fetchHeroPage(0, false).catch(() => {}); } catch (e) {}
     try { fetchGalleryPage(0, false).catch(() => {}); } catch (e) {}
-  }, []);
+  }, [fetchLogoPage, fetchHeroPage, fetchGalleryPage, resetLogo, resetHero, resetGallery]);
 
   const fetchMedia = (category, limit, offset) => {
     // fallback fetch used for uncategorized requests; paginated hooks handle category-specific lists

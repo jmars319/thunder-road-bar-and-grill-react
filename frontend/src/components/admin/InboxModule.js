@@ -42,21 +42,38 @@ const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 function InboxModule() {
   const [messages, setMessages] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const perPage = 25; // static for now; change to state if you want a per-page selector
   const [selectedMessage, setSelectedMessage] = useState(null);
 
   useEffect(() => {
     fetchMessages();
   }, []);
 
+  useEffect(() => {
+    // refetch when pagination changes
+    fetchMessages();
+  }, [page, perPage]);
+
+  useEffect(() => {
+    const handler = () => fetchMessages();
+    window.addEventListener('contactMessageSent', handler);
+    return () => window.removeEventListener('contactMessageSent', handler);
+  }, []);
+
   const fetchMessages = () => {
     // Prefer a minimal check for OK responses and gracefully handle unexpected shapes
-    fetch(`${API_BASE}/contact/messages`)
+    fetch(`${API_BASE}/contact/messages?page=${page}&per_page=${perPage}`)
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch messages');
         return res.json();
       })
-      .then(data => setMessages(Array.isArray(data) ? data : []))
-      .catch(() => setMessages([]));
+      .then(data => {
+        setMessages(Array.isArray(data.messages) ? data.messages : []);
+        setTotal(typeof data.total === 'number' ? data.total : 0);
+      })
+      .catch(() => { setMessages([]); setTotal(0); });
   };
 
   const markAsRead = (id) => {
@@ -86,6 +103,14 @@ function InboxModule() {
       <div className="lg:col-span-1 bg-surface rounded-lg shadow">
         <div className="p-4 border-b">
           <h3 className="font-bold text-lg text-text-primary">Messages</h3>
+        </div>
+        <div className="p-3 flex items-center justify-between border-t">
+          <div className="text-sm text-text-secondary">{total} messages</div>
+          <div className="flex items-center gap-2">
+            <button type="button" onClick={() => setPage(p => Math.max(1, p - 1))} className="px-2 py-1 rounded bg-surface">Prev</button>
+            <div className="text-sm">Page {page}</div>
+            <button type="button" onClick={() => setPage(p => p + 1)} className="px-2 py-1 rounded bg-surface">Next</button>
+          </div>
         </div>
         <div className="divide-y max-h-[600px] overflow-y-auto" role="list" aria-label="Inbox messages">
           {(Array.isArray(messages) ? messages : []).map(msg => (
